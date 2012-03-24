@@ -30,6 +30,10 @@ namespace coal_raider
         public readonly KeyboardState[] LastKeyboardStates;
         public readonly GamePadState[] LastGamePadStates;
 
+#if !XBOX
+        MouseState CurrentMouseState, LastMouseState;
+#endif
+
         public readonly bool[] GamePadWasConnected;
 
         public TouchCollection TouchState;
@@ -45,8 +49,16 @@ namespace coal_raider
             CurrentKeyboardStates = new KeyboardState[MaxInputs];
             CurrentGamePadStates = new GamePadState[MaxInputs];
 
+#if !XBOX
+            CurrentMouseState = new MouseState();
+#endif
+
             LastKeyboardStates = new KeyboardState[MaxInputs];
             LastGamePadStates = new GamePadState[MaxInputs];
+
+#if !XBOX
+            LastMouseState = new MouseState();
+#endif
 
             GamePadWasConnected = new bool[MaxInputs];
         }
@@ -71,6 +83,11 @@ namespace coal_raider
                     GamePadWasConnected[i] = true;
                 }
             }
+
+#if !XBOX
+            LastMouseState = CurrentMouseState;
+            CurrentMouseState = Mouse.GetState();
+#endif
 
             // Get the raw touch state from the TouchPanel
             TouchState = TouchPanel.GetState();
