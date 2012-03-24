@@ -27,6 +27,7 @@ namespace coal_raider
     {
         #region Fields
 
+        /*---- Original GameplayScreen Fields -----*/
         ContentManager content;
         SpriteFont gameFont;
 
@@ -38,6 +39,14 @@ namespace coal_raider
         float pauseAlpha;
 
         InputAction pauseAction;
+        /*---- End Original GameplayScreen Fields -----*/
+
+        GraphicsDeviceManager graphics;
+
+        Camera camera;
+        Map map;
+
+        Model planeModel;
 
         #endregion
 
@@ -49,6 +58,7 @@ namespace coal_raider
         /// </summary>
         public GameplayScreen()
         {
+            /*---- Original GameplayScreen Initialization -----*/
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -56,6 +66,8 @@ namespace coal_raider
                 new Buttons[] { Buttons.Start, Buttons.Back },
                 new Keys[] { Keys.Escape },
                 true);
+            /*---- End Original GameplayScreen Initialization -----*/
+            
         }
 
 
@@ -64,6 +76,18 @@ namespace coal_raider
         /// </summary>
         public override void Activate(bool instancePreserved)
         {
+            // Create camera and add to components list
+            camera = new Camera(ScreenManager.Game, new Vector3(0, 12, 9), Vector3.Zero, -Vector3.UnitZ);
+            ScreenManager.Game.Components.Add(camera);
+
+            // Initialize Models
+            planeModel = ScreenManager.Game.Content.Load<Model>(@"Models\floorModel");
+
+            Model[] a = new Model[8];
+            a[0] = planeModel;
+            map = new Map(ScreenManager.Game, a, -36, 36, ScreenManager.GraphicsDevice);
+            ScreenManager.Game.Components.Add(map);
+
             if (!instancePreserved)
             {
                 if (content == null)
@@ -140,21 +164,8 @@ namespace coal_raider
 
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
+                /*----- GAME UPDATE GOES HERE -----*/
 
-                enemyPosition.X += (float)(random.NextDouble() - 0.5) * randomization;
-                enemyPosition.Y += (float)(random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                Vector2 targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - gameFont.MeasureString("Insert Gameplay Here").X / 2, 
-                    200);
-
-                enemyPosition = Vector2.Lerp(enemyPosition, targetPosition, 0.05f);
-
-                // TODO: this game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
             }
         }
 
@@ -192,38 +203,9 @@ namespace coal_raider
             }
             else
             {
-                // Otherwise move the player position.
-                Vector2 movement = Vector2.Zero;
+                /*----- INPUT HANDLING GOES HERE -----*/
 
-                if (keyboardState.IsKeyDown(Keys.Left))
-                    movement.X--;
 
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    movement.X++;
-
-                if (keyboardState.IsKeyDown(Keys.Up))
-                    movement.Y--;
-
-                if (keyboardState.IsKeyDown(Keys.Down))
-                    movement.Y++;
-
-                Vector2 thumbstick = gamePadState.ThumbSticks.Left;
-
-                movement.X += thumbstick.X;
-                movement.Y -= thumbstick.Y;
-
-                if (input.TouchState.Count > 0)
-                {
-                    Vector2 touchPosition = input.TouchState[0].Position;
-                    Vector2 direction = touchPosition - playerPosition;
-                    direction.Normalize();
-                    movement += direction;
-                }
-
-                if (movement.Length() > 1)
-                    movement.Normalize();
-
-                playerPosition += movement * 8f;
             }
         }
 
@@ -235,17 +217,23 @@ namespace coal_raider
         {
             // This game has a blue background. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.CornflowerBlue, 0, 0);
+                                               Color.Black, 0, 0);
 
             // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
+            /* ORIGINAL GameplayScreen Stuff
             spriteBatch.Begin();
-
             spriteBatch.DrawString(gameFont, "// TODO", playerPosition, Color.Green);
-
             spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
                                    enemyPosition, Color.DarkRed);
+            spriteBatch.End();
+             * */
+
+            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+            map.Draw(camera);
 
             spriteBatch.End();
 
