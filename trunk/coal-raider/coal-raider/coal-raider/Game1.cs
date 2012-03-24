@@ -61,8 +61,11 @@ namespace coal_raider
 
         private void InitializePortraitGraphics()
         {
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 480;
+            this.IsMouseVisible = true;
+
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
         }
 
         /// <summary>
