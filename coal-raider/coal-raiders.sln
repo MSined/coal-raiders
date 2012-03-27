@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coal-raider", "coal-raider\coal-raider\coal-raider.csproj", "{513A95D0-9014-40D2-A656-054BA9269E69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coal-raiders", "coal-raider\coal-raider\coal-raiders.csproj", "{513A95D0-9014-40D2-A656-054BA9269E69}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "coal-raiderContent", "coal-raider\coal-raiderContent\coal-raiderContent.contentproj", "{2961CABC-9C73-4967-A034-E6571EDEE90A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "coal-raidersContent", "coal-raider\coal-raiderContent\coal-raidersContent.contentproj", "{2961CABC-9C73-4967-A034-E6571EDEE90A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
