@@ -41,12 +41,10 @@ namespace coal_raider
         InputAction pauseAction;
         /*---- End Original GameplayScreen Fields -----*/
 
-        GraphicsDeviceManager graphics;
-
         Camera camera;
         Map map;
 
-        Model planeModel;
+        Model floorModel, buildingModel, treeModel;
 
         #endregion
 
@@ -81,11 +79,16 @@ namespace coal_raider
             ScreenManager.Game.Components.Add(camera);
 
             // Initialize Models
-            planeModel = ScreenManager.Game.Content.Load<Model>(@"Models\floorModel");
+            floorModel = ScreenManager.Game.Content.Load<Model>(@"Models\floorModel");
+            buildingModel = ScreenManager.Game.Content.Load<Model>(@"Models\buildingModel");
+            treeModel = ScreenManager.Game.Content.Load<Model>(@"Models\treeModel");
 
-            Model[] a = new Model[8];
-            a[0] = planeModel;
-            map = new Map(ScreenManager.Game, a, -36, 36, ScreenManager.GraphicsDevice);
+            Model[] a = new Model[3];
+            a[0] = floorModel;
+            a[1] = buildingModel;
+            a[2] = treeModel;
+
+            map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice);
             ScreenManager.Game.Components.Add(map);
 
             if (!instancePreserved)

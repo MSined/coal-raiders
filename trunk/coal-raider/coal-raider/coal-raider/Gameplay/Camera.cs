@@ -22,12 +22,6 @@ namespace coal_raider
 
         public Vector3 cameraTarget;
 
-        //Vector3 onScreenAdjust = new Vector3(0, 0, -7f);
-        public float top = -11;
-        public float bottom = 8;
-        public float left = -17;
-        public float right = 17;
-
         // Current scroll wheel value. It stores the cumulative scroll value since start of game
         // Also used to verify against new scroll values to determine if zoom in or out
         float scrollWheelValue = 0;
@@ -35,7 +29,6 @@ namespace coal_raider
         private Game game;
 
         private Vector3 origPos, origTarget, origUp, origDir, origDistFromPlayer;
-        public bool saveCamera = true;
 
         private Vector2 screenSizeOver2; // Should be Size technically, but we want floats.
         private Rectangle noActionRectangle;
