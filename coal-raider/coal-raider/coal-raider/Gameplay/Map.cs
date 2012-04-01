@@ -13,10 +13,12 @@ namespace coal_raider
     {
         private Game game;
         private Model model;
+        private Model[] waypointModel = new Model[1];
         protected Matrix world = Matrix.Identity;
+        public Vector2 size { get; protected set; }
         public List<StaticObject> staticObjects { get; protected set; }
 
-        public List<waypoint> waypointList = new List<waypoint>();
+        public List<Waypoint> waypointList = new List<Waypoint>();
 
         /*
         RasterizerState originalState, transparentState;
@@ -42,6 +44,8 @@ namespace coal_raider
             Model[] tree = new Model[1];
             tree[0] = modelComponents[2];
 
+            waypointModel[0] = modelComponents[3];
+
             Model[][] modelArrays = {
                                         building,
                                         tree
@@ -49,7 +53,7 @@ namespace coal_raider
 
             staticObjects = new List<StaticObject>();
 
-            createTile(buildMapFromFile(mapFileName, modelArrays));
+            buildMapFromFile(mapFileName, modelArrays);
 
             /*
             originalState = new RasterizerState();
@@ -70,8 +74,9 @@ namespace coal_raider
             */
         }
 
-        private bool[,] buildMapFromFile(string fileName, Model[][] modelArrays)
+        private void buildMapFromFile(string fileName, Model[][] modelArrays)
         {
+            bool[,] mapBool = new bool[0, 0];
             StreamReader sr = new StreamReader(fileName);
             try
             {
@@ -83,16 +88,15 @@ namespace coal_raider
                     string[] words = new string[10];
                     String line;
                     int x = 0,
-                        y = 0;
+                        y = -1;
 
-                    Vector2 mapSize = new Vector2();
                     if ((line = sr.ReadLine()) != null)
                     {
                         words = line.Split(delimiterChars);
-                        mapSize = new Vector2(int.Parse(words[0]), int.Parse(words[1]));
+                        size = new Vector2(int.Parse(words[0]), int.Parse(words[1]));
                     }
 
-                    bool[,] mapBool = new bool[(int)mapSize.X, (int)mapSize.Y];//return bool[,]
+                    mapBool = new bool[(int)size.X, (int)size.Y];
 
                     // Read and display lines from the file until the end of
                     // the file is reached.
@@ -111,11 +115,10 @@ namespace coal_raider
                                 continue;
                             }
                             mapBool[x, y] = false;
-                            staticObjects.Add(new StaticObject(game, modelArrays[int.Parse(i)], new Vector3((x++ * 2) - mapSize.X, 0, (2 * y) - mapSize.Y)));
+                            staticObjects.Add(new StaticObject(game, modelArrays[int.Parse(i)], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y)));
                         }
                         
                     }
-                    return mapBool;
                 }
             }
             catch (Exception e)
@@ -123,61 +126,64 @@ namespace coal_raider
                 // Let the user know what went wrong.
                 Console.WriteLine("The map file could not be read:");
                 Console.WriteLine(e.Message);
-
-                return new bool[0, 0];
             }
+            createTile(mapBool);
         }
 
         public void createTile(bool[,] mapBool)
         {
             //mapbool, true = accessible , false = inaccessible
+            int xLen = mapBool.GetLength(0);
+            int yLen = mapBool.GetLength(1);
 
-            waypoint[,] mapTemp = new waypoint[mapBool.GetLength(0), mapBool.GetLength(1)];//link helper
+            Waypoint[,] mapTemp = new Waypoint[mapBool.GetLength(0), mapBool.GetLength(1)];//link helper
 
-            for (int i = 0; i < mapBool.GetLength(0); ++i)
+            for (int x = 0; x < xLen; ++x)
             {
-                for (int j = 0; j < mapBool.GetLength(1); ++j)
+                for (int y = 0; y < yLen; ++y)
                 {
-                    if (mapBool[i, j])
+                    if (mapBool[x, y])
                     {
-                        mapTemp[i, j] = new waypoint(new Vector3(j - mapBool.GetLength(1) / 2, 0, i - mapBool.GetLength(0) / 2));//fixed
-                        waypointList.Add(mapTemp[i, j]);//add waypoint to the list
-                        //set links
-                        if (i != 0)//if have up
-                        {
-                            if (j != 0 && mapTemp[i - 1, j - 1] != null)//up left
-                            {
-                                //mapTemp[i, j].upLeft = mapTemp[i - 1, j - 1];//set upLeft link
-                                //mapTemp[i - 1, j - 1].downRight = mapTemp[i, j];
-                                mapTemp[i, j].neighbors.Add(mapTemp[i - 1, j - 1]);//set upLeft link
-                                mapTemp[i - 1, j - 1].neighbors.Add(mapTemp[i, j]);
-                            }
-                            if (mapTemp[i - 1, j] != null)//up
-                            {
-                                //mapTemp[i, j].up = mapTemp[i - 1, j];
-                                //mapTemp[i - 1, j].down = mapTemp[i, j];
-                                mapTemp[i, j].neighbors.Add(mapTemp[i - 1, j]);
-                                mapTemp[i - 1, j].neighbors.Add(mapTemp[i, j]);
-                            }
-                            if (j != mapTemp.GetLength(0) - 1 && j != mapTemp.GetLength(0) && mapTemp[i - 1, j + 1] != null)//up right
-                            {
-                                //mapTemp[i, j].upRight = mapTemp[i - 1, j + 1];
-                                //mapTemp[i - 1, j + 1].downLeft = mapTemp[i, j];
-                                mapTemp[i, j].neighbors.Add(mapTemp[i - 1, j + 1]);
-                                mapTemp[i - 1, j + 1].neighbors.Add(mapTemp[i, j]);
-                            }
-                        }
-                        if (j != 0 && mapTemp[i, j - 1] != null)//if have left
-                        {
-                            //mapTemp[i, j].right = mapTemp[i, j - 1];
-                            //mapTemp[i, j - 1].left = mapTemp[i, j];
-                            mapTemp[i, j].neighbors.Add(mapTemp[i, j - 1]);
-                            mapTemp[i, j - 1].neighbors.Add(mapTemp[i, j]);
-                        }
+                        mapTemp[x, y] = new Waypoint(game, waypointModel, new Vector3((x * 2) - size.X, 0, (y * 2) - size.Y));//fixed
+                    }
+                    else
+                    {
+                        mapTemp[x, y] = null;
                     }
                 }
-            }//end loop
-        }//end createTile
+            }
+
+            Waypoint.Edge edge;
+            for (int x = 0; x < xLen; ++x)
+            {
+                for (int y = 0; y < yLen; ++y)
+                {
+                    if (mapTemp[x, y] != null)
+                    {
+                        for (int i = -1; i <= 1; ++i)
+                        {
+                            for (int j = -1; j <= 1; ++j)
+                            {
+                                if (!(i == 0 && j == 0) && !(x + i < 0 || y + j < 0) && !(x + i >= xLen || y + j >= yLen))
+                                {
+                                    if (mapTemp[x + i, y + j] == null)
+                                        continue;
+                                    edge = new Waypoint.Edge();
+                                    edge.connectedTo = mapTemp[x + i, y + j];
+                                    edge.length = (mapTemp[x, y].position - edge.connectedTo.position).LengthSquared();
+                                    mapTemp[x, y].connectedEdges.Add(edge);
+                                }
+                            }
+                        }
+
+                        waypointList.Add(mapTemp[x, y]);//add waypoint to the list
+                    }
+                }
+            }
+
+
+            
+        }
 
 
         public void Draw(Camera camera)
@@ -203,25 +209,11 @@ namespace coal_raider
             {
                 so.Draw(camera);
             }
-        }
-    }
-    //Joe
-    class waypoint
-    {
-        public Vector3 position { get; private set; }
-        public List<waypoint> neighbors = new List<waypoint>();
 
-        public List<waypoint> path = new List<waypoint>();
-        public float g;//cost
-        public float h;//heuristic
-        public float f;
-
-        public waypoint(Vector3 position)
-        {
-            this.position = position;
-            this.g = 0;
-            this.h = 0;
-            this.f = 0;
+            foreach (Waypoint w in waypointList)
+            {
+                w.Draw(camera);
+            }
         }
     }
 }

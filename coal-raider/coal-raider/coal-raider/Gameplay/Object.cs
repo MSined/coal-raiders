@@ -13,17 +13,18 @@ namespace coal_raider
         public Game game { get; private set; }
         protected Matrix world = Matrix.Identity;
         protected Model[] modelComponents { get; private set; }
-        protected BoundingBox bounds { get; set; }
+        public BoundingBox bounds { get; protected set; }
         public bool isAlive;
 
         private Vector3 _position;
-        protected Vector3 position
+        public Vector3 position
         {
             get
             {
                 return _position;
             }
-            set
+            
+            protected set
             {
                 _position = value;
                 Vector3 center = bounds.Max - bounds.Min;
@@ -31,9 +32,9 @@ namespace coal_raider
                 bounds = new BoundingBox(bounds.Max + offset, bounds.Min + offset);
             }
         }
-        //static int objectIDCounter = 0;
-        //public int objectID = objectIDCounter++;
-        //public int[] cellIDs = { -1, -1, -1, -1 };
+        static int objectIDCounter = 0;
+        public int objectID = objectIDCounter++;
+        public int[] cellIDs = { -1, -1, -1, -1 };
 
         public Object(Game game, Model[] modelComponents, Vector3 position, bool isAlive)
             : base(game)
@@ -48,7 +49,7 @@ namespace coal_raider
 
         public abstract void Draw(Camera camera);
 
-        public virtual void Update(GameTime gameTime, List<Object> colliders, Vector3 cameraTarget){}
+        public virtual void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList) { }
 
         private static BoundingBox CreateBoundingBox(Model model)
         {

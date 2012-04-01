@@ -112,6 +112,7 @@
     <Compile Include="Gameplay\Map.cs" />
     <Compile Include="Gameplay\Object.cs" />
     <Compile Include="Gameplay\StaticObject.cs" />
+    <Compile Include="Gameplay\Unit.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="InputAction.cs" />
     <Compile Include="InputState.cs" />
@@ -135,7 +136,9 @@
     <Compile Include="ScreenManager\PhoneMenuScreen.cs" />
     <Compile Include="ScreenManager\PhonePauseScreen.cs" />
     <Compile Include="ScreenManager\PlayerIndexEventArgs.cs" />
+    <Compile Include="Tools\SpatialHashGrid.cs" />
     <Compile Include="Tools\VertexElementExtractor.cs" />
+    <Compile Include="Tools\Waypoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
