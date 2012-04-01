@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 #endregion
 
 namespace coal_raider
@@ -30,6 +31,8 @@ namespace coal_raider
         /*---- Original GameplayScreen Fields -----*/
         ContentManager content;
         SpriteFont gameFont;
+        GameComponentCollection components = new GameComponentCollection();
+        SpatialHashGrid grid;
 
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
@@ -43,8 +46,9 @@ namespace coal_raider
 
         Camera camera;
         Map map;
+        Unit unit1, unit2;
 
-        Model floorModel, buildingModel, treeModel;
+        Model floorModel, buildingModel, treeModel, unitModel;
 
         #endregion
 
@@ -75,21 +79,45 @@ namespace coal_raider
         public override void Activate(bool instancePreserved)
         {
             // Create camera and add to components list
-            camera = new Camera(ScreenManager.Game, new Vector3(0, 12, 9), Vector3.Zero, -Vector3.UnitZ);
-            ScreenManager.Game.Components.Add(camera);
+            camera = new Camera(ScreenManager.Game, new Vector3(0, 20, 10), Vector3.Zero, -Vector3.UnitZ);
+            components.Add(camera);
 
             // Initialize Models
             floorModel = ScreenManager.Game.Content.Load<Model>(@"Models\floorModel");
             buildingModel = ScreenManager.Game.Content.Load<Model>(@"Models\buildingModel");
             treeModel = ScreenManager.Game.Content.Load<Model>(@"Models\treeModel");
 
-            Model[] a = new Model[3];
+            unitModel = ScreenManager.Game.Content.Load<Model>(@"Models\unitModel");
+
+            Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
+
+            Model[] a = new Model[4];
             a[0] = floorModel;
             a[1] = buildingModel;
             a[2] = treeModel;
+            a[3] = waypointModel;
 
             map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice);
-            ScreenManager.Game.Components.Add(map);
+            components.Add(map);
+
+            Model[] b = new Model[1];
+            b[0] = unitModel;
+            unit1 = new Unit(ScreenManager.Game, b, new Vector3(30, 0, 30), 10, 10, 0.05f, true);
+            components.Add(unit1);
+
+            unit2 = new Unit(ScreenManager.Game, b, new Vector3(0, 0, 0), 10, 10, 0.05f, true);
+            components.Add(unit2);
+
+            unit1.target = unit2;
+            unit1.newTarget = true;
+
+            grid = new SpatialHashGrid(map.size.X, map.size.Y, 2, map.size.X / 2, map.size.Y / 2);
+            for (int i = 0; i < map.staticObjects.Count; ++i)
+                grid.insertStaticObject(map.staticObjects[i]);
+            /*
+            for (int i = 0; i < map.usableBuildings.Count; ++i)//for collisions
+                grid.insertStaticObject(map.usableBuildings[i]);
+            */
 
             if (!instancePreserved)
             {
@@ -168,7 +196,36 @@ namespace coal_raider
             if (IsActive)
             {
                 /*----- GAME UPDATE GOES HERE -----*/
+                camera.Update(gameTime);
 
+                #region Updates
+                List<Object> colliders = new List<Object>();
+                GameComponent[] gcc = new GameComponent[components.Count];
+                components.CopyTo(gcc, 0);
+                foreach (GameComponent gc in gcc)
+                {
+                    if (!(gc is Object))
+                    {
+                        gc.Update(gameTime);
+                    }
+                    else
+                    {
+                        Object o = (Object)gc;
+                        // Only update if the object is alive
+                        if (o.isAlive)
+                        {
+                            colliders = grid.getPotentialColliders(o);
+                            o.Update(gameTime, colliders, map.waypointList);
+                            colliders.Clear();
+                        }
+                        else
+                        {
+                            components.Remove(o);
+                            grid.removeDynamicObject(o);
+                        }
+                    }
+                }
+                #endregion
             }
         }
 
@@ -237,6 +294,17 @@ namespace coal_raider
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
             map.Draw(camera);
+
+            GameComponent[] gcc = new GameComponent[components.Count];
+            components.CopyTo(gcc, 0);
+            foreach (GameComponent gc in gcc)
+            {
+                if (gc is Object)
+                {
+                    Object o = (Object)gc;
+                    o.Draw(camera);
+                }
+            }
 
             spriteBatch.End();
 
