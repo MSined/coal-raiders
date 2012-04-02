@@ -100,5 +100,17 @@ namespace coal_raider
         {
             view = Matrix.CreateLookAt(cameraPosition, cameraPosition + cameraDirection, cameraUp);
         }
+
+        public bool inCamera(Vector3 target) 
+        {
+            if (target.X > cameraPosition.X - 25 &&
+                target.X < cameraPosition.X + 25 &&
+                target.Z > cameraPosition.Z - 25 &&
+                target.Z < cameraPosition.Z) 
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

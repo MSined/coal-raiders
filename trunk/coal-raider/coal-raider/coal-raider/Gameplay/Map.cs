@@ -207,7 +207,10 @@ namespace coal_raider
 
             foreach (StaticObject so in staticObjects)
             {
-                so.Draw(camera);
+                if (camera.inCamera(so.position))
+                {
+                    so.Draw(camera);
+                }
             }
 
             foreach (Waypoint w in waypointList)
