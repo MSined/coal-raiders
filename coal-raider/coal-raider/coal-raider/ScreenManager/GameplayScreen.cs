@@ -102,14 +102,19 @@ namespace coal_raider
 
             Model[] b = new Model[1];
             b[0] = unitModel;
-            unit1 = new Unit(ScreenManager.Game, b, new Vector3(30, 0, 30), 10, 10, 0.05f, true);
+            unit1 = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
 
-            unit2 = new Unit(ScreenManager.Game, b, new Vector3(0, 0, 0), 10, 10, 0.05f, true);
-            components.Add(unit2);
+            Unit[] unitList = new Unit[5];
+            unitList[0] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Warrior);
+            unitList[1] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Ranger);
+            unitList[2] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Ranger);
+            unitList[3] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Warrior);
+            unitList[4] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Mage);
 
-            unit1.target = unit2;
-            unit1.newTarget = true;
+            Squad squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pentagram);
+            squad.setTarget(unit1);
+            components.Add(squad);
 
             grid = new SpatialHashGrid(map.size.X, map.size.Y, 2, map.size.X / 2, map.size.Y / 2);
             for (int i = 0; i < map.staticObjects.Count; ++i)

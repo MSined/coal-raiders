@@ -47,7 +47,7 @@ namespace coal_raider
             this.isAlive = isAlive;
         }
 
-        public abstract void Draw(Camera camera);
+        public virtual void Draw(Camera camera) { }
 
         public virtual void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList) { }
 
