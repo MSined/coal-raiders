@@ -42,7 +42,6 @@ namespace coal_raider
             this.sp = topSP;
 
             this.speed = speed;
-
         }
 
         public override void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList)
@@ -51,14 +50,21 @@ namespace coal_raider
             {
                 //moveToTargetPosition(waypointList);
                 velocity = (Vector3)targetPosition - position;
-                
+
             }
 
             if (!(velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0))
             {
-                velocity.Normalize();
-                position += speed * velocity;
-
+                if (velocity.Length() > speed)
+                {
+                    velocity.Normalize();
+                    position += speed * velocity;
+                }
+                else
+                {
+                    position += velocity;
+                }
+                
             }
             
             float angle = (float)Math.Asin(lookDirection.X) + MathHelper.ToRadians(180);

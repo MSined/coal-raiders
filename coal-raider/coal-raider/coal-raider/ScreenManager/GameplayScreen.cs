@@ -46,9 +46,9 @@ namespace coal_raider
 
         Camera camera;
         Map map;
-        Unit unit1, unit2;
+        Unit unit1;
 
-        Model floorModel, buildingModel, treeModel, unitModel;
+        Model floorModel, buildingModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage;
 
         #endregion
 
@@ -87,7 +87,9 @@ namespace coal_raider
             buildingModel = ScreenManager.Game.Content.Load<Model>(@"Models\buildingModel");
             treeModel = ScreenManager.Game.Content.Load<Model>(@"Models\treeModel");
 
-            unitModel = ScreenManager.Game.Content.Load<Model>(@"Models\unitModel");
+            unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelWarrior");
+            unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelRanger");
+            unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelMage");
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
@@ -100,17 +102,24 @@ namespace coal_raider
             map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice);
             components.Add(map);
 
-            Model[] b = new Model[1];
-            b[0] = unitModel;
-            unit1 = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(30, 0, 30), UnitType.Warrior);
+            Model[] w = new Model[1];
+            w[0] = unitModelWarrior;
+
+            Model[] r = new Model[1];
+            r[0] = unitModelRanger;
+
+            Model[] m = new Model[1];
+            m[0] = unitModelMage;
+
+            unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
 
             Unit[] unitList = new Unit[5];
-            unitList[0] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Warrior);
-            unitList[1] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Ranger);
-            unitList[2] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Ranger);
-            unitList[3] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Warrior);
-            unitList[4] = UnitFactory.createUnit(ScreenManager.Game, b, new Vector3(0, 0, 0), UnitType.Mage);
+            unitList[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
+            unitList[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
+            unitList[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
+            unitList[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
+            unitList[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(0, 0, 0), UnitType.Mage);
 
             Squad squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pentagram);
             squad.setTarget(unit1);
