@@ -5,7 +5,7 @@ xof 0303txt 0064
 		1.0;
 			1.0; 1.0; 1.0;;
 			0.0; 0.0; 0.0;;
-			TextureFilename { "../Textures/unitTexture.png"; }
+			TextureFilename { "../Textures/unitTextureMage.png"; }
 		}
 Frame unnamed_object1 {
 	Mesh {
