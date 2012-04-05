@@ -8,29 +8,34 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace coal_raider
 {
-    class Waypoint : Object
+    class Waypoint
     {
         public struct Edge { public float length; public Waypoint connectedTo; }
 
         //int temp = 0;
         static int IDCtr = 0;
         public int ID;
-        //public Vector3 position;
+        public Vector3 position;
         public List<Edge> connectedEdges = new List<Edge>();
 
-        public Waypoint(Game game, Model[] modelComponents, Vector3 position)
-            : base(game, modelComponents, position, false)
+        Matrix world;
+        Model model;
+
+        public Waypoint(Game game, Model model, Vector3 position)
         {
             this.ID = IDCtr++;
             this.position = position;
+
+            this.world = this.world = Matrix.CreateTranslation(position);
+            this.model = model;
         }
 
-        public override void Draw(Camera camera)
+        public void Draw(Camera camera)
         {
-            Matrix[] transforms = new Matrix[modelComponents[0].Bones.Count];
-            modelComponents[0].CopyAbsoluteBoneTransformsTo(transforms);
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(transforms);
 
-            foreach (ModelMesh mesh in modelComponents[0].Meshes)
+            foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect be in mesh.Effects)
                 {

@@ -126,7 +126,8 @@ namespace coal_raider
             squad.setTarget(unit1);
             components.Add(squad);
 
-            grid = new SpatialHashGrid(map.size.X, map.size.Y, 2, map.size.X / 2, map.size.Y / 2);
+            float cellSize = 2.0f;
+            grid = new SpatialHashGrid(map.size.X * cellSize, map.size.Y * cellSize, cellSize, -map.size.X / 2, map.size.Y / 2);
             for (int i = 0; i < map.staticObjects.Count; ++i)
                 grid.insertStaticObject(map.staticObjects[i]);
             /*
@@ -229,9 +230,9 @@ namespace coal_raider
                         // Only update if the object is alive
                         if (o.isAlive)
                         {
-                            colliders = grid.getPotentialColliders(o);
-                            o.Update(gameTime, colliders, map.waypointList);
-                            colliders.Clear();
+                            //colliders = grid.getPotentialColliders(o);
+                            o.Update(gameTime, grid, map.waypointList);
+                            //colliders.Clear();
                         }
                         else
                         {

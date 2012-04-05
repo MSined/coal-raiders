@@ -96,7 +96,7 @@ namespace coal_raider
             return Enumerable.Reverse(d.Values).ToArray();
         }
 
-        public override void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList)
+        public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
         {
             updatePosition();
 
@@ -114,7 +114,7 @@ namespace coal_raider
             {
                 Vector3 newPos = anchor + Vector3.Transform(formationOffset[i], rotation);
                 unitList[i].setTarget(newPos, velocity);
-                unitList[i].Update(gameTime, colliders, waypointList);
+                unitList[i].Update(gameTime, grid, waypointList);
             }
 
         }

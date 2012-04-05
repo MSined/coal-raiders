@@ -140,6 +140,7 @@
     <Compile Include="ScreenManager\PhoneMenuScreen.cs" />
     <Compile Include="ScreenManager\PhonePauseScreen.cs" />
     <Compile Include="ScreenManager\PlayerIndexEventArgs.cs" />
+    <Compile Include="Tools\MultiMap.cs" />
     <Compile Include="Tools\SpatialHashGrid.cs" />
     <Compile Include="Tools\VertexElementExtractor.cs" />
     <Compile Include="Tools\Waypoint.cs" />
