@@ -53,7 +53,7 @@ namespace coal_raider
             int topHP = 200;
             int topSP = 20;
             float speed = 0.06f;
-            return new Unit(game, modelComponents, position, UnitType.Mage, topHP, topSP, speed, true);
+            return new Unit(game, modelComponents, position, UnitType.Warrior, topHP, topSP, speed, true);
         }
 
     }
