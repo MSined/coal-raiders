@@ -114,14 +114,15 @@ namespace coal_raider
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
 
-            Unit[] unitList = new Unit[5];
+            Unit[] unitList = new Unit[6];
             unitList[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
             unitList[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
             unitList[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
             unitList[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
             unitList[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(0, 0, 0), UnitType.Mage);
+            unitList[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
 
-            Squad squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pentagram);
+            Squad squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pyramid);
             squad.setTarget(unit1);
             components.Add(squad);
 

@@ -43,9 +43,9 @@ namespace coal_raider
         {
             int numUnitsInFormation = 5;
             Vector3[] formationOffset = {
-                                    new Vector3(0,0,1),
                                     new Vector3(-1,0,0),
                                     new Vector3(1,0,0),
+                                    new Vector3(0,0,1),
                                     new Vector3(-0.5f,0,-1),
                                     new Vector3(0.5f,0,-1)
                                     };
@@ -145,6 +145,5 @@ namespace coal_raider
             }
             throw new NotSupportedException();
         }
-        
     }
 }

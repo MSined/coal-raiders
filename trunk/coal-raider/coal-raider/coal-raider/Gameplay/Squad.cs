@@ -44,8 +44,56 @@ namespace coal_raider
 
         private Unit[] placeUnits(Unit[] uList)
         {
-            //Will need to palce units in array according to table with values for each unit type;
-            return uList;
+            Unit[] newList = new Unit[uList.Length];
+            for (int i = 0; i < newList.Length; ++i)
+            {
+                newList[i] = null;
+            }
+
+            uList = sortByAssignmentEase(uList);
+
+            foreach (Unit u in uList)
+            {
+                int index = 0;
+                int smallestCost = int.MaxValue;
+                for (int i = 0; i < newList.Length; ++i)
+                {
+                    if (newList[i] == null)
+                    {
+                        int newCost = SquadFactory.getSlotCost(u.type, formationSlotTypes[i]);
+                        if (newCost < smallestCost)
+                        {
+                            smallestCost = newCost;
+                            index = i;
+                        }
+
+                        if (newCost == 0)
+                            break;
+                    }
+                }
+
+                newList[index] = u;
+            }
+
+            return newList;
+        }
+
+        private Unit[] sortByAssignmentEase(Unit[] uList)
+        {
+            MultiMap<float, Unit> d = new MultiMap<float, Unit>();
+
+            foreach (Unit u in uList)
+            {
+                float ease = 0;
+                for (int i = 0; i < formationSlotTypes.Length; ++i)
+                {
+                    ease += 1 / (1 + SquadFactory.getSlotCost(u.type, formationSlotTypes[i]));
+                }
+
+                d.Add(ease, u);
+            }
+            
+            return Enumerable.Reverse(d.Values).ToArray();
         }
 
         public override void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList)
@@ -60,6 +108,7 @@ namespace coal_raider
 
             Matrix rotation = getRotationMatrix();
             Vector3 anchor = position + speed * velocity;
+            Random rand = new Random();
 
             for (int i=0; i < unitList.Length; ++i )
             {
