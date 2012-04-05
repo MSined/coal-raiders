@@ -27,9 +27,9 @@ namespace coal_raider
             protected set
             {
                 _position = value;
-                Vector3 center = bounds.Max - bounds.Min;
+                Vector3 center = (bounds.Max + bounds.Min)/2.0f;
                 Vector3 offset = position - center;
-                bounds = new BoundingBox(bounds.Max + offset, bounds.Min + offset);
+                bounds = new BoundingBox(bounds.Min + offset, bounds.Max + offset);
             }
         }
         static int objectIDCounter = 0;
@@ -41,15 +41,23 @@ namespace coal_raider
         {
             this.game = game;
             this.modelComponents = modelComponents;
+            if (modelComponents != null)
+            {
+                this.bounds = CreateBoundingBox(modelComponents[0]);
+            }
+            else
+            {
+                this.bounds = new BoundingBox();
+            }
+                
             this.world = Matrix.CreateTranslation(position);
-            this.bounds = bounds;
             this.position = position;
             this.isAlive = isAlive;
         }
 
         public virtual void Draw(Camera camera) { }
 
-        public virtual void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList) { }
+        public virtual void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList) { }
 
         private static BoundingBox CreateBoundingBox(Model model)
         {
@@ -85,10 +93,12 @@ namespace coal_raider
             Vector3[] transformedPositions = new Vector3[positions.Length];
             Vector3.Transform(positions, ref transform, transformedPositions);
 
+            /*
             for (int i = 0; i < transformedPositions.Length; i++)
             {
                 Console.WriteLine(" " + transformedPositions[i]);
             }
+            */
             return BoundingBox.CreateFromPoints(transformedPositions);
         }
     }

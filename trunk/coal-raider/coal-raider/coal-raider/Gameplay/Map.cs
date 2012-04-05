@@ -6,6 +6,7 @@ using System.IO;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Threading.Tasks;
 
 namespace coal_raider
 {
@@ -13,7 +14,7 @@ namespace coal_raider
     {
         private Game game;
         private Model model;
-        private Model[] waypointModel = new Model[1];
+        private Model waypointModel;
         protected Matrix world = Matrix.Identity;
         public Vector2 size { get; protected set; }
         public List<StaticObject> staticObjects { get; protected set; }
@@ -44,7 +45,7 @@ namespace coal_raider
             Model[] tree = new Model[1];
             tree[0] = modelComponents[2];
 
-            waypointModel[0] = modelComponents[3];
+            waypointModel = modelComponents[3];
 
             Model[][] modelArrays = {
                                         building,
@@ -115,9 +116,9 @@ namespace coal_raider
                                 continue;
                             }
                             mapBool[x, y] = false;
+
                             staticObjects.Add(new StaticObject(game, modelArrays[int.Parse(i)], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y)));
                         }
-                        
                     }
                 }
             }
@@ -180,12 +181,8 @@ namespace coal_raider
                     }
                 }
             }
-
-
-            
         }
-
-
+        
         public void Draw(Camera camera)
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];

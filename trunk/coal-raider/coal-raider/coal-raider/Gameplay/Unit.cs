@@ -44,7 +44,7 @@ namespace coal_raider
             this.speed = speed;
         }
 
-        public override void Update(GameTime gameTime, List<Object> colliders, List<Waypoint> waypointList)
+        public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
         {
             if (targetPosition != null)
             {
@@ -75,7 +75,7 @@ namespace coal_raider
             world = Matrix.CreateRotationY(-angle) * Matrix.CreateTranslation(position);
 
             //check collisions after moved
-            CheckCollisions(colliders);
+            CheckCollisions(grid.getPotentialColliders(this));
 
             checkIfDead();
 
@@ -161,20 +161,27 @@ namespace coal_raider
         {
             foreach (Object o in colliders)
             {
+
                 if (bounds.Intersects(o.bounds))
                 {
                     if (o is StaticObject || o is Unit)
                     {
                         //neutralize the Z movement if going in a collision by moving up/down
-                        if (position.X > o.bounds.Min.X && position.X < o.bounds.Max.X)
+                        if ((bounds.Max.X > o.bounds.Min.X && bounds.Max.X < o.bounds.Max.X) ||
+                            (bounds.Min.X > o.bounds.Min.X && bounds.Min.X < o.bounds.Max.X))
                         {
-                            position -= speed * new Vector3(0, 0, velocity.Z);
+                            Vector3 dir = o.position - position;
+                            dir.Normalize();
+                            position -= speed * new Vector3(0, 0, dir.Z);
                         }
 
                         //neutralize the X movement if going in a collision by moving left/right
-                        if (position.Z > o.bounds.Min.Z && position.Z < o.bounds.Max.Z)
+                        if ((bounds.Max.Z > o.bounds.Min.Z && bounds.Max.Z < o.bounds.Max.Z) ||
+                            (bounds.Min.Z > o.bounds.Min.Z && bounds.Min.Z < o.bounds.Max.Z))
                         {
-                            position -= speed * new Vector3(velocity.X, 0, 0);
+                            Vector3 dir = o.position - position;
+                            dir.Normalize();
+                            position -= speed * new Vector3(dir.X, 0, 0);
                         }
 
                         /*update bounds again to make sure Character does not get stuck
