@@ -55,6 +55,7 @@ namespace coal_raider
         Texture2D mDottedLine;
         Rectangle mSelectionBox;
 
+        List<Unit> testUnitList = new List<Unit>();
         #endregion
 
         #region Initialization
@@ -120,6 +121,21 @@ namespace coal_raider
 
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
+
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(i, 0, j), UnitType.Warrior));
+                }
+            }
+
+            foreach (Unit u in testUnitList)
+            {
+                //u.setBounds(new BoundingBox(u.position, new Vector3(u.position.X+1, 0f, u.position.Y+1)));
+                System.Diagnostics.Debug.WriteLine(u.bounds);
+                components.Add(u);
+            }
 
             Unit[] unitList = new Unit[6];
             unitList[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
@@ -319,17 +335,26 @@ namespace coal_raider
                 if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
                 {
                     //UNIT SELECTION CODE GOES HERE
-                    BoundingFrustum bFrustrum = camera.CreateFromRectangle(mSelectionBox, ScreenManager.Game);
 
+                    BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
+                    System.Diagnostics.Debug.WriteLine(mSelectionBox);
                     foreach (Unit u in squad.unitList)
                     {
                         if (u.bounds.Intersects(bFrustrum))
                         {
-                            System.Diagnostics.Debug.WriteLine("Unit Selected");
+                            //System.Diagnostics.Debug.WriteLine("Unit Selected");
                         }
                         
                     }
-                    System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
+                    //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
+                    foreach (Unit u in testUnitList)
+                    {
+                        if (bFrustrum.Intersects(u.bounds))
+                        {
+                            components.Remove(u);
+                        }
+
+                    }
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
                 }
