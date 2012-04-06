@@ -33,7 +33,7 @@ namespace coal_raider
         private Vector2 screenSizeOver2; // Should be Size technically, but we want floats.
         private Rectangle noActionRectangle;
         private const int MouseCameraBorder = 5; // Really, this should be 1.
-        
+
         public Camera(Game game, Vector3 pos /* in respect to player*/, Vector3 target, Vector3 up)
             : base(game)
         {
@@ -75,7 +75,7 @@ namespace coal_raider
             {
                 cameraTarget += msV;
             }
-            cameraPosition = cameraTarget + (Vector3.UnitZ * 2.2f) + cameraDistFromPlayer;            
+            cameraPosition = cameraTarget + (Vector3.UnitZ * 2.2f) + cameraDistFromPlayer;
 
             // Check for scroll wheel zooming
             // Camera moves along its direction matrix (where it is looking)
@@ -101,12 +101,12 @@ namespace coal_raider
             view = Matrix.CreateLookAt(cameraPosition, cameraPosition + cameraDirection, cameraUp);
         }
 
-        public bool inCamera(Vector3 target) 
+        public bool inCamera(Vector3 target)
         {
             if (target.X > cameraPosition.X - 25 &&
                 target.X < cameraPosition.X + 25 &&
                 target.Z > cameraPosition.Z - 25 &&
-                target.Z < cameraPosition.Z) 
+                target.Z < cameraPosition.Z)
             {
                 return true;
             }
@@ -158,5 +158,25 @@ namespace coal_raider
             return new BoundingFrustum(view * regionProjMatrix);
         }
 
+        public List<Unit> RectangleSelect(List<Unit> objectsList, Rectangle selectionRect, Game game)
+        {
+            Viewport viewport = game.GraphicsDevice.Viewport;
+            // Create a new list to return it
+            List<Unit> selectedObj = new List<Unit>();
+            foreach (Unit o in objectsList)
+            {
+                // Getting the 2D position of the object
+                Vector3 screenPos = viewport.Project(o.position, projection, view, Matrix.Identity);
+                // screenPos is window relative, we change it to be viewport relative
+                screenPos.X -= viewport.X;
+                screenPos.Y -= viewport.Y;
+                if (selectionRect.Contains((int)screenPos.X, (int)screenPos.Y))
+                {
+                    // Add object to selected objects list
+                    selectedObj.Add(o);
+                }
+            }
+            return selectedObj;
+        }
     }
 }

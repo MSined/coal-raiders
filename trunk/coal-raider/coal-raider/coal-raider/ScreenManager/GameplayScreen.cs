@@ -336,7 +336,7 @@ namespace coal_raider
                 {
                     //UNIT SELECTION CODE GOES HERE
 
-                    BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
+                    /*BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
                     System.Diagnostics.Debug.WriteLine(mSelectionBox);
                     foreach (Unit u in squad.unitList)
                     {
@@ -344,7 +344,6 @@ namespace coal_raider
                         {
                             //System.Diagnostics.Debug.WriteLine("Unit Selected");
                         }
-                        
                     }
                     //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
                     foreach (Unit u in testUnitList)
@@ -354,6 +353,12 @@ namespace coal_raider
                             components.Remove(u);
                         }
 
+                    }*/
+                    List<Unit> ul = camera.RectangleSelect(testUnitList, mSelectionBox, ScreenManager.Game);
+
+                    foreach (Unit u in ul) 
+                    {
+                        components.Remove(u);
                     }
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
@@ -474,7 +479,6 @@ namespace coal_raider
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
         }
-
 
         #endregion
     }
