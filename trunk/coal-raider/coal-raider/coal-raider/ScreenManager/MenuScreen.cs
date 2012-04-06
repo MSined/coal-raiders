@@ -120,6 +120,22 @@ namespace coal_raider
                     selectedEntry = 0;
             }
 
+
+
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && input.LastMouseState.LeftButton == ButtonState.Released)
+            {
+                int entryNum = 0;
+                foreach (MenuEntry entry in menuEntries)
+                {
+                    Rectangle entryPosition = new Rectangle((int)entry.Position.X, (int)entry.Position.Y, entry.GetWidth(this), entry.GetHeight(this));
+                    if (entryPosition.Contains(input.CurrentMouseState.X, input.CurrentMouseState.Y))
+                    {
+                        OnSelectEntry(entryNum, playerIndex);
+                    }
+                    entryNum++;
+                }
+            }
+
             if (menuSelect.Evaluate(input, ControllingPlayer, out playerIndex))
             {
                 OnSelectEntry(selectedEntry, playerIndex);

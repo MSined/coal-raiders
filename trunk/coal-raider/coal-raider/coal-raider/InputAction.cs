@@ -35,6 +35,8 @@ namespace coal_raider
         // by allowing us to map the appropriate delegates and invoke them, rather than having two separate code paths.
         private delegate bool ButtonPress(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex player);
         private delegate bool KeyPress(Keys key, PlayerIndex? controllingPlayer, out PlayerIndex player);
+        
+        private bool MousePress;
 
         /// <summary>
         /// Initializes a new InputAction.
@@ -65,6 +67,7 @@ namespace coal_raider
             // Figure out which delegate methods to map from the state which takes care of our "newPressOnly" logic
             ButtonPress buttonTest;
             KeyPress keyTest;
+
             if (newPressOnly)
             {
                 buttonTest = state.IsNewButtonPress;
