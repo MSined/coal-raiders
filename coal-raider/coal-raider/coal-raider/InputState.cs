@@ -31,7 +31,7 @@ namespace coal_raider
         public readonly GamePadState[] LastGamePadStates;
 
 #if !XBOX
-        MouseState CurrentMouseState, LastMouseState;
+        public MouseState CurrentMouseState, LastMouseState;
 #endif
 
         public readonly bool[] GamePadWasConnected;

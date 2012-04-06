@@ -50,6 +50,9 @@ namespace coal_raider
 
         Model floorModel, buildingModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage;
 
+        Texture2D mDottedLine;
+        Rectangle mSelectionBox;
+
         #endregion
 
         #region Initialization
@@ -93,6 +96,8 @@ namespace coal_raider
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
+            mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
+
             Model[] a = new Model[4];
             a[0] = floorModel;
             a[1] = buildingModel;
@@ -134,6 +139,8 @@ namespace coal_raider
             for (int i = 0; i < map.usableBuildings.Count; ++i)//for collisions
                 grid.insertStaticObject(map.usableBuildings[i]);
             */
+
+
 
             if (!instancePreserved)
             {
@@ -261,6 +268,8 @@ namespace coal_raider
             KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
             GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
 
+            MouseState mouseState = input.CurrentMouseState;
+
             // The game pauses either if the user presses the pause button, or if
             // they unplug the active gamepad. This requires us to keep track of
             // whether a gamepad was ever plugged in, because we don't want to pause
@@ -280,11 +289,99 @@ namespace coal_raider
             else
             {
                 /*----- INPUT HANDLING GOES HERE -----*/
+                if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && input.LastMouseState.LeftButton == ButtonState.Released)
+                {
+                    //System.Diagnostics.Debug.WriteLine("Mouse X: " + input.CurrentMouseState.X + " Mouse Y: " + input.CurrentMouseState.Y); 
+                    
+                }
 
+                //If the user has just clicked the Left mouse button, then set the start location for the Selection box
+                if (input.CurrentMouseState.LeftButton == ButtonState.Pressed & input.LastMouseState.LeftButton == ButtonState.Released)
+                {
+                    //Set the starting location for the selectiong box to the current location
+                    //where the Left button was initially clicked.
+                    mSelectionBox = new Rectangle(input.CurrentMouseState.X, input.CurrentMouseState.Y, 0, 0);
+                }
+
+                //If the user is still holding the Left button down, then continue to re-size the 
+                //selection square based on where the mouse has currently been moved to.
+                if (input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+                {
+                    //The starting location for the selection box remains the same, but increase (or decrease)
+                    //the size of the Width and Height but taking the current location of the mouse minus the
+                    //original starting location.
+                    mSelectionBox = new Rectangle(mSelectionBox.X, mSelectionBox.Y, input.CurrentMouseState.X - mSelectionBox.X, input.CurrentMouseState.Y - mSelectionBox.Y);
+                }
+
+                //If the user has released the left mouse button, then reset the selection square
+                if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
+                {
+
+
+                    //Reset the selection square to no position with no height and width
+                    mSelectionBox = new Rectangle(0, 0, 0, 0);
+                }
 
             }
         }
 
+        private void DrawHorizontalLine(int thePositionY)
+        {
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            //When the width is greater than 0, the user is selecting an area to the right of the starting point
+            if (mSelectionBox.Width > 0)
+            {
+                //Draw the line starting at the startring location and moving to the right
+                for (int aCounter = 0; aCounter <= mSelectionBox.Width - 10; aCounter += 10)
+                {
+                    if (mSelectionBox.Width - aCounter >= 0)
+                    {
+                        spriteBatch.Draw(mDottedLine, new Rectangle(mSelectionBox.X + aCounter, thePositionY, 10, 5), Color.White);
+                    }
+                }
+            }
+            //When the width is less than 0, the user is selecting an area to the left of the starting point
+            else if (mSelectionBox.Width < 0)
+            {
+                //Draw the line starting at the starting location and moving to the left
+                for (int aCounter = -10; aCounter >= mSelectionBox.Width; aCounter -= 10)
+                {
+                    if (mSelectionBox.Width - aCounter <= 0)
+                    {
+                        spriteBatch.Draw(mDottedLine, new Rectangle(mSelectionBox.X + aCounter, thePositionY, 10, 5), Color.White);
+                    }
+                }
+            }
+        }
+
+        private void DrawVerticalLine(int thePositionX)
+        {
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            //When the height is greater than 0, the user is selecting an area below the starting point
+            if (mSelectionBox.Height > 0)
+            {
+                //Draw the line starting at the starting loctino and moving down
+                for (int aCounter = -2; aCounter <= mSelectionBox.Height; aCounter += 10)
+                {
+                    if (mSelectionBox.Height - aCounter >= 0)
+                    {
+                        spriteBatch.Draw(mDottedLine, new Rectangle(thePositionX, mSelectionBox.Y + aCounter, 10, 5), new Rectangle(0, 0, mDottedLine.Width, mDottedLine.Height), Color.White, MathHelper.ToRadians(90), new Vector2(0, 0), SpriteEffects.None, 0);
+                    }
+                }
+            }
+            //When the height is less than 0, the user is selecting an area above the starting point
+            else if (mSelectionBox.Height < 0)
+            {
+                //Draw the line starting at the start location and moving up
+                for (int aCounter = 0; aCounter >= mSelectionBox.Height; aCounter -= 10)
+                {
+                    if (mSelectionBox.Height - aCounter <= 0)
+                    {
+                        spriteBatch.Draw(mDottedLine, new Rectangle(thePositionX - 10, mSelectionBox.Y + aCounter, 10, 5), Color.White);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Draws the gameplay screen.
@@ -321,6 +418,14 @@ namespace coal_raider
                     o.Draw(camera);
                 }
             }
+
+            //Draw the horizontal portions of the selection box 
+            DrawHorizontalLine(mSelectionBox.Y);
+            DrawHorizontalLine(mSelectionBox.Y + mSelectionBox.Height);
+
+            //Draw the verticla portions of the selection box 
+            DrawVerticalLine(mSelectionBox.X);
+            DrawVerticalLine(mSelectionBox.X + mSelectionBox.Width);
 
             spriteBatch.End();
 
