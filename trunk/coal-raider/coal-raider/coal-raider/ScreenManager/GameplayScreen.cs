@@ -354,12 +354,26 @@ namespace coal_raider
                         }
 
                     }*/
+
+                    if(mSelectionBox.Width < 0)
+                    {
+                        mSelectionBox.X += mSelectionBox.Width;
+                        mSelectionBox.Width = Math.Abs(mSelectionBox.Width);
+                    }
+
+                    if (mSelectionBox.Height < 0)
+                    {
+                        mSelectionBox.Y += mSelectionBox.Height;
+                        mSelectionBox.Height = Math.Abs(mSelectionBox.Height);
+                    }
+
                     List<Unit> ul = camera.RectangleSelect(testUnitList, mSelectionBox, ScreenManager.Game);
 
                     foreach (Unit u in ul) 
                     {
                         components.Remove(u);
                     }
+
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
                 }

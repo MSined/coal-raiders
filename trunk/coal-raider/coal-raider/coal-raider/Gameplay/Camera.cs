@@ -153,7 +153,7 @@ namespace coal_raider
             regionProjMatrix.M31 = (regionCenterScreen.X - (viewport.Width / 2f)) / ((float)source.Width / 2f);
 
             // M32 is vertical center. Notice that the screen has low Y on top, projection has low Y on bottom.
-            regionProjMatrix.M32 = -(regionCenterScreen.Y - (viewport.Height / 2f)) / ((float)source.Height / 2f);
+            regionProjMatrix.M33 = -(regionCenterScreen.Y - (viewport.Height / 2f)) / ((float)source.Height / 2f);
 
             return new BoundingFrustum(view * regionProjMatrix);
         }
