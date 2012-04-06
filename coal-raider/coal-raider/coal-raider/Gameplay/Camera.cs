@@ -128,7 +128,35 @@ namespace coal_raider
             mat.M41 = ((float)vp.Width - 2 * (float)rectangle.Center.X) * inverseWidth;
             mat.M42 = -((float)vp.Height - 2 * (float)rectangle.Center.Y) * inverseHeight;
 
-            return new BoundingFrustum(view * projection * mat);
-        }  
+            return new BoundingFrustum((view * projection * mat));
+        }
+
+        public BoundingFrustum UnprojectRectangle(Rectangle source, Game game)
+        {
+            //http://forums.create.msdn.com/forums/p/6690/35401.aspx , by "The Friggm"
+            // Many many thanks to him...
+
+            Viewport viewport = game.GraphicsDevice.Viewport;
+
+
+            // Point in screen space of the center of the region selected
+            Vector2 regionCenterScreen = new Vector2(source.Center.X, source.Center.Y);
+
+            // Generate the projection matrix for the screen region
+            Matrix regionProjMatrix = projection;
+
+            // Calculate the region dimensions in the projection matrix. M11 is inverse of width, M22 is inverse of height.
+            regionProjMatrix.M11 /= ((float)source.Width / (float)viewport.Width);
+            regionProjMatrix.M22 /= ((float)source.Height / (float)viewport.Height);
+
+            // Calculate the region center in the projection matrix. M31 is horizonatal center.
+            regionProjMatrix.M31 = (regionCenterScreen.X - (viewport.Width / 2f)) / ((float)source.Width / 2f);
+
+            // M32 is vertical center. Notice that the screen has low Y on top, projection has low Y on bottom.
+            regionProjMatrix.M32 = -(regionCenterScreen.Y - (viewport.Height / 2f)) / ((float)source.Height / 2f);
+
+            return new BoundingFrustum(view * regionProjMatrix);
+        }
+
     }
 }
