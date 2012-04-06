@@ -16,7 +16,7 @@ namespace coal_raider
         public Object target { get; protected set; }
         public float speed;
 
-        Unit[] unitList;
+        public Unit[] unitList;
 
         Vector3[] formationOffset;
         SquadSlotType[] formationSlotTypes;

@@ -112,5 +112,23 @@ namespace coal_raider
             }
             return false;
         }
+
+        public BoundingFrustum CreateFromRectangle(Rectangle rectangle, Game game)
+        {
+            var vp = game.GraphicsDevice.Viewport;
+
+            float inverseWidth = 1.0f / (float)rectangle.Width;
+            float inverseHeight = 1.0f / (float)rectangle.Height;
+
+            Matrix mat = Matrix.Identity;
+
+            mat.M11 = vp.Width * inverseWidth;
+            mat.M22 = vp.Height * inverseHeight;
+
+            mat.M41 = ((float)vp.Width - 2 * (float)rectangle.Center.X) * inverseWidth;
+            mat.M42 = -((float)vp.Height - 2 * (float)rectangle.Center.Y) * inverseHeight;
+
+            return new BoundingFrustum(view * projection * mat);
+        }  
     }
 }

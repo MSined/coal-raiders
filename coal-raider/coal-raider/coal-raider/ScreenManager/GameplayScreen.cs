@@ -48,6 +48,8 @@ namespace coal_raider
         Map map;
         Unit unit1;
 
+        Squad squad;
+
         Model floorModel, buildingModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage;
 
         Texture2D mDottedLine;
@@ -127,7 +129,7 @@ namespace coal_raider
             unitList[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(0, 0, 0), UnitType.Mage);
             unitList[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
 
-            Squad squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pyramid);
+            squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pyramid);
             squad.setTarget(unit1);
             components.Add(squad);
 
@@ -316,8 +318,18 @@ namespace coal_raider
                 //If the user has released the left mouse button, then reset the selection square
                 if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
                 {
+                    //UNIT SELECTION CODE GOES HERE
+                    BoundingFrustum bFrustrum = camera.CreateFromRectangle(mSelectionBox, ScreenManager.Game);
 
-
+                    foreach (Unit u in squad.unitList)
+                    {
+                        if (u.bounds.Intersects(bFrustrum))
+                        {
+                            System.Diagnostics.Debug.WriteLine("Unit Selected");
+                        }
+                        
+                    }
+                    System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
                 }
