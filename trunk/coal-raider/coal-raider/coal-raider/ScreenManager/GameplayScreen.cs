@@ -351,7 +351,7 @@ namespace coal_raider
                     //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
                     foreach (Unit u in testUnitList)
                     {
-                        if (bFrustrum.Intersects(u.bounds))
+                        if (bFrustrum.Contains(u.bounds) != ContainmentType.Disjoint)
                         {
                             components.Remove(u);
                         }
