@@ -37,21 +37,19 @@ namespace coal_raider
             this.graphics = graphics;
 
             // Set models
-            model = modelComponents[0];
-
-            Model[] building = new Model[1];
-            building[0] = modelComponents[1];
+            Model[] mountain = new Model[1];
+            mountain[0] = modelComponents[0];
 
             Model[] tree = new Model[1];
-            tree[0] = modelComponents[2];
+            tree[0] = modelComponents[1];
 
-            waypointModel = modelComponents[3];
+            waypointModel = modelComponents[2];
 
             Model[] ground = new Model[1];
-            ground[0] = modelComponents[4];
+            ground[0] = modelComponents[3];
 
             Model[][] modelArrays = {
-                                        building,
+                                        mountain,
                                         tree,
                                         ground
                                     };
@@ -189,23 +187,6 @@ namespace coal_raider
         
         public void Draw(Camera camera)
         {
-            //Matrix[] transforms = new Matrix[model.Bones.Count];
-            //model.CopyAbsoluteBoneTransformsTo(transforms);
-            //
-            //foreach (ModelMesh mesh in model.Meshes)
-            //{
-            //    foreach (BasicEffect be in mesh.Effects)
-            //    {
-            //        be.EnableDefaultLighting();
-            //        be.SpecularPower = 10f;
-            //        be.Projection = camera.projection;
-            //        be.View = camera.view;
-            //        be.World = world * mesh.ParentBone.Transform;
-            //    }
-            //
-            //    mesh.Draw();
-            //}
-
             foreach (StaticObject so in staticObjects)
             {
                 if (camera.inView(so))

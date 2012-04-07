@@ -139,7 +139,7 @@ namespace coal_raider
             armWorld = Matrix.CreateRotationX(MathHelper.ToRadians(armRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(armPos);
 
             // Set leg position and orientation
-            if (moving)
+            if (!dontMove)
             {
                 if (leftLegMoveForward)
                 {
