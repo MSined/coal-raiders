@@ -179,10 +179,77 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\mountainTexture2.png">
-      <Name>mountainTexture2</Name>
+    <Compile Include="Textures\groundTexture.png">
+      <Name>groundTexture</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\mageArmTexture.png">
+      <Name>mageArmTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\mageLeftLegTexture.png">
+      <Name>mageLeftLegTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\mageRightLegTexture.png">
+      <Name>mageRightLegTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\mageTorsoTexture.png">
+      <Name>mageTorsoTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\rangerArmTexture.png">
+      <Name>rangerArmTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\rangerLeftLegTexture.png">
+      <Name>rangerLeftLegTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\rangerRightLegTexture.png">
+      <Name>rangerRightLegTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\rangerTorsoTexture.png">
+      <Name>rangerTorsoTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\warriorArmTexture.png">
+      <Name>warriorArmTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\warriorLeftLegTexture.png">
+      <Name>warriorLeftLegTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\warriorRightLegTexture.png">
+      <Name>warriorRightLegTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\warriorTorsoTexture.png">
+      <Name>warriorTorsoTexture</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\trees.x">
+      <Name>trees</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
