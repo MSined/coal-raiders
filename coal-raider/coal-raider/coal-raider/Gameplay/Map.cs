@@ -47,9 +47,13 @@ namespace coal_raider
 
             waypointModel = modelComponents[3];
 
+            Model[] ground = new Model[1];
+            ground[0] = modelComponents[4];
+
             Model[][] modelArrays = {
                                         building,
-                                        tree
+                                        tree,
+                                        ground
                                     };
 
             staticObjects = new List<StaticObject>();
@@ -112,12 +116,12 @@ namespace coal_raider
                             if (i.Equals("-"))
                             {
                                 mapBool[x, y] = true;
-                                ++x;
+                                staticObjects.Add(new StaticObject(game, modelArrays[2], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), false));
                                 continue;
                             }
                             mapBool[x, y] = false;
 
-                            staticObjects.Add(new StaticObject(game, modelArrays[int.Parse(i)], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y)));
+                            staticObjects.Add(new StaticObject(game, modelArrays[int.Parse(i)], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), true));
                         }
                     }
                 }
@@ -185,22 +189,22 @@ namespace coal_raider
         
         public void Draw(Camera camera)
         {
-            Matrix[] transforms = new Matrix[model.Bones.Count];
-            model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                foreach (BasicEffect be in mesh.Effects)
-                {
-                    be.EnableDefaultLighting();
-                    be.SpecularPower = 10f;
-                    be.Projection = camera.projection;
-                    be.View = camera.view;
-                    be.World = world * mesh.ParentBone.Transform;
-                }
-
-                mesh.Draw();
-            }
+            //Matrix[] transforms = new Matrix[model.Bones.Count];
+            //model.CopyAbsoluteBoneTransformsTo(transforms);
+            //
+            //foreach (ModelMesh mesh in model.Meshes)
+            //{
+            //    foreach (BasicEffect be in mesh.Effects)
+            //    {
+            //        be.EnableDefaultLighting();
+            //        be.SpecularPower = 10f;
+            //        be.Projection = camera.projection;
+            //        be.View = camera.view;
+            //        be.World = world * mesh.ParentBone.Transform;
+            //    }
+            //
+            //    mesh.Draw();
+            //}
 
             foreach (StaticObject so in staticObjects)
             {

@@ -36,7 +36,9 @@ namespace coal_raider
         public int objectID = objectIDCounter++;
         public int[] cellIDs = { -1, -1, -1, -1 };
 
-        public Object(Game game, Model[] modelComponents, Vector3 position, bool isAlive)
+        public bool collideable;
+
+        public Object(Game game, Model[] modelComponents, Vector3 position, bool isAlive, bool canCollide)
             : base(game)
         {
             this.game = game;
@@ -53,6 +55,8 @@ namespace coal_raider
             this.world = Matrix.CreateTranslation(position);
             this.position = position;
             this.isAlive = isAlive;
+
+            this.collideable = canCollide;
         }
 
         public virtual void Draw(Camera camera) { }

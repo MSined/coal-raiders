@@ -12,8 +12,8 @@ namespace coal_raider
     {
         public Model model { get; protected set; }
 
-        public StaticObject(Game game, Model[] modelComponents, Vector3 position)
-            : base(game, modelComponents, position, true)
+        public StaticObject(Game game, Model[] modelComponents, Vector3 position, bool canCollide)
+            : base(game, modelComponents, position, true, canCollide)
         {
             model = modelComponents[0];
             world = /*Matrix.CreateRotationY(MathHelper.ToRadians(angle)) * */ Matrix.CreateTranslation(position);
