@@ -17,10 +17,20 @@ namespace coal_raider
         public int topSP;
         public int sp { get; protected set; }
         public float speed;
+        public float attackRange;
 
         private float spRecoverTimer = 0f;
         private float spRecoverInterval = 1000f;
         private int spRecoverRate = 5;
+
+        private float armRotation = 0, leftLegRotation = 0, rightLegRotation = 0;
+        private bool armMoveUp = true, leftLegMoveForward = true;
+        private Matrix armWorld = Matrix.Identity, leftLegWorld = Matrix.Identity, rightLegWorld = Matrix.Identity;
+        private Vector3 unitDir = Vector3.Zero;
+        private Matrix meshWorld;
+        public bool attacking = true, moving = true;
+        private Quaternion q;
+        private Vector3 s, t;
 
         protected int[] attributes { get; private set; }
 
@@ -30,7 +40,7 @@ namespace coal_raider
 
         // Characters initial position is defined by the spawnpoint ther are associated with
         public Unit(Game game, Model[] modelComponents, Vector3 position,
-            UnitType type, int topHP, int topSP, float speed, bool isAlive)
+            UnitType type, int topHP, int topSP, float speed, bool isAlive, float attackRange)
             : base(game, modelComponents, position, isAlive)
         {
             this.type = type;
@@ -42,10 +52,13 @@ namespace coal_raider
             this.sp = topSP;
 
             this.speed = speed;
+
+            this.attackRange = attackRange;
         }
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
         {
+
             if (targetPosition != null)
             {
                 //moveToTargetPosition(waypointList);
@@ -79,17 +92,78 @@ namespace coal_raider
 
             checkIfDead();
 
-            /*
-            if (this is Enemy)
-                checkBox.Update(gameTime, colliders, cameraTarget);
-            */
-
             spRecoverTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (sp < topSP && spRecoverTimer > spRecoverInterval)
             {
                 sp += spRecoverRate;
                 spRecoverTimer = 0;
             }
+
+            // Get world components for arm position calculations
+            world.Decompose(out s, out q, out t);
+
+            // Check if close enough to attack
+            if (attacking && targetPosition != null && ((Vector3)targetPosition - this.position).LengthSquared() < attackRange)
+            {
+                if (type == UnitType.Warrior)
+                {
+                    if (armMoveUp)
+                    {
+                        armRotation -= 10f;
+                        if (armRotation < -80)
+                            armMoveUp = false;
+                    }
+                    else
+                    {
+                        armRotation += 10f;
+                        if (armRotation > 15)
+                            armMoveUp = true;
+                    }
+                }
+
+                else if (type == UnitType.Mage)
+                {
+                    if (armMoveUp)
+                    {
+                        armRotation -= 10f;
+                        if (armRotation < -80)
+                            armMoveUp = false;
+                    }
+                    else
+                    {
+                        armRotation += 10f;
+                        if (armRotation > 15)
+                            armMoveUp = true;
+                    }
+                }
+            }
+            // Set arm position and orientation
+            Vector3 armPos = t;
+            armPos.Y += 1.4040f;
+            armWorld = Matrix.CreateRotationX(MathHelper.ToRadians(armRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(armPos);
+
+            // Set leg position and orientation
+            if (moving)
+            {
+                if (leftLegMoveForward)
+                {
+                    leftLegRotation -= 5f;
+                    rightLegRotation += 5f;
+                    if (leftLegRotation < -30)
+                        leftLegMoveForward = false;
+                }
+                else
+                {
+                    leftLegRotation += 5f;
+                    rightLegRotation -= 5f;
+                    if (leftLegRotation > 30)
+                        leftLegMoveForward = true;
+                }
+            }
+            Vector3 legPos = t;
+            legPos.Y += 0.8935f;
+            leftLegWorld = Matrix.CreateRotationX(MathHelper.ToRadians(leftLegRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(legPos);
+            rightLegWorld = Matrix.CreateRotationX(MathHelper.ToRadians(rightLegRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(legPos);
 
             //base.Update(gameTime, colliders, cameraTarget, waypointList);
         }
@@ -117,15 +191,26 @@ namespace coal_raider
                 Matrix[] transforms = new Matrix[modelComponents[0].Bones.Count];
                 modelComponents[0].CopyAbsoluteBoneTransformsTo(transforms);
 
+                int meshNum = 0;
                 foreach (ModelMesh mesh in modelComponents[0].Meshes)
                 {
+                    if (meshNum == 3)
+                        meshWorld = armWorld;
+                    else if (meshNum == 0)
+                        meshWorld = leftLegWorld;
+                    else if (meshNum == 2)
+                        meshWorld = rightLegWorld;
+                    else
+                        meshWorld = world;
+
+                    ++meshNum;
                     foreach (BasicEffect be in mesh.Effects)
                     {
                         be.EnableDefaultLighting();
                         be.SpecularPower = 10f;
                         be.Projection = camera.projection;
                         be.View = camera.view;
-                        be.World = world * mesh.ParentBone.Transform;
+                        be.World = meshWorld * mesh.ParentBone.Transform;
                     }
                     mesh.Draw();
                 }

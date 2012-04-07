@@ -37,7 +37,7 @@ namespace coal_raider
             int topHP = 100;
             int topSP = 100;
             float speed = 0.05f;
-            return new Unit(game, modelComponents, position, UnitType.Mage, topHP, topSP, speed, true);
+            return new Unit(game, modelComponents, position, UnitType.Mage, topHP, topSP, speed, true, 20);
         }
 
         private static Unit createRanger(Game game, Model[] modelComponents, Vector3 position)
@@ -45,7 +45,7 @@ namespace coal_raider
             int topHP = 100;
             int topSP = 50;
             float speed = 0.07f;
-            return new Unit(game, modelComponents, position, UnitType.Ranger, topHP, topSP, speed, true);
+            return new Unit(game, modelComponents, position, UnitType.Ranger, topHP, topSP, speed, true, 40);
         }
 
         private static Unit createWarrior(Game game, Model[] modelComponents, Vector3 position)
@@ -53,7 +53,7 @@ namespace coal_raider
             int topHP = 200;
             int topSP = 20;
             float speed = 0.06f;
-            return new Unit(game, modelComponents, position, UnitType.Warrior, topHP, topSP, speed, true);
+            return new Unit(game, modelComponents, position, UnitType.Warrior, topHP, topSP, speed, true, 10);
         }
 
     }
