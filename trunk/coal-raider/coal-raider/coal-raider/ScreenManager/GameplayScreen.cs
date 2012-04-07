@@ -52,7 +52,7 @@ namespace coal_raider
 
         Model floorModel, buildingModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage;
 
-        Texture2D mDottedLine;
+        Texture2D mDottedLine, userInterface;
         Rectangle mSelectionBox;
 
         List<Unit> testUnitList = new List<Unit>();
@@ -100,6 +100,8 @@ namespace coal_raider
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
+
+            userInterface = ScreenManager.Game.Content.Load<Texture2D>("UI");
 
             Model[] a = new Model[4];
             a[0] = floorModel;
@@ -492,6 +494,8 @@ namespace coal_raider
                     o.Draw(camera);
                 }
             }
+
+            spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), Color.White);
 
 
             DrawSelectionBox(mSelectionBox);
