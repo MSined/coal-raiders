@@ -125,7 +125,24 @@ namespace coal_raider
 
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
-            
+
+            #region TESTUNITREGION
+
+            //for (int i = 0; i < 15; i++)
+            //{
+            //    for (int j = 0; j < 15; j++)
+            //    {
+            //        testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(i, 0, j), UnitType.Warrior));
+            //    }
+            //}
+
+            //foreach (Unit u in testUnitList)
+            //{
+            //    components.Add(u);
+            //}
+
+            #endregion
+
             Unit[] unitList = new Unit[6];
             unitList[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
             unitList[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
@@ -329,12 +346,24 @@ namespace coal_raider
                         bfRenderer.Frustum = bFrustrum;
                         bfRenderer.Update();
 
-                        System.Diagnostics.Debug.WriteLine(mSelectionBox);
-
-                        //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
+                        //THIS FOREACH LOOP IS FOR DEBUGGING/IMPLEMENTATION PURPOSES OF DRAG SELECTION WHEN TIME NEEDED INSERT SQUAD SELECTION CODE HERE
                         foreach (Unit u in testUnitList)
                         {
                             if (bFrustrum.Contains(u.bounds) != ContainmentType.Disjoint)
+                            {
+                                components.Remove(u);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        Ray singleClick = camera.GetMouseRay(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), ScreenManager.Game);
+
+                        //THIS FOREACH LOOP IS FOR DEBUGGING/IMPLEMENTATION PURPOSES OF SINGLE CLICK SELECTION WHEN TIME NEEDED INSERT SQUAD SELECTION CODE HERE
+                        foreach (Unit u in testUnitList)
+                        {
+                            if (singleClick.Intersects(u.bounds).HasValue)
                             {
                                 components.Remove(u);
                             }

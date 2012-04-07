@@ -106,6 +106,21 @@ namespace coal_raider
             return new BoundingFrustum(view * projection).Intersects(target.bounds);
         }
 
+        public Ray GetMouseRay(Vector2 mousePosition, Game game)
+        {
+            Vector3 nearPoint = new Vector3(mousePosition, 0);
+            Vector3 farPoint = new Vector3(mousePosition, 1);
+
+            nearPoint = game.GraphicsDevice.Viewport.Unproject(nearPoint, projection, view, Matrix.Identity);
+            farPoint = game.GraphicsDevice.Viewport.Unproject(farPoint, projection, view, Matrix.Identity);
+
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
+        }
+
+
         public BoundingFrustum UnprojectRectangle(Rectangle source, Game game)
         {
             //http://forums.create.msdn.com/forums/p/6690/35401.aspx , by "The Friggm"
