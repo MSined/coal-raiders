@@ -100,7 +100,7 @@ namespace coal_raider
             unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\warrior");
             unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\ranger");
             unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\mage");
-            selectionRingModel = ScreenManager.Game.Content.Load<Model>(@"Models\trees");
+            selectionRingModel = ScreenManager.Game.Content.Load<Model>(@"Models\SelectionRing");
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
@@ -535,7 +535,7 @@ namespace coal_raider
                 {
                     foreach (BasicEffect be in mesh.Effects)
                     {
-                        be.EnableDefaultLighting();
+                        //be.EnableDefaultLighting();
                         be.Projection = camera.projection;
                         be.View = camera.view;
                         be.World = pos * mesh.ParentBone.Transform;
