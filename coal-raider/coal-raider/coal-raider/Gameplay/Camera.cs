@@ -138,7 +138,6 @@ namespace coal_raider
 
             Viewport viewport = game.GraphicsDevice.Viewport;
 
-
             // Point in screen space of the center of the region selected
             Vector2 regionCenterScreen = new Vector2(source.Center.X, source.Center.Y);
 
@@ -161,16 +160,24 @@ namespace coal_raider
         public List<Unit> RectangleSelect(List<Unit> objectsList, Rectangle selectionRect, Game game)
         {
             Viewport viewport = game.GraphicsDevice.Viewport;
+
             // Create a new list to return it
             List<Unit> selectedObj = new List<Unit>();
             foreach (Unit o in objectsList)
             {
                 // Getting the 2D position of the object
-                Vector3 screenPos = viewport.Project(o.position, projection, view, Matrix.Identity);
+                Vector3 screenMinPos = viewport.Project(o.bounds.Min, projection, view, Matrix.Identity);
+                Vector3 screenMaxPos = viewport.Project(o.bounds.Max, projection, view, Matrix.Identity);
+                
                 // screenPos is window relative, we change it to be viewport relative
-                screenPos.X -= viewport.X;
-                screenPos.Y -= viewport.Y;
-                if (selectionRect.Contains((int)screenPos.X, (int)screenPos.Y))
+                screenMinPos.X -= viewport.X;
+                screenMinPos.Y -= viewport.Y;
+                screenMaxPos.X -= viewport.X;
+                screenMaxPos.Y -= viewport.Y;
+
+                Rectangle objRect = new Rectangle((int)screenMinPos.X, (int)screenMinPos.Y, (int)(screenMaxPos.X - screenMinPos.X), (int)(screenMaxPos.Y - screenMinPos.Y));
+
+                if (selectionRect.Intersects(objRect))
                 {
                     // Add object to selected objects list
                     selectedObj.Add(o);
