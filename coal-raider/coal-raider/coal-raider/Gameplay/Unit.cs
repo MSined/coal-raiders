@@ -23,7 +23,7 @@ namespace coal_raider
         private float spRecoverInterval = 1000f;
         private int spRecoverRate = 5;
 
-        private float armRotation = 0, leftLegRotation = 0, rightLegRotation = 0;
+        private float armRotation = 0, leftLegRotation = 0, rightLegRotation = 0, attackRate = 0, attackTimer = 0, armUpAngle = 0, armDownAngle = 0, armRotationSpeed = 0;
         private bool armMoveUp = true, leftLegMoveForward = true;
         private Matrix armWorld = Matrix.Identity, leftLegWorld = Matrix.Identity, rightLegWorld = Matrix.Identity;
         private Vector3 unitDir = Vector3.Zero;
@@ -54,6 +54,31 @@ namespace coal_raider
             this.speed = speed;
 
             this.attackRange = attackRange;
+
+            if (this.type == UnitType.Mage)
+            {
+                armUpAngle = -80f;
+                armDownAngle = 15f;
+                armRotationSpeed = 10f;
+                // Put in milliseconds
+                attackRate = 2000;
+            }
+            else if (this.type == UnitType.Ranger)
+            {
+                armUpAngle = -30f;
+                armDownAngle = 0f;
+                armRotationSpeed = 10f;
+                // Put in milliseconds
+                attackRate = 1000;
+            }
+            else if (this.type == UnitType.Warrior)
+            {
+                armUpAngle = -80f;
+                armDownAngle = 15f;
+                armRotationSpeed = 10f;
+                // Put in milliseconds
+                attackRate = 300f;
+            }
         }
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
@@ -105,35 +130,23 @@ namespace coal_raider
             // Check if close enough to attack
             if (attacking && targetPosition != null && ((Vector3)targetPosition - this.position).LengthSquared() < attackRange)
             {
-                if (type == UnitType.Warrior)
+                attackTimer += gameTime.ElapsedGameTime.Milliseconds;
+                if (attackTimer >= attackRate)
                 {
                     if (armMoveUp)
                     {
-                        armRotation -= 10f;
-                        if (armRotation < -80)
-                            armMoveUp = false;
+                        armRotation -= armRotationSpeed;
+                        if (armRotation < armUpAngle)
+                           armMoveUp = false;
                     }
                     else
                     {
-                        armRotation += 10f;
-                        if (armRotation > 15)
+                        armRotation += armRotationSpeed;
+                        if (armRotation > armDownAngle)
+                        {
                             armMoveUp = true;
-                    }
-                }
-
-                else if (type == UnitType.Mage)
-                {
-                    if (armMoveUp)
-                    {
-                        armRotation -= 10f;
-                        if (armRotation < -80)
-                            armMoveUp = false;
-                    }
-                    else
-                    {
-                        armRotation += 10f;
-                        if (armRotation > 15)
-                            armMoveUp = true;
+                            attackTimer = 0;
+                        }
                     }
                 }
             }
