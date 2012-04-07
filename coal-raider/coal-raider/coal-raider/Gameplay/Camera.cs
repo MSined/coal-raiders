@@ -48,7 +48,7 @@ namespace coal_raider
             projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
                                                              (float)Game.Window.ClientBounds.Width /
                                                              (float)Game.Window.ClientBounds.Height,
-                                                             1, 1000);
+                                                             0.01f, 1000);
             origPos = pos;
             origTarget = target;
             origUp = up;
