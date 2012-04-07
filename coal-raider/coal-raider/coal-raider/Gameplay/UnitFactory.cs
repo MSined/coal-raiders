@@ -23,11 +23,11 @@ namespace coal_raider
             switch(type)
             {
                 case UnitType.Mage:
-                    return createMage(game, modelComponents, position, -80, 15, 10, 2000, 25);
+                    return createMage(game, modelComponents, position, -80f, 15f, 10f, 25f, 2000f);
                 case UnitType.Ranger:
-                    return createRanger(game, modelComponents, position, -30, 0, 10, 1000, 40);
+                    return createRanger(game, modelComponents, position, -30f, 0f, 10f, 40f, 1000f);
                 case UnitType.Warrior:
-                    return createWarrior(game, modelComponents, position, -80, 15, 10, 300, 1.5f);
+                    return createWarrior(game, modelComponents, position, -80f, 15f, 10f, 1.5f, 300f);
             }
             return null;
         }
