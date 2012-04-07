@@ -13,7 +13,6 @@ namespace coal_raider
     class Map : Microsoft.Xna.Framework.GameComponent
     {
         private Game game;
-        private Model model;
         private Model waypointModel;
         protected Matrix world = Matrix.Identity;
         public Vector2 size { get; protected set; }

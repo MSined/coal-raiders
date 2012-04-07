@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 namespace coal_raider
 {
     class SpatialHashGrid
@@ -275,6 +278,62 @@ namespace coal_raider
             #endregion
 
             return cellIDs;
+        }
+
+        public List<Object> getAttackBoxColliders(BoundingBox bb)
+        {
+            // cellID corresponding to lower left corner of bounds
+            // Uses the worldLeftX and worldBottomY to create a 3D offset relative to the maps position
+            int x1 = (int)(Math.Floor(bb.Min.X / cellSize) - worldLeftX);
+            int y1 = (int)(Math.Floor(bb.Min.Z / cellSize) + worldBottomY);
+            // cellID corresponding to upper right corner of bounds
+            // Uses the worldLeftX and worldBottomY to create a 3D offset relative to the maps position
+            int x2 = (int)(Math.Floor(bb.Max.X / cellSize) - worldLeftX);
+            int y2 = (int)(Math.Floor(bb.Max.Z / cellSize) + worldBottomY);
+
+            // The previous gets the top left and bottom right corner cell locations of
+            // the passed bounding box
+
+            // The following will calculate all cell IDs that are contained in that 2D range
+            List<int> cellIDs = new List<int>();
+            // Check these values, from y1 to y2, it may be ++ and not --
+            // Consequently the comparison operator as well
+            for(int i = x1; i < x2; ++i)
+            {
+                for (int j = y1; j > y2; --j)
+                {
+                    cellIDs.Add(i + j * cellsPerRow);
+                }
+            }
+
+            // Get the objects that are within that range of cells
+            foundObjects.Clear();
+            int index = 0;
+            int cellID = -1;
+            while (index <= 3 && (cellID = cellIDs[index]) != -1)
+            {
+                int len = dynamicCells[cellID].Count;
+                for (int j = 0; j < len; ++j)
+                {
+                    // Get all objects that are part in a particular cell
+                    Object collider = dynamicCells[cellID].ElementAt<Object>(j);
+                    // If the object is already in the list, don't include it
+                    // Also make sure the collider is no itself!!
+                    foundObjects.Add(collider);
+                }
+
+                len = staticCells[cellID].Count;
+                for (int j = 0; j < len; ++j)
+                {
+                    // Get all objects that are part in a particular cell
+                    Object collider = staticCells[cellID].ElementAt<Object>(j);
+                    // If the object is already in the list, don't include it
+                    // Also make sure the collider is no itself!!
+                    foundObjects.Add(collider);
+                }
+                ++index;
+            }
+            return foundObjects;
         }
     }
 }
