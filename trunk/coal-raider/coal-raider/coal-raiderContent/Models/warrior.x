@@ -5,28 +5,28 @@ xof 0303txt 0064
 		1.0;
 			1.0; 1.0; 1.0;;
 			0.0; 0.0; 0.0;;
-			TextureFilename { "c:/Users/Nicholas/Desktop/School Related Projects/Coal Raiders/coal-raider/coal-raider/coal-raiderContent/Models/warriorArmTexture.png"; }
+			TextureFilename { "../Textures/warriorArmTexture.png"; }
 		}
 		Material cube2_sep37_auv {
 			1.0; 1.0; 1.0; 1.0;;
 		1.0;
 			1.0; 1.0; 1.0;;
 			0.0; 0.0; 0.0;;
-			TextureFilename { "c:/Users/Nicholas/Desktop/School Related Projects/Coal Raiders/coal-raider/coal-raider/coal-raiderContent/Models/warriorRightLegTexture.png"; }
+			TextureFilename { "../Textures/warriorRightLegTexture.png"; }
 		}
 		Material cube2_sep61_auv {
 			1.0; 1.0; 1.0; 1.0;;
 		1.0;
 			1.0; 1.0; 1.0;;
 			0.0; 0.0; 0.0;;
-			TextureFilename { "c:/Users/Nicholas/Desktop/School Related Projects/Coal Raiders/coal-raider/coal-raider/coal-raiderContent/Models/warriorTorsoTexture.png"; }
+			TextureFilename { "../Textures/warriorTorsoTexture.png"; }
 		}
 		Material cube2_sep66_auv {
 			1.0; 1.0; 1.0; 1.0;;
 		1.0;
 			1.0; 1.0; 1.0;;
 			0.0; 0.0; 0.0;;
-			TextureFilename { "c:/Users/Nicholas/Desktop/School Related Projects/Coal Raiders/coal-raider/coal-raider/coal-raiderContent/Models/warriorLeftLegTexture.png"; }
+			TextureFilename { "../Textures/warriorLeftLegTexture.png"; }
 		}
 Frame cube2_sep66 {
 	Mesh {

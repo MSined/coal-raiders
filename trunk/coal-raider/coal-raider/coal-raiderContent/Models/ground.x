@@ -5,7 +5,7 @@ xof 0303txt 0064
 		1.0;
 			1.0; 1.0; 1.0;;
 			0.0; 0.0; 0.0;;
-			TextureFilename { "c:/Users/Nicholas/Desktop/School Related Projects/Coal Raiders/coal-raider/coal-raider/coal-raiderContent/Models/cube2_auv.png"; }
+			TextureFilename { "../Textures/groundTexture.png"; }
 		}
 		Material default {
 			0.7898538076923077; 0.8133333333333334; 0.6940444444444445; 1.0;;
