@@ -44,7 +44,7 @@ namespace coal_raider
         InputAction pauseAction;
         /*---- End Original GameplayScreen Fields -----*/
 
-        const bool DEBUG = true;
+        const bool DEBUG = false;
 
         Camera camera;
         Map map;
@@ -388,7 +388,7 @@ namespace coal_raider
 
         private void DrawSelectionBox(Rectangle box)
         {
-            int spacing = 7;
+            int spacing = 10;
             Vector2 dashSize = new Vector2(5, 2); //Length, thickness
 
             //Draw the horizontal portions of the selection box 
@@ -449,11 +449,11 @@ namespace coal_raider
             else if (length < 0)
             {
                 //Draw the line starting at the start location and moving up
-                for (int aCounter = 0; aCounter >= length; aCounter -= spacing)
+                for (int aCounter = -(int)dashSize.X; aCounter >= length; aCounter -= spacing)
                 {
                     if (length - aCounter <= 0)
                     {
-                        spriteBatch.Draw(mDottedLine, new Rectangle(xCoord - (int)dashSize.X, yCoord + aCounter, (int)dashSize.X, (int)dashSize.Y), Color.White);
+                        spriteBatch.Draw(mDottedLine, new Rectangle(xCoord, yCoord + aCounter, (int)dashSize.X, (int)dashSize.Y), new Rectangle(0, 0, mDottedLine.Width, mDottedLine.Height), Color.White, MathHelper.ToRadians(90), new Vector2(0, 0), SpriteEffects.None, 0);
                     }
                 }
             }
