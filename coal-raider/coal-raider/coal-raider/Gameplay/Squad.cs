@@ -11,7 +11,7 @@ namespace coal_raider
 {
     class Squad : NavigatingObject
     {
-        private int numUnitsInFormation = 5;
+        private int numUnitsInFormation;
 
         public Object target { get; protected set; }
         public float speed;

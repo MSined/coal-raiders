@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using System.Diagnostics;
 
 namespace coal_raider
 {
@@ -113,12 +114,14 @@ namespace coal_raider
 
         #region Update & Draw
 
+        [Conditional("DEBUG")]
         public void Update()
         {
             UpdateCorners();
             vertexBuffer.SetData(verts);
         }
 
+        [Conditional("DEBUG")]
         protected void UpdateCorners()
         {
             frustum.GetCorners(corners);
@@ -128,6 +131,7 @@ namespace coal_raider
             }
         }
 
+        [Conditional("DEBUG")]
         public void Draw(Camera camera)
         {
             effect.Projection = camera.projection;

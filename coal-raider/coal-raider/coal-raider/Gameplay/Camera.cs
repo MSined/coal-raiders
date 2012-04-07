@@ -106,29 +106,10 @@ namespace coal_raider
             return new BoundingFrustum(view * projection).Intersects(target.bounds);
         }
 
-        public BoundingFrustum CreateFromRectangle(Rectangle rectangle, Game game)
-        {
-            var vp = game.GraphicsDevice.Viewport;
-
-            float inverseWidth = 1.0f / (float)rectangle.Width;
-            float inverseHeight = 1.0f / (float)rectangle.Height;
-
-            Matrix mat = Matrix.Identity;
-
-            mat.M11 = vp.Width * inverseWidth;
-            mat.M22 = vp.Height * inverseHeight;
-
-            mat.M41 = ((float)vp.Width - 2 * (float)rectangle.Center.X) * inverseWidth;
-            mat.M42 = -((float)vp.Height - 2 * (float)rectangle.Center.Y) * inverseHeight;
-
-            return new BoundingFrustum((view * projection * mat));
-        }
-
         public BoundingFrustum UnprojectRectangle(Rectangle source, Game game)
         {
             //http://forums.create.msdn.com/forums/p/6690/35401.aspx , by "The Friggm"
             // Many many thanks to him...
-
 
             Viewport viewport = game.GraphicsDevice.Viewport;
 
@@ -149,35 +130,6 @@ namespace coal_raider
             regionProjMatrix.M32 = -(regionCenterScreen.Y - (viewport.Height / 2f)) / ((float)source.Height / 2f);
 
             return new BoundingFrustum(view * regionProjMatrix);
-        }
-
-        public List<Unit> RectangleSelect(List<Unit> objectsList, Rectangle selectionRect, Game game)
-        {
-            Viewport viewport = game.GraphicsDevice.Viewport;
-
-            // Create a new list to return it
-            List<Unit> selectedObj = new List<Unit>();
-            foreach (Unit o in objectsList)
-            {
-                // Getting the 2D position of the object
-                Vector3 screenMinPos = viewport.Project(o.bounds.Min, projection, view, Matrix.Identity);
-                Vector3 screenMaxPos = viewport.Project(o.bounds.Max, projection, view, Matrix.Identity);
-                
-                // screenPos is window relative, we change it to be viewport relative
-                screenMinPos.X -= viewport.X;
-                screenMinPos.Y -= viewport.Y;
-                screenMaxPos.X -= viewport.X;
-                screenMaxPos.Y -= viewport.Y;
-
-                Rectangle objRect = new Rectangle((int)screenMinPos.X, (int)screenMinPos.Y, (int)(screenMaxPos.X - screenMinPos.X), (int)(screenMaxPos.Y - screenMinPos.Y));
-
-                if (selectionRect.Intersects(objRect))
-                {
-                    // Add object to selected objects list
-                    selectedObj.Add(o);
-                }
-            }
-            return selectedObj;
         }
     }
 }

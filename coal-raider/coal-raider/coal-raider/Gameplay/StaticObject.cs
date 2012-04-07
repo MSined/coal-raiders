@@ -37,6 +37,8 @@ namespace coal_raider
                 }
                 mesh.Draw();
             }
+
+            DebugShapeRenderer.AddBoundingBox(bounds, Color.Green);
         }
     }
 }
