@@ -204,7 +204,7 @@ namespace coal_raider
 
             foreach (StaticObject so in staticObjects)
             {
-                if (camera.inCamera(so.position))
+                if (camera.inView(so))
                 {
                     so.Draw(camera);
                 }
