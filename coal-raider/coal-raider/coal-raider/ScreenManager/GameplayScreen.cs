@@ -44,6 +44,8 @@ namespace coal_raider
         InputAction pauseAction;
         /*---- End Original GameplayScreen Fields -----*/
 
+        const bool DEBUG = true;
+
         Camera camera;
         Map map;
         Unit unit1;
@@ -54,7 +56,7 @@ namespace coal_raider
 
         Model floorModel, buildingModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage;
 
-        Texture2D mDottedLine;
+        Texture2D mDottedLine, userInterface;
         Rectangle mSelectionBox;
 
         List<Unit> testUnitList = new List<Unit>();
@@ -103,6 +105,8 @@ namespace coal_raider
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
 
+            userInterface = ScreenManager.Game.Content.Load<Texture2D>("UI");
+
             Model[] a = new Model[4];
             a[0] = floorModel;
             a[1] = buildingModel;
@@ -124,15 +128,14 @@ namespace coal_raider
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
 
-            testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior));
-            /*
+            
             for (int i = 0; i < 15; i++)
             {
                 for (int j = 0; j < 15; j++)
                 {
                     testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(i, 0, j), UnitType.Warrior));
                 }
-            }*/
+            }
 
             foreach (Unit u in testUnitList)
             {
@@ -162,7 +165,7 @@ namespace coal_raider
                 grid.insertStaticObject(map.usableBuildings[i]);
             */
 
-
+            bfRenderer = new BoundingFrustumRenderer(new BoundingFrustum(camera.view * camera.projection), ScreenManager.Game);
 
             if (!instancePreserved)
             {
@@ -337,7 +340,11 @@ namespace coal_raider
 
                     BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
 
-                    bfRenderer = new BoundingFrustumRenderer(bFrustrum, ScreenManager.Game);
+                    if (DEBUG)
+                    {
+                        bfRenderer.Frustum = bFrustrum;
+                        bfRenderer.Update();
+                    }
 
                     System.Diagnostics.Debug.WriteLine(mSelectionBox);
 
@@ -489,8 +496,13 @@ namespace coal_raider
                 }
             }
 
-            if (bfRenderer != null)
+            if (DEBUG)
+            {
                 bfRenderer.Draw(camera);
+            }
+
+            spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), Color.White);
+
 
             DrawSelectionBox(mSelectionBox);
 
