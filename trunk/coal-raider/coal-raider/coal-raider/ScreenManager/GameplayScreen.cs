@@ -44,8 +44,6 @@ namespace coal_raider
         InputAction pauseAction;
         /*---- End Original GameplayScreen Fields -----*/
 
-        const bool DEBUG = false;
-
         Camera camera;
         Map map;
         Unit unit1;
@@ -127,23 +125,7 @@ namespace coal_raider
 
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
-
             
-            for (int i = 0; i < 15; i++)
-            {
-                for (int j = 0; j < 15; j++)
-                {
-                    testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(i, 0, j), UnitType.Warrior));
-                }
-            }
-
-            foreach (Unit u in testUnitList)
-            {
-                //u.setBounds(new BoundingBox(u.position, new Vector3(u.position.X+1, 0f, u.position.Y+1)));
-                System.Diagnostics.Debug.WriteLine(u.bounds);
-                components.Add(u);
-            }
-
             Unit[] unitList = new Unit[6];
             unitList[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
             unitList[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
@@ -164,6 +146,9 @@ namespace coal_raider
             for (int i = 0; i < map.usableBuildings.Count; ++i)//for collisions
                 grid.insertStaticObject(map.usableBuildings[i]);
             */
+
+            // Initialize our renderer
+            DebugShapeRenderer.Initialize(ScreenManager.Game.GraphicsDevice);
 
             bfRenderer = new BoundingFrustumRenderer(new BoundingFrustum(camera.view * camera.projection), ScreenManager.Game);
 
@@ -336,48 +321,27 @@ namespace coal_raider
                 //If the user has released the left mouse button, then reset the selection square
                 if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
                 {
-                    //UNIT SELECTION CODE GOES HERE
-
-                    BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
-
-                    if (DEBUG)
+                    if (!(mSelectionBox.Width == 0 || mSelectionBox.Height == 0))
                     {
+
+                        BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
+
                         bfRenderer.Frustum = bFrustrum;
                         bfRenderer.Update();
-                    }
 
-                    System.Diagnostics.Debug.WriteLine(mSelectionBox);
+                        System.Diagnostics.Debug.WriteLine(mSelectionBox);
 
-                    //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
-                    foreach (Unit u in testUnitList)
-                    {
-                        if (bFrustrum.Contains(u.bounds) != ContainmentType.Disjoint)
+                        //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
+                        foreach (Unit u in testUnitList)
                         {
-                            components.Remove(u);
+                            if (bFrustrum.Contains(u.bounds) != ContainmentType.Disjoint)
+                            {
+                                components.Remove(u);
+                            }
+
                         }
-
                     }
 
-                    /*
-                    if(mSelectionBox.Width < 0)
-                    {
-                        mSelectionBox.X += mSelectionBox.Width;
-                        mSelectionBox.Width = Math.Abs(mSelectionBox.Width);
-                    }
-
-                    if (mSelectionBox.Height < 0)
-                    {
-                        mSelectionBox.Y += mSelectionBox.Height;
-                        mSelectionBox.Height = Math.Abs(mSelectionBox.Height);
-                    }
-
-                    List<Unit> ul = camera.RectangleSelect(testUnitList, mSelectionBox, ScreenManager.Game);
-
-                    foreach (Unit u in ul) 
-                    {
-                        components.Remove(u);
-                    }
-                    * */
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
                      
@@ -483,7 +447,7 @@ namespace coal_raider
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
-            //map.Draw(camera);
+            map.Draw(camera);
 
             GameComponent[] gcc = new GameComponent[components.Count];
             components.CopyTo(gcc, 0);
@@ -496,13 +460,10 @@ namespace coal_raider
                 }
             }
 
-            if (DEBUG)
-            {
-                bfRenderer.Draw(camera);
-            }
+            //bfRenderer.Draw(camera);
+            DebugShapeRenderer.Draw(gameTime, camera.view, camera.projection);
 
             spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), Color.White);
-
 
             DrawSelectionBox(mSelectionBox);
 
