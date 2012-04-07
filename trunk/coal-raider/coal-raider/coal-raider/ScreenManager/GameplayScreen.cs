@@ -98,7 +98,7 @@ namespace coal_raider
             treeModel = ScreenManager.Game.Content.Load<Model>(@"Models\treeModel");
 
             unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\warrior");
-            unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelRanger");
+            unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\ranger");
             unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\mage");
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
