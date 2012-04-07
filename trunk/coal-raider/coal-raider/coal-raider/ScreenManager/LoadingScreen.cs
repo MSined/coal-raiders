@@ -11,6 +11,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 #endregion
 
 namespace coal_raider
@@ -37,6 +38,8 @@ namespace coal_raider
         bool otherScreensAreGone;
 
         GameScreen[] screensToLoad;
+        Texture2D backgroundTexture;
+        ContentManager content;
 
         #endregion
 
@@ -54,6 +57,7 @@ namespace coal_raider
             this.screensToLoad = screensToLoad;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            content = new ContentManager(screenManager.Game.Services, "Content");
         }
 
 
@@ -139,6 +143,8 @@ namespace coal_raider
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
                 SpriteFont font = ScreenManager.Font;
 
+                backgroundTexture = content.Load<Texture2D>("loadingBackground");
+
                 const string message = "Loading...";
 
                 // Center the text in the viewport.
@@ -151,6 +157,7 @@ namespace coal_raider
 
                 // Draw the text.
                 spriteBatch.Begin();
+                spriteBatch.Draw(backgroundTexture, new Rectangle(0,0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
                 spriteBatch.DrawString(font, message, textPosition, color);
                 spriteBatch.End();
             }
