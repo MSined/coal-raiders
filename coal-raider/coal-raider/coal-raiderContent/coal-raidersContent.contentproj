@@ -165,13 +165,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\mountainModel.x">
-      <Name>mountainModel</Name>
-      <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\mountainTexture.jpg">
       <Name>mountainTexture</Name>
       <Importer>TextureImporter</Importer>
