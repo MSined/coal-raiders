@@ -24,13 +24,10 @@ namespace coal_raider
         private int spRecoverRate = 5;
 
         private float armRotation = 0, leftLegRotation = 0, rightLegRotation = 0, attackRate = 0, attackTimer = 0, armUpAngle = 0, armDownAngle = 0, armRotationSpeed = 0;
-        private bool armMoveUp = true, leftLegMoveForward = true, dontMove = false;
+        private bool armMoveUp = true, leftLegMoveForward = true, attacking = false, moving = false;
         private Matrix armWorld = Matrix.Identity, leftLegWorld = Matrix.Identity, rightLegWorld = Matrix.Identity;
         private Vector3 unitDir = Vector3.Zero;
         private Matrix meshWorld;
-        public bool attacking = true, moving = true;
-        private Quaternion q;
-        private Vector3 s, t;
 
         protected int[] attributes { get; private set; }
 
@@ -68,10 +65,18 @@ namespace coal_raider
             {
                 //moveToTargetPosition(waypointList);
                 velocity = (Vector3)targetPosition - position;
-
             }
+            moving = true;
+            /*
+            if (targetPosition != null && ((Vector3)targetPosition - this.position).LengthSquared() < attackRange)
+            {
+                // Stop unit when it is close enough to attack
+                moving = false;
+            }*/
 
-            if (!dontMove && !(velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0))
+            updateAnimation(gameTime);
+
+            if (moving && !(velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0))
             {
                 if (velocity.Length() > speed)
                 {
@@ -103,15 +108,35 @@ namespace coal_raider
                 spRecoverTimer = 0;
             }
 
+            //base.Update(gameTime, colliders, cameraTarget, waypointList);
+        }
+
+        public void checkIfDead()
+        {
+            if (hp <= 0)
+            {
+                isAlive = false;
+            }
+        }
+
+        public void setTarget(Vector3 pos, Vector3 orientation)
+        {
+            targetPosition = pos;
+            lookDirection = orientation;
+            newTargetPosition = true;
+        }
+
+        private void updateAnimation(GameTime gameTime)
+        {
+            Quaternion q;
+            Vector3 s, t;
+
             // Get world components for arm position calculations
             world.Decompose(out s, out q, out t);
 
             // Check if close enough to attack
-            if (attacking && targetPosition != null && ((Vector3)targetPosition - this.position).LengthSquared() < attackRange)
+            if (attacking)
             {
-                // Stop unit when it is close enough to attack
-                dontMove = true;
-
                 attackTimer += gameTime.ElapsedGameTime.Milliseconds;
                 if (attackTimer >= attackRate)
                 {
@@ -119,7 +144,7 @@ namespace coal_raider
                     {
                         armRotation -= armRotationSpeed;
                         if (armRotation < armUpAngle)
-                           armMoveUp = false;
+                            armMoveUp = false;
                     }
                     else
                     {
@@ -139,7 +164,7 @@ namespace coal_raider
             armWorld = Matrix.CreateRotationX(MathHelper.ToRadians(armRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(armPos);
 
             // Set leg position and orientation
-            if (!dontMove)
+            if (moving)
             {
                 if (leftLegMoveForward)
                 {
@@ -161,23 +186,6 @@ namespace coal_raider
             legPos.Y += 0.7153f;
             leftLegWorld = Matrix.CreateRotationX(MathHelper.ToRadians(leftLegRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(legPos);
             rightLegWorld = Matrix.CreateRotationX(MathHelper.ToRadians(rightLegRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(legPos);
-
-            //base.Update(gameTime, colliders, cameraTarget, waypointList);
-        }
-
-        public void checkIfDead()
-        {
-            if (hp <= 0)
-            {
-                isAlive = false;
-            }
-        }
-
-        public void setTarget(Vector3 pos, Vector3 orientation)
-        {
-            targetPosition = pos;
-            lookDirection = orientation;
-            newTargetPosition = true;
         }
 
         public override void Draw(Camera camera)

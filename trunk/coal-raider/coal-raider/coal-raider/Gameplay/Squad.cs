@@ -14,7 +14,8 @@ namespace coal_raider
         private int numUnitsInFormation;
 
         public Object target { get; protected set; }
-        public float speed;
+        public float avgSpeed;
+        public float bigestRange;
 
         public Unit[] unitList;
 
@@ -34,13 +35,15 @@ namespace coal_raider
             this.formationSlotTypes = formationSlotTypes;
             this.numUnitsInFormation = numUnitsInFormation;
             this.unitList = placeUnits(unitList);
-            
+
+            bigestRange = float.MinValue;
             float totalSpeed = 0;
             foreach (Unit u in unitList)
             {
                 totalSpeed += u.speed;
+                if (u.attackRange > bigestRange) bigestRange = u.attackRange;
             }
-            speed = totalSpeed / numUnitsInFormation;
+            avgSpeed = totalSpeed / numUnitsInFormation;
                         
             target = null;
         }
@@ -110,28 +113,28 @@ namespace coal_raider
             }
 
             Matrix rotation = getRotationMatrix();
-            Vector3 anchor = position + speed * velocity;
+            Vector3 anchor = position + avgSpeed * velocity;
             
             // Calculate distance to squad target
-            float distSqrd = (target.position - this.position).LengthSquared();
+            float range = (target.position - this.position).LengthSquared();
 
             for (int i=0; i < unitList.Length; ++i )
             {
                 Vector3 newPos = anchor + Vector3.Transform(formationOffset[i], rotation);
 
                 // Check if the squad is in range
-                if (distSqrd < 100)
+                if (range < bigestRange)
                 {
                     // If so, set the unit target to the squad target
                     unitList[i].setTarget(target.position, velocity);
-                    unitList[i].attacking = true;
+                    //unitList[i].attacking = true;
                 }
                 // Otherwise
                 else
                 {
                     // Set the unit target to the squad position
                     unitList[i].setTarget(newPos, velocity);
-                    unitList[i].attacking = false;
+                    //unitList[i].attacking = false;
                 }
 
                 unitList[i].Update(gameTime, grid, waypointList);
@@ -176,6 +179,18 @@ namespace coal_raider
             target = t;
             targetPosition = t.position;
             newTargetPosition = true;
+        }
+
+        public bool Intersects(BoundingFrustum bf)
+        {
+            foreach (Unit u in unitList)
+            {
+                if (bf.Contains(u.bounds) != ContainmentType.Disjoint)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

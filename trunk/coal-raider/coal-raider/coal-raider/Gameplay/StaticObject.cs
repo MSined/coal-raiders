@@ -11,6 +11,7 @@ namespace coal_raider
     class StaticObject : Object
     {
         public Model model { get; protected set; }
+        private Vector3 blackVector = new Vector3(0, 0, 0);
 
         public StaticObject(Game game, Model[] modelComponents, Vector3 position, bool canCollide)
             : base(game, modelComponents, position, true, canCollide)
@@ -30,7 +31,7 @@ namespace coal_raider
                 foreach (BasicEffect be in mesh.Effects)
                 {
                     be.EnableDefaultLighting();
-                    be.SpecularPower = 10f;
+                    be.SpecularColor = blackVector;
                     be.Projection = camera.projection;
                     be.View = camera.view;
                     be.World = world * mesh.ParentBone.Transform;

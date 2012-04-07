@@ -52,12 +52,13 @@ namespace coal_raider
 
         Squad squad;
 
-        Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel;
+        Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
 
         Texture2D mDottedLine, userInterface;
         Rectangle mSelectionBox;
 
         List<Unit> testUnitList = new List<Unit>();
+        List<Squad> selectedSquads = new List<Squad>();
         #endregion
 
         #region Initialization
@@ -99,6 +100,7 @@ namespace coal_raider
             unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\warrior");
             unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\ranger");
             unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\mage");
+            selectionRingModel = ScreenManager.Game.Content.Load<Model>(@"Models\trees");
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
@@ -340,42 +342,51 @@ namespace coal_raider
                 //If the user has released the left mouse button, then reset the selection square
                 if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
                 {
-                    if (!(mSelectionBox.Width == 0 || mSelectionBox.Height == 0))
+                    selectedSquads = new List<Squad>();
+
+                    if (mSelectionBox.Width == 0)
                     {
-
-                        BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
-
-                        bfRenderer.Frustum = bFrustrum;
-                        bfRenderer.Update();
-
-                        //THIS FOREACH LOOP IS FOR DEBUGGING/IMPLEMENTATION PURPOSES OF DRAG SELECTION WHEN TIME NEEDED INSERT SQUAD SELECTION CODE HERE
-                        foreach (Unit u in testUnitList)
-                        {
-                            if (bFrustrum.Contains(u.bounds) != ContainmentType.Disjoint)
-                            {
-                                components.Remove(u);
-                            }
-
-                        }
+                        mSelectionBox.Width = 1;
                     }
-                    else
+
+                    if (mSelectionBox.Height == 0)
                     {
-                        Ray singleClick = camera.GetMouseRay(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), ScreenManager.Game);
+                        mSelectionBox.Height = 1;
+                    }
 
-                        //THIS FOREACH LOOP IS FOR DEBUGGING/IMPLEMENTATION PURPOSES OF SINGLE CLICK SELECTION WHEN TIME NEEDED INSERT SQUAD SELECTION CODE HERE
-                        foreach (Unit u in testUnitList)
+                    BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
+
+                    bfRenderer.Frustum = bFrustrum;
+                    bfRenderer.Update();
+
+                    foreach (GameComponent gc in components)
+                    {
+                        if (gc is Squad)
                         {
-                            if (singleClick.Intersects(u.bounds).HasValue)
-                            {
-                                components.Remove(u);
-                            }
-
+                            Squad s = (Squad)gc;
+                            if (s.Intersects(bFrustrum))
+                                selectedSquads.Add(s);
                         }
                     }
 
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
                      
+                }
+
+                if (input.CurrentMouseState.RightButton == ButtonState.Released && input.LastMouseState.RightButton == ButtonState.Pressed)
+                {
+                    Ray singleClick = camera.GetMouseRay(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), ScreenManager.Game);
+
+                    //THIS FOREACH LOOP IS FOR DEBUGGING/IMPLEMENTATION PURPOSES OF SINGLE CLICK SELECTION WHEN TIME NEEDED INSERT SQUAD SELECTION CODE HERE
+                    foreach (Unit u in testUnitList)
+                    {
+                        if (singleClick.Intersects(u.bounds).HasValue)
+                        {
+                            components.Remove(u);
+                        }
+
+                    }
                 }
 
             }
@@ -480,6 +491,8 @@ namespace coal_raider
 
             map.Draw(camera);
 
+            drawSelectedSquads();
+
             GameComponent[] gcc = new GameComponent[components.Count];
             components.CopyTo(gcc, 0);
             foreach (GameComponent gc in gcc)
@@ -506,6 +519,29 @@ namespace coal_raider
                 float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
+            }
+        }
+
+        private void drawSelectedSquads()
+        {
+            foreach (Squad s in selectedSquads)
+            {
+                Matrix[] transforms = new Matrix[selectionRingModel.Bones.Count];
+                selectionRingModel.CopyAbsoluteBoneTransformsTo(transforms);
+
+                Matrix pos = Matrix.CreateTranslation(s.position);
+
+                foreach (ModelMesh mesh in selectionRingModel.Meshes)
+                {
+                    foreach (BasicEffect be in mesh.Effects)
+                    {
+                        be.EnableDefaultLighting();
+                        be.Projection = camera.projection;
+                        be.View = camera.view;
+                        be.World = pos * mesh.ParentBone.Transform;
+                    }
+                    mesh.Draw();
+                }
             }
         }
 
