@@ -52,7 +52,7 @@ namespace coal_raider
 
         Squad squad;
 
-        Model mountainModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel;
+        Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel;
 
         Texture2D mDottedLine, userInterface;
         Rectangle mSelectionBox;
@@ -94,6 +94,7 @@ namespace coal_raider
             groundTileModel = ScreenManager.Game.Content.Load<Model>(@"Models\ground");
             mountainModel = ScreenManager.Game.Content.Load<Model>(@"Models\mountain");
             treeModel = ScreenManager.Game.Content.Load<Model>(@"Models\trees");
+            buildingModel = ScreenManager.Game.Content.Load<Model>(@"Models\Building");
 
             unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\warrior");
             unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\ranger");
@@ -105,11 +106,12 @@ namespace coal_raider
 
             userInterface = ScreenManager.Game.Content.Load<Texture2D>("UI");
 
-            Model[] a = new Model[4];
+            Model[] a = new Model[5];
             a[0] = mountainModel;
             a[1] = treeModel;
             a[2] = waypointModel;
             a[3] = groundTileModel;
+            a[4] = buildingModel;
 
             map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice);
             components.Add(map);
