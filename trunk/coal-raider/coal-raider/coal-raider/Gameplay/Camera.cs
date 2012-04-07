@@ -101,16 +101,9 @@ namespace coal_raider
             view = Matrix.CreateLookAt(cameraPosition, cameraPosition + cameraDirection, cameraUp);
         }
 
-        public bool inCamera(Vector3 target)
+        public bool inView(Object target)
         {
-            if (target.X > cameraPosition.X - 25 &&
-                target.X < cameraPosition.X + 25 &&
-                target.Z > cameraPosition.Z - 25 &&
-                target.Z < cameraPosition.Z)
-            {
-                return true;
-            }
-            return false;
+            return new BoundingFrustum(view * projection).Intersects(target.bounds);
         }
 
         public BoundingFrustum CreateFromRectangle(Rectangle rectangle, Game game)
@@ -136,6 +129,7 @@ namespace coal_raider
             //http://forums.create.msdn.com/forums/p/6690/35401.aspx , by "The Friggm"
             // Many many thanks to him...
 
+
             Viewport viewport = game.GraphicsDevice.Viewport;
 
             // Point in screen space of the center of the region selected
@@ -152,7 +146,7 @@ namespace coal_raider
             regionProjMatrix.M31 = (regionCenterScreen.X - (viewport.Width / 2f)) / ((float)source.Width / 2f);
 
             // M32 is vertical center. Notice that the screen has low Y on top, projection has low Y on bottom.
-            regionProjMatrix.M33 = -(regionCenterScreen.Y - (viewport.Height / 2f)) / ((float)source.Height / 2f);
+            regionProjMatrix.M32 = -(regionCenterScreen.Y - (viewport.Height / 2f)) / ((float)source.Height / 2f);
 
             return new BoundingFrustum(view * regionProjMatrix);
         }

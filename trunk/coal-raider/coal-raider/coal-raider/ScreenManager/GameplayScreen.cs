@@ -48,11 +48,13 @@ namespace coal_raider
         Map map;
         Unit unit1;
 
+        BoundingFrustumRenderer bfRenderer;
+
         Squad squad;
 
         Model floorModel, buildingModel, treeModel, unitModelWarrior, unitModelRanger, unitModelMage;
 
-        Texture2D mDottedLine, userInterface;
+        Texture2D mDottedLine;
         Rectangle mSelectionBox;
 
         List<Unit> testUnitList = new List<Unit>();
@@ -101,8 +103,6 @@ namespace coal_raider
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
 
-            userInterface = ScreenManager.Game.Content.Load<Texture2D>("UI");
-
             Model[] a = new Model[4];
             a[0] = floorModel;
             a[1] = buildingModel;
@@ -124,13 +124,15 @@ namespace coal_raider
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
             components.Add(unit1);
 
+            testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior));
+            /*
             for (int i = 0; i < 15; i++)
             {
                 for (int j = 0; j < 15; j++)
                 {
                     testUnitList.Add(UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(i, 0, j), UnitType.Warrior));
                 }
-            }
+            }*/
 
             foreach (Unit u in testUnitList)
             {
@@ -309,11 +311,6 @@ namespace coal_raider
             else
             {
                 /*----- INPUT HANDLING GOES HERE -----*/
-                if (input.CurrentMouseState.LeftButton == ButtonState.Pressed && input.LastMouseState.LeftButton == ButtonState.Released)
-                {
-                    //System.Diagnostics.Debug.WriteLine("Mouse X: " + input.CurrentMouseState.X + " Mouse Y: " + input.CurrentMouseState.Y); 
-                    
-                }
 
                 //If the user has just clicked the Left mouse button, then set the start location for the Selection box
                 if (input.CurrentMouseState.LeftButton == ButtonState.Pressed & input.LastMouseState.LeftButton == ButtonState.Released)
@@ -339,14 +336,11 @@ namespace coal_raider
                     //UNIT SELECTION CODE GOES HERE
 
                     BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
+
+                    bfRenderer = new BoundingFrustumRenderer(bFrustrum, ScreenManager.Game);
+
                     System.Diagnostics.Debug.WriteLine(mSelectionBox);
-                    foreach (Unit u in squad.unitList)
-                    {
-                        if (u.bounds.Intersects(bFrustrum))
-                        {
-                            //System.Diagnostics.Debug.WriteLine("Unit Selected");
-                        }
-                    }
+
                     //System.Diagnostics.Debug.WriteLine("+++++++++++++++++++++++++");
                     foreach (Unit u in testUnitList)
                     {
@@ -495,8 +489,8 @@ namespace coal_raider
                 }
             }
 
-            spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), Color.White);
-
+            if (bfRenderer != null)
+                bfRenderer.Draw(camera);
 
             DrawSelectionBox(mSelectionBox);
 
