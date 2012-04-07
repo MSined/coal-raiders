@@ -24,7 +24,7 @@ namespace coal_raider
         private int spRecoverRate = 5;
 
         private float armRotation = 0, leftLegRotation = 0, rightLegRotation = 0, attackRate = 0, attackTimer = 0, armUpAngle = 0, armDownAngle = 0, armRotationSpeed = 0;
-        private bool armMoveUp = true, leftLegMoveForward = true;
+        private bool armMoveUp = true, leftLegMoveForward = true, dontMove = false;
         private Matrix armWorld = Matrix.Identity, leftLegWorld = Matrix.Identity, rightLegWorld = Matrix.Identity;
         private Vector3 unitDir = Vector3.Zero;
         private Matrix meshWorld;
@@ -40,8 +40,9 @@ namespace coal_raider
 
         // Characters initial position is defined by the spawnpoint ther are associated with
         public Unit(Game game, Model[] modelComponents, Vector3 position,
-            UnitType type, int topHP, int topSP, float speed, bool isAlive, float attackRange)
-            : base(game, modelComponents, position, isAlive)
+            UnitType type, int topHP, int topSP, float speed, bool isAlive,
+            float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate)
+            : base(game, modelComponents, position, isAlive, false)
         {
             this.type = type;
 
@@ -53,32 +54,11 @@ namespace coal_raider
 
             this.speed = speed;
 
+            this.armUpAngle = armUpAngle;
+            this.armDownAngle = armDownAngle;
+            this.armRotationSpeed = armRotationSpeed;
             this.attackRange = attackRange;
-
-            if (this.type == UnitType.Mage)
-            {
-                armUpAngle = -80f;
-                armDownAngle = 15f;
-                armRotationSpeed = 10f;
-                // Put in milliseconds
-                attackRate = 2000;
-            }
-            else if (this.type == UnitType.Ranger)
-            {
-                armUpAngle = -30f;
-                armDownAngle = 0f;
-                armRotationSpeed = 10f;
-                // Put in milliseconds
-                attackRate = 1000;
-            }
-            else if (this.type == UnitType.Warrior)
-            {
-                armUpAngle = -80f;
-                armDownAngle = 15f;
-                armRotationSpeed = 10f;
-                // Put in milliseconds
-                attackRate = 300f;
-            }
+            this.attackRate = attackRate;
         }
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
@@ -91,7 +71,7 @@ namespace coal_raider
 
             }
 
-            if (!(velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0))
+            if (!dontMove && !(velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0))
             {
                 if (velocity.Length() > speed)
                 {
@@ -102,9 +82,8 @@ namespace coal_raider
                 {
                     position += velocity;
                 }
-                
             }
-            
+
             float angle = (float)Math.Asin(lookDirection.X) + MathHelper.ToRadians(180);
             if (lookDirection.Z > 0)
             {
@@ -130,6 +109,9 @@ namespace coal_raider
             // Check if close enough to attack
             if (attacking && targetPosition != null && ((Vector3)targetPosition - this.position).LengthSquared() < attackRange)
             {
+                // Stop unit when it is close enough to attack
+                dontMove = true;
+
                 attackTimer += gameTime.ElapsedGameTime.Milliseconds;
                 if (attackTimer >= attackRate)
                 {
@@ -152,7 +134,8 @@ namespace coal_raider
             }
             // Set arm position and orientation
             Vector3 armPos = t;
-            armPos.Y += 1.4040f;
+            // Model position offset
+            armPos.Y += 1.0520f;
             armWorld = Matrix.CreateRotationX(MathHelper.ToRadians(armRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(armPos);
 
             // Set leg position and orientation
@@ -174,7 +157,8 @@ namespace coal_raider
                 }
             }
             Vector3 legPos = t;
-            legPos.Y += 0.8935f;
+            // Model position offset
+            legPos.Y += 0.7153f;
             leftLegWorld = Matrix.CreateRotationX(MathHelper.ToRadians(leftLegRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(legPos);
             rightLegWorld = Matrix.CreateRotationX(MathHelper.ToRadians(rightLegRotation)) * Matrix.CreateFromQuaternion(q) * Matrix.CreateTranslation(legPos);
 
@@ -263,7 +247,7 @@ namespace coal_raider
             foreach (Object o in colliders)
             {
 
-                if (bounds.Intersects(o.bounds))
+                if (o.collideable && bounds.Intersects(o.bounds))
                 {
                     if (o is StaticObject || o is Unit)
                     {

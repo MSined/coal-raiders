@@ -25,7 +25,7 @@ namespace coal_raider
         Random rand = new Random();
 
         public Squad(Game game, Unit[] unitList, int numUnitsInFormation, Vector3[] formationOffset, SquadSlotType[] formationSlotTypes)
-            : base(game, null, new Vector3(0,0,0), true)
+            : base(game, null, new Vector3(0,0,0), true, false)
         {
             if (unitList.Length != numUnitsInFormation)
                 throw new NotImplementedException();
@@ -120,7 +120,7 @@ namespace coal_raider
                 Vector3 newPos = anchor + Vector3.Transform(formationOffset[i], rotation);
 
                 // Check if the squad is in range
-                if (distSqrd < 10)
+                if (distSqrd < 100)
                 {
                     // If so, set the unit target to the squad target
                     unitList[i].setTarget(target.position, velocity);
@@ -131,6 +131,7 @@ namespace coal_raider
                 {
                     // Set the unit target to the squad position
                     unitList[i].setTarget(newPos, velocity);
+                    unitList[i].attacking = false;
                 }
 
                 unitList[i].Update(gameTime, grid, waypointList);

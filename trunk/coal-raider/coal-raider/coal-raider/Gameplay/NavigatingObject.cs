@@ -31,8 +31,8 @@ namespace coal_raider
         
 
         // Characters initial position is defined by the spawnpoint ther are associated with
-        public NavigatingObject(Game game, Model[] modelComponents, Vector3 position, bool isAlive)
-            : base(game, modelComponents, position, isAlive)
+        public NavigatingObject(Game game, Model[] modelComponents, Vector3 position, bool isAlive, bool canCollide)
+            : base(game, modelComponents, position, isAlive, canCollide)
         {
 
         }
