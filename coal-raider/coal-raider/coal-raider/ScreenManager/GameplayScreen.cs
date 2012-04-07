@@ -97,9 +97,9 @@ namespace coal_raider
             buildingModel = ScreenManager.Game.Content.Load<Model>(@"Models\buildingModel");
             treeModel = ScreenManager.Game.Content.Load<Model>(@"Models\treeModel");
 
-            unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelWarrior");
+            unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\warrior");
             unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelRanger");
-            unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\unitModelMage");
+            unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\mage");
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
@@ -483,7 +483,7 @@ namespace coal_raider
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
-            map.Draw(camera);
+            //map.Draw(camera);
 
             GameComponent[] gcc = new GameComponent[components.Count];
             components.CopyTo(gcc, 0);
