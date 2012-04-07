@@ -125,6 +125,7 @@ namespace coal_raider
 
             float endNodeCost = 0;
             float endNodeHeuristic = 0;
+            NodeRecord nodeFoundInList;
             while (openList.Count > 0)
             {
                 float smallestCost = float.MaxValue;
@@ -149,23 +150,19 @@ namespace coal_raider
 
                     NodeRecord endNodeRecord = new NodeRecord();
 
-                    if (containedInList(closedList, endNode))
+                    if (containedInList(closedList, endNode, out nodeFoundInList))
                     {
                         endNodeRecord = new NodeRecord();
+                        endNodeRecord.costSoFar = nodeFoundInList.costSoFar;
+                        endNodeRecord.currentWaypoint = nodeFoundInList.currentWaypoint;
+                        endNodeRecord.estimatedTotalCost = nodeFoundInList.estimatedTotalCost;
+                        endNodeRecord.fromWaypoint = nodeFoundInList.fromWaypoint;
+                        endNodeRecord.fromNode = nodeFoundInList.fromNode;
 
                         // Equivalent to closedList.Find(endNode)
-                        foreach (NodeRecord n in closedList)
-                        {
-                            if (n.currentWaypoint.ID == endNode.currentWaypoint.ID)
-                            {
-                                endNodeRecord.costSoFar = n.costSoFar;
-                                endNodeRecord.currentWaypoint = n.currentWaypoint;
-                                endNodeRecord.estimatedTotalCost = n.estimatedTotalCost;
-                                endNodeRecord.fromWaypoint = n.fromWaypoint;
-                                endNodeRecord.fromNode = n.fromNode;
-                            }
-
-                        }
+                        // When containedInList is run, if it finds the node
+                        // It will store it at an out variable so we dont need to 
+                        // loop through the list AGAIN
 
                         if (endNodeRecord.costSoFar <= endNodeCost)
                             continue;
@@ -174,23 +171,19 @@ namespace coal_raider
 
                         endNodeHeuristic = endNodeRecord.estimatedTotalCost - endNodeRecord.costSoFar;
                     }
-
-                    else if (containedInList(openList, endNode))
+                    else if (containedInList(openList, endNode, out nodeFoundInList))
                     {
                         endNodeRecord = new NodeRecord();
+                        endNodeRecord.costSoFar = nodeFoundInList.costSoFar;
+                        endNodeRecord.currentWaypoint = nodeFoundInList.currentWaypoint;
+                        endNodeRecord.estimatedTotalCost = nodeFoundInList.estimatedTotalCost;
+                        endNodeRecord.fromWaypoint = nodeFoundInList.fromWaypoint;
+                        endNodeRecord.fromNode = nodeFoundInList.fromNode;
 
                         // Equivalent to closedList.Find(endNode)
-                        foreach (NodeRecord n in openList)
-                        {
-                            if (n.currentWaypoint.ID == endNode.currentWaypoint.ID)
-                            {
-                                endNodeRecord.costSoFar = n.costSoFar;
-                                endNodeRecord.currentWaypoint = n.currentWaypoint;
-                                endNodeRecord.estimatedTotalCost = n.estimatedTotalCost;
-                                endNodeRecord.fromWaypoint = n.fromWaypoint;
-                                endNodeRecord.fromNode = n.fromNode;
-                            }
-                        }
+                        // When containedInList is run, if it finds the node
+                        // It will store it at an out variable so we dont need to 
+                        // loop through the list AGAIN
 
                         if (endNodeRecord.costSoFar <= endNodeCost)
                             continue;
@@ -212,7 +205,7 @@ namespace coal_raider
                     endNodeRecord.fromNode[0] = endNode.fromNode[0];
                     endNodeRecord.estimatedTotalCost = endNodeCost + endNodeHeuristic;
 
-                    if (!containedInList(openList, endNode))
+                    if (!containedInList(openList, endNode, out nodeFoundInList))
                         openList.Add(endNodeRecord);
                 }
 
@@ -236,11 +229,20 @@ namespace coal_raider
             return pathToTake;
         }
 
-        private bool containedInList(List<NodeRecord> list, NodeRecord node)
+        private bool containedInList(List<NodeRecord> list, NodeRecord node, out NodeRecord foundNode)
         {
+            foundNode = new NodeRecord();
             foreach (NodeRecord n in list)
                 if (node.currentWaypoint.ID == n.currentWaypoint.ID)
+                {
+                    foundNode.costSoFar = n.costSoFar;
+                    foundNode.currentWaypoint = n.currentWaypoint;
+                    foundNode.estimatedTotalCost = n.estimatedTotalCost;
+                    foundNode.fromWaypoint = n.fromWaypoint;
+                    foundNode.fromNode = n.fromNode;
+
                     return true;
+                }
 
             return false;
         }
