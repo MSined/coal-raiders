@@ -336,7 +336,7 @@ namespace coal_raider
                 {
                     //UNIT SELECTION CODE GOES HERE
 
-                    /*BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
+                    BoundingFrustum bFrustrum = camera.UnprojectRectangle(mSelectionBox, ScreenManager.Game);
                     System.Diagnostics.Debug.WriteLine(mSelectionBox);
                     foreach (Unit u in squad.unitList)
                     {
@@ -353,8 +353,9 @@ namespace coal_raider
                             components.Remove(u);
                         }
 
-                    }*/
+                    }
 
+                    /*
                     if(mSelectionBox.Width < 0)
                     {
                         mSelectionBox.X += mSelectionBox.Width;
@@ -373,70 +374,87 @@ namespace coal_raider
                     {
                         components.Remove(u);
                     }
-
+                    * */
                     //Reset the selection square to no position with no height and width
                     mSelectionBox = new Rectangle(0, 0, 0, 0);
+                     
                 }
 
             }
         }
 
-        private void DrawHorizontalLine(int thePositionY)
+        private void DrawSelectionBox(Rectangle box)
+        {
+            int spacing = 7;
+            Vector2 dashSize = new Vector2(5, 2); //Length, thickness
+
+            //Draw the horizontal portions of the selection box 
+            DrawHorizontalLine(mSelectionBox.X, mSelectionBox.Y, box.Width, spacing, dashSize);
+            DrawHorizontalLine(mSelectionBox.X, mSelectionBox.Y + mSelectionBox.Height, box.Width, spacing, dashSize);
+
+            //Draw the verticla portions of the selection box 
+            DrawVerticalLine(mSelectionBox.X, mSelectionBox.Y, box.Height, spacing, dashSize);
+            DrawVerticalLine(mSelectionBox.X + mSelectionBox.Width, mSelectionBox.Y, box.Height, spacing, dashSize);
+        }
+
+        private void DrawHorizontalLine(int xCoord, int yCoord, int length, int spacing, Vector2 dashSize)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             //When the width is greater than 0, the user is selecting an area to the right of the starting point
-            if (mSelectionBox.Width > 0)
+            if (length > 0)
             {
                 //Draw the line starting at the startring location and moving to the right
-                for (int aCounter = 0; aCounter <= mSelectionBox.Width - 10; aCounter += 10)
+                for (int aCounter = 0; aCounter <= length - (int)dashSize.X; aCounter += spacing)
                 {
-                    if (mSelectionBox.Width - aCounter >= 0)
+                    if (length - aCounter >= 0)
                     {
-                        spriteBatch.Draw(mDottedLine, new Rectangle(mSelectionBox.X + aCounter, thePositionY, 10, 5), Color.White);
+                        spriteBatch.Draw(mDottedLine, new Rectangle(mSelectionBox.X + aCounter, yCoord, (int)dashSize.X, (int)dashSize.Y), Color.White);
                     }
                 }
             }
             //When the width is less than 0, the user is selecting an area to the left of the starting point
-            else if (mSelectionBox.Width < 0)
+            else if (length < 0)
             {
                 //Draw the line starting at the starting location and moving to the left
-                for (int aCounter = -10; aCounter >= mSelectionBox.Width; aCounter -= 10)
+                for (int aCounter = -(int)dashSize.X; aCounter >= length; aCounter -= spacing)
                 {
-                    if (mSelectionBox.Width - aCounter <= 0)
+                    if (length - aCounter <= 0)
                     {
-                        spriteBatch.Draw(mDottedLine, new Rectangle(mSelectionBox.X + aCounter, thePositionY, 10, 5), Color.White);
+                        spriteBatch.Draw(mDottedLine, new Rectangle(mSelectionBox.X + aCounter, yCoord, (int)dashSize.X, (int)dashSize.Y), Color.White);
                     }
                 }
             }
+
         }
 
-        private void DrawVerticalLine(int thePositionX)
+        private void DrawVerticalLine(int xCoord, int yCoord, int length, int spacing, Vector2 dashSize)
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             //When the height is greater than 0, the user is selecting an area below the starting point
-            if (mSelectionBox.Height > 0)
+            if (length > 0)
             {
                 //Draw the line starting at the starting loctino and moving down
-                for (int aCounter = -2; aCounter <= mSelectionBox.Height; aCounter += 10)
+                for (int aCounter = 0; aCounter <= length; aCounter += spacing)
                 {
-                    if (mSelectionBox.Height - aCounter >= 0)
+                    if (length - aCounter >= 0)
                     {
-                        spriteBatch.Draw(mDottedLine, new Rectangle(thePositionX, mSelectionBox.Y + aCounter, 10, 5), new Rectangle(0, 0, mDottedLine.Width, mDottedLine.Height), Color.White, MathHelper.ToRadians(90), new Vector2(0, 0), SpriteEffects.None, 0);
+                        spriteBatch.Draw(mDottedLine, new Rectangle(xCoord, yCoord + aCounter, (int)dashSize.X, (int)dashSize.Y), new Rectangle(0, 0, mDottedLine.Width, mDottedLine.Height), Color.White, MathHelper.ToRadians(90), new Vector2(0, 0), SpriteEffects.None, 0);
                     }
                 }
             }
             //When the height is less than 0, the user is selecting an area above the starting point
-            else if (mSelectionBox.Height < 0)
+            else if (length < 0)
             {
                 //Draw the line starting at the start location and moving up
-                for (int aCounter = 0; aCounter >= mSelectionBox.Height; aCounter -= 10)
+                for (int aCounter = 0; aCounter >= length; aCounter -= spacing)
                 {
-                    if (mSelectionBox.Height - aCounter <= 0)
+                    if (length - aCounter <= 0)
                     {
-                        spriteBatch.Draw(mDottedLine, new Rectangle(thePositionX - 10, mSelectionBox.Y + aCounter, 10, 5), Color.White);
+                        spriteBatch.Draw(mDottedLine, new Rectangle(xCoord - (int)dashSize.X, yCoord + aCounter, (int)dashSize.X, (int)dashSize.Y), Color.White);
                     }
                 }
             }
+
         }
 
         /// <summary>
@@ -475,13 +493,8 @@ namespace coal_raider
                 }
             }
 
-            //Draw the horizontal portions of the selection box 
-            DrawHorizontalLine(mSelectionBox.Y);
-            DrawHorizontalLine(mSelectionBox.Y + mSelectionBox.Height);
 
-            //Draw the verticla portions of the selection box 
-            DrawVerticalLine(mSelectionBox.X);
-            DrawVerticalLine(mSelectionBox.X + mSelectionBox.Width);
+            DrawSelectionBox(mSelectionBox);
 
             spriteBatch.End();
 
