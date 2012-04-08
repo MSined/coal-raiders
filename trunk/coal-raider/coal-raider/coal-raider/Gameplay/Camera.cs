@@ -71,11 +71,13 @@ namespace coal_raider
             var ms = Mouse.GetState();
             var msV = new Vector3((ms.X - screenSizeOver2.X) / screenSizeOver2.X, 0, (ms.Y - screenSizeOver2.Y) / screenSizeOver2.Y);
             var msPt = new Point(ms.X, ms.Y);
+            var mouseMouvementScalar = 0.5f;
+
             if (!noActionRectangle.Contains(msPt))
             {
                 if ((cameraPosition.X >= -20 && cameraPosition.X <= 25))
                 {
-                    cameraTarget.X += msV.X;
+                    cameraTarget.X += msV.X * mouseMouvementScalar;
                 }
                 else if (cameraPosition.X < -20)
                 {
@@ -88,7 +90,7 @@ namespace coal_raider
 
                 if ((cameraPosition.Z >= -15 && cameraPosition.Z <= 40))
                 {
-                    cameraTarget.Z += msV.Z;
+                    cameraTarget.Z += msV.Z * mouseMouvementScalar;
                 }
                 else if (cameraPosition.Z < -15)
                 {
