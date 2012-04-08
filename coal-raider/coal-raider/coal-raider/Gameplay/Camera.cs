@@ -75,33 +75,25 @@ namespace coal_raider
 
             if (!noActionRectangle.Contains(msPt))
             {
-                if ((cameraPosition.X >= -20 && cameraPosition.X <= 25))
+                if ((cameraTarget.X >= -27 && cameraTarget.X <= 27))
                 {
                     cameraTarget.X += msV.X * mouseMouvementScalar;
                 }
-                else if (cameraPosition.X < -20)
+                if (!(cameraTarget.X >= -27 && cameraTarget.X <= 27))//undo move if out of screen
                 {
-                    cameraTarget.X = -20;
-                }
-                else if (cameraPosition.X > 25)
-                {
-                    cameraTarget.X = 25;
+                    cameraTarget.X -= msV.X * mouseMouvementScalar;
                 }
 
-                if ((cameraPosition.Z >= -15 && cameraPosition.Z <= 40))
+                if ((cameraTarget.Z >= -27 && cameraTarget.Z <= 27))
                 {
                     cameraTarget.Z += msV.Z * mouseMouvementScalar;
                 }
-                else if (cameraPosition.Z < -15)
+                if (!(cameraTarget.Z >= -27 && cameraTarget.Z <= 27))//undo move if out of screen
                 {
-                    cameraTarget.Z = -15 - 12.2f;
-                }
-                else if (cameraPosition.Z > 40)
-                {
-                    cameraTarget.Z = 40 - 12.2f;
+                    cameraTarget.Z -= msV.Z * mouseMouvementScalar;
                 }
 
-                System.Diagnostics.Debug.WriteLine(cameraPosition.Z);
+                System.Diagnostics.Debug.WriteLine(cameraTarget.Z);
 
             }
 
