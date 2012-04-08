@@ -9,15 +9,22 @@ using Microsoft.Xna.Framework.Input;
 
 namespace coal_raider
 {
-    class Unit : NavigatingObject
+    class Unit : DamageableObject
     {
         public UnitType type { get; protected set; }
-        public int topHP;
-        public int hp { get; protected set; }
-        public int topSP;
-        public int sp { get; protected set; }
-        public float speed;
-        public float attackRange;
+
+        public Vector3 lookDirection = new Vector3(1, 0, 0);
+        public Vector3 velocity = new Vector3(0, 0, 0);
+        public Vector3? targetPosition { get; protected set; }
+
+        public int meleeAttack { get; protected set; }
+        public int rangeAttack { get; protected set; }
+        public int magicAttack { get; protected set; }
+        
+        public float speed { get; protected set; } 
+        public float attackRange { get; protected set; }
+
+        public DamageableObject attackTarget { get; protected set; }
 
         private float spRecoverTimer = 0f;
         private float spRecoverInterval = 1000f;
@@ -37,19 +44,18 @@ namespace coal_raider
 
         // Characters initial position is defined by the spawnpoint ther are associated with
         public Unit(Game game, Model[] modelComponents, Vector3 position,
-            UnitType type, int topHP, int topSP, float speed, bool isAlive,
+            UnitType type, int topHP, int topSP, int meleeAttack, int rangeAttack, int magicAttack, int meleeDefence, int rangeDefence, int magicDefence, float speed, bool isAlive, int team,
             float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate)
-            : base(game, modelComponents, position, isAlive, false)
-        {
+            : base(game, modelComponents, position, topHP, topSP, meleeDefence, rangeDefence, magicDefence, isAlive, team)
+        { 
             this.type = type;
-
-            this.topHP = topHP;
-            this.hp = topHP;
-
-            this.topSP = topSP;
-            this.sp = topSP;
-
             this.speed = speed;
+
+            this.meleeAttack = meleeAttack;
+            this.rangeAttack = rangeAttack;
+            this.magicAttack = magicAttack;
+
+            this.attackTarget = null;
 
             this.armUpAngle = armUpAngle;
             this.armDownAngle = armDownAngle;
@@ -67,12 +73,33 @@ namespace coal_raider
                 velocity = (Vector3)targetPosition - position;
             }
             moving = true;
-            /*
-            if (targetPosition != null && ((Vector3)targetPosition - this.position).LengthSquared() < attackRange)
+
+            if (attackTarget != null)
             {
-                // Stop unit when it is close enough to attack
-                moving = false;
-            }*/
+                if (!attackTarget.isAlive)
+                {
+                    attackTarget = null;
+                    attacking = false;
+                }
+                else
+                {
+                    Vector3 newVel = attackTarget.position - this.position;
+                    // Stop unit when it is close enough to attack
+                    if (newVel.Length() < attackRange)
+                    {
+                        moving = false;
+                        attacking = true;
+
+                        attackTarget.receiveDamage(meleeAttack, rangeAttack, magicAttack);
+                    }
+                    else
+                    {
+                        velocity = newVel;
+                        velocity.Normalize();
+                        lookDirection = velocity;
+                    }
+                }
+            }
 
             updateAnimation(gameTime);
 
@@ -111,11 +138,45 @@ namespace coal_raider
             //base.Update(gameTime, colliders, cameraTarget, waypointList);
         }
 
-        public void checkIfDead()
+        public bool selectAttack(List<Object> objList)
         {
-            if (hp <= 0)
+            DamageableObject mostAggro = null;
+            float aggroLevel = 0;
+
+            foreach (Object o in objList)
             {
-                isAlive = false;
+                if (!(o is DamageableObject /*|| o is AttackableBuilding*/))
+                    continue;
+
+                DamageableObject u = (DamageableObject)o;
+
+                if (u.team == team)
+                    continue;
+
+                //Calculate which one I want to attack using aggro level
+                float thisAggroLevel = 0;
+
+                //Add aggro depending on the type of the unit
+                //TODO
+                
+                //Add aggro depending on distance (to separate same class units)
+                thisAggroLevel += 1 / (u.position - position).Length();
+
+                if (thisAggroLevel > aggroLevel)
+                {
+                    aggroLevel = thisAggroLevel;
+                    mostAggro = u;
+                }
+            }
+
+            if (mostAggro != null)
+            {
+                attackTarget = mostAggro;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -123,7 +184,6 @@ namespace coal_raider
         {
             targetPosition = pos;
             lookDirection = orientation;
-            newTargetPosition = true;
         }
 
         private void updateAnimation(GameTime gameTime)
@@ -222,39 +282,16 @@ namespace coal_raider
 
                 DebugShapeRenderer.AddBoundingBox(bounds, Color.White);
 
+                //BoundingSphere bs = new BoundingSphere(position + new Vector3(0,1,0), attackRange);
+                //DebugShapeRenderer.AddBoundingSphere(bs, Color.Red);
+
             }
         }
 
-        public void drawHealth(Camera camera, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D healthTexture)
-        {
-            if (this.isAlive)
-            {
-                int healthBarWidth = 20;
-                int healthBarHeight = 5;
-                Rectangle srcRect, destRect;
-
-                Vector3 screenPos = graphicsDevice.Viewport.Project(this.position + new Vector3(0, 0.8f, 0), camera.projection, camera.view, Matrix.Identity);
-
-                srcRect = new Rectangle(0, 0, 1, 1);
-                destRect = new Rectangle((int)screenPos.X - healthBarWidth / 2, (int)screenPos.Y, healthBarWidth, healthBarHeight);
-                spriteBatch.Draw(healthTexture, destRect, srcRect, Color.LightGray, 0f, Vector2.Zero, SpriteEffects.None, 0.81f);
-
-                float healthPercentage = (float)hp / (float)topHP;
-
-                Color healthColor = new Color(new Vector3(1 - healthPercentage, healthPercentage, 0));
-
-                srcRect = new Rectangle(0, 0, 1, 1);
-                destRect = new Rectangle((int)screenPos.X - healthBarWidth / 2, (int)screenPos.Y, (int)(healthPercentage * healthBarWidth), healthBarHeight);
-                spriteBatch.Draw(healthTexture, destRect, srcRect, healthColor, 0f, Vector2.Zero, SpriteEffects.None, 0.8f);
-            }
-        }
-
-        //collision vs buildings/ all bullet collisions are in Bullet
         public void CheckCollisions(List<Object> colliders)
         {
             foreach (Object o in colliders)
             {
-
                 if (o.collideable && bounds.Intersects(o.bounds))
                 {
                     if (o is StaticObject || o is Unit)

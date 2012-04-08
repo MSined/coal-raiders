@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gameplay\Camera.cs" />
+    <Compile Include="Gameplay\DamageableObject.cs" />
     <Compile Include="Gameplay\SquadFactory.cs" />
     <Compile Include="Gameplay\Map.cs" />
     <Compile Include="Gameplay\NavigatingObject.cs" />

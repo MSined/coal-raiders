@@ -300,7 +300,7 @@ namespace coal_raider
             // Consequently the comparison operator as well
             for(int i = x1; i < x2; ++i)
             {
-                for (int j = y1; j > y2; --j)
+                for (int j = y1; j < y2; ++j)
                 {
                     cellIDs.Add(i + j * cellsPerRow);
                 }
@@ -310,7 +310,7 @@ namespace coal_raider
             foundObjects.Clear();
             int index = 0;
             int cellID = -1;
-            while (index <= 3 && (cellID = cellIDs[index]) != -1)
+            while (index < cellIDs.Count && (cellID = cellIDs[index]) != -1)
             {
                 int len = dynamicCells[cellID].Count;
                 for (int j = 0; j < len; ++j)
@@ -330,6 +330,7 @@ namespace coal_raider
                     // If the object is already in the list, don't include it
                     // Also make sure the collider is no itself!!
                     foundObjects.Add(collider);
+                    DebugShapeRenderer.AddBoundingBox(collider.bounds, Color.Orange);
                 }
                 ++index;
             }

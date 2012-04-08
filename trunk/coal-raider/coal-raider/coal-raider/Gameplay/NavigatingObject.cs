@@ -29,7 +29,6 @@ namespace coal_raider
         public Vector3 lookDirection = new Vector3(1, 0, 0);
         public Vector3 velocity = new Vector3(0, 0, 0);
         
-
         // Characters initial position is defined by the spawnpoint ther are associated with
         public NavigatingObject(Game game, Model[] modelComponents, Vector3 position, bool isAlive, bool canCollide)
             : base(game, modelComponents, position, isAlive, canCollide)

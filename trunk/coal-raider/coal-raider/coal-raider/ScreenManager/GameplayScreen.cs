@@ -46,11 +46,11 @@ namespace coal_raider
 
         Camera camera;
         Map map;
-        Unit unit1;
+        Unit unit1, unit2;
 
         BoundingFrustumRenderer bfRenderer;
 
-        Squad squad;
+        Squad squad1, squad2;
 
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
 
@@ -127,8 +127,12 @@ namespace coal_raider
             Model[] m = new Model[1];
             m[0] = unitModelMage;
 
-            unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior);
+            /*
+            unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-10, 0, -10), UnitType.Warrior, 1);
+            unit2 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
             components.Add(unit1);
+            components.Add(unit2);
+             * */
 
             #region TESTUNITREGION
 
@@ -147,26 +151,43 @@ namespace coal_raider
 
             #endregion
 
-            Unit[] unitList = new Unit[6];
-            unitList[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
-            unitList[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
-            unitList[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger);
-            unitList[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
-            unitList[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(0, 0, 0), UnitType.Mage);
-            unitList[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior);
+            Unit[] unitList1 = new Unit[6];
+            unitList1[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior, 0);
+            unitList1[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger, 0);
+            unitList1[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger, 0);
+            unitList1[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior, 0);
+            unitList1[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(0, 0, 0), UnitType.Mage, 0);
+            unitList1[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior, 0);
 
-            squad = SquadFactory.createSquad(ScreenManager.Game, unitList, SquadType.Pyramid);
-            squad.setTarget(unit1);
-            components.Add(squad);
+            squad1 = SquadFactory.createSquad(ScreenManager.Game, unitList1, SquadType.Pyramid);
+            components.Add(squad1);
 
+            Unit[] unitList2 = new Unit[5];
+            unitList2[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior, 1);
+            unitList2[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
+            unitList2[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
+            unitList2[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior, 1);
+            unitList2[4] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior, 1);
+
+            squad2 = SquadFactory.createSquad(ScreenManager.Game, unitList2, SquadType.Pentagram);
+            components.Add(squad2);
+
+            squad1.setTarget(unitList2[0]);
+            squad2.setTarget(unitList1[0]);
+            
             float cellSize = 2.0f;
             grid = new SpatialHashGrid(map.size.X * cellSize, map.size.Y * cellSize, cellSize, -map.size.X / 2, map.size.Y / 2);
             for (int i = 0; i < map.staticObjects.Count; ++i)
                 grid.insertStaticObject(map.staticObjects[i]);
-            /*
-            for (int i = 0; i < map.usableBuildings.Count; ++i)//for collisions
-                grid.insertStaticObject(map.usableBuildings[i]);
-            */
+            
+            for (int i = 0; i < unitList1.Length; ++i)//for collisions
+                grid.insertDynamicObject(unitList1[i]);
+
+            for (int i = 0; i < unitList2.Length; ++i)//for collisions
+                grid.insertDynamicObject(unitList2[i]);
+
+            //grid.insertDynamicObject(unit1);
+            //grid.insertDynamicObject(unit2);
 
             // Initialize our renderer
             DebugShapeRenderer.Initialize(ScreenManager.Game.GraphicsDevice);
@@ -378,14 +399,19 @@ namespace coal_raider
                 {
                     Ray singleClick = camera.GetMouseRay(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), ScreenManager.Game);
 
-                    //THIS FOREACH LOOP IS FOR DEBUGGING/IMPLEMENTATION PURPOSES OF SINGLE CLICK SELECTION WHEN TIME NEEDED INSERT SQUAD SELECTION CODE HERE
-                    foreach (Unit u in testUnitList)
+                    foreach (GameComponent gc in components)
                     {
-                        if (singleClick.Intersects(u.bounds).HasValue)
+                        if (gc is Object)
                         {
-                            components.Remove(u);
+                            Object o = (Object)gc;
+                            if (singleClick.Intersects(o.bounds).HasValue)
+                            {
+                                foreach (Squad s in selectedSquads)
+                                {
+                                    s.setTarget(o);
+                                }
+                            }
                         }
-
                     }
                 }
 
@@ -502,6 +528,16 @@ namespace coal_raider
                     Object o = (Object)gc;
                     o.Draw(camera);
                 }
+                if (gc is DamageableObject)
+                {
+                    DamageableObject o = (DamageableObject)gc;
+                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, mDottedLine);
+                }
+                if (gc is Squad)
+                {
+                    Squad o = (Squad)gc;
+                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, mDottedLine);
+                }
             }
 
             //bfRenderer.Draw(camera);
@@ -535,7 +571,8 @@ namespace coal_raider
                 {
                     foreach (BasicEffect be in mesh.Effects)
                     {
-                        //be.EnableDefaultLighting();
+                        be.EnableDefaultLighting();
+                        be.SpecularPower = 100f;
                         be.Projection = camera.projection;
                         be.View = camera.view;
                         be.World = pos * mesh.ParentBone.Transform;
