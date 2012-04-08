@@ -145,7 +145,7 @@ namespace coal_raider
 
             foreach (Object o in objList)
             {
-                if (!(o is DamageableObject /*|| o is AttackableBuilding*/))
+                if (!(o is DamageableObject /*|| o is AttackableBuilding*/) || !o.isAlive)
                     continue;
 
                 DamageableObject u = (DamageableObject)o;
@@ -292,7 +292,7 @@ namespace coal_raider
         {
             foreach (Object o in colliders)
             {
-                if (o.collideable && bounds.Intersects(o.bounds))
+                if (o.collideable && o.isAlive && bounds.Intersects(o.bounds))
                 {
                     if (o is StaticObject || o is Unit)
                     {
