@@ -213,6 +213,18 @@ namespace coal_raider
             return false;
         }
 
+        public bool Intersects(Ray r)
+        {
+            foreach (Unit u in unitList)
+            {
+                if (r.Intersects(u.bounds).HasValue)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private float getBiggestRange()
         {
             float br = 0;
