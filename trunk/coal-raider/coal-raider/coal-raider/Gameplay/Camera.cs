@@ -15,7 +15,7 @@ namespace coal_raider
         public Matrix view { get; protected set; }
         public Matrix projection { get; protected set; }
         // Camera attributes for constructor
-        public Vector3 cameraPosition { get; protected set; }
+        public Vector3 cameraPosition { get; set; }
         public Vector3 cameraDistFromPlayer;
         Vector3 cameraDirection;
         Vector3 cameraUp;
@@ -73,8 +73,36 @@ namespace coal_raider
             var msPt = new Point(ms.X, ms.Y);
             if (!noActionRectangle.Contains(msPt))
             {
-                cameraTarget += msV;
+                if ((cameraPosition.X >= -20 && cameraPosition.X <= 25))
+                {
+                    cameraTarget.X += msV.X;
+                }
+                else if (cameraPosition.X < -20)
+                {
+                    cameraTarget.X = -20;
+                }
+                else if (cameraPosition.X > 25)
+                {
+                    cameraTarget.X = 25;
+                }
+
+                if ((cameraPosition.Z >= -15 && cameraPosition.Z <= 40))
+                {
+                    cameraTarget.Z += msV.Z;
+                }
+                else if (cameraPosition.Z < -15)
+                {
+                    cameraTarget.Z = -15 - 12.2f;
+                }
+                else if (cameraPosition.Z > 40)
+                {
+                    cameraTarget.Z = 40 - 12.2f;
+                }
+
+                System.Diagnostics.Debug.WriteLine(cameraPosition.Z);
+
             }
+
             cameraPosition = cameraTarget + (Vector3.UnitZ * 2.2f) + cameraDistFromPlayer;
 
             // Check for scroll wheel zooming
