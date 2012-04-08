@@ -50,7 +50,7 @@ namespace coal_raider
 
         BoundingFrustumRenderer bfRenderer;
 
-        Squad squad1, squad2;
+        Squad squad1, squad2, squad3;
 
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
 
@@ -172,8 +172,16 @@ namespace coal_raider
             squad2 = SquadFactory.createSquad(ScreenManager.Game, unitList2, SquadType.Pentagram);
             components.Add(squad2);
 
-            squad1.setTarget(unitList2[0]);
-            squad2.setTarget(unitList1[0]);
+            Unit[] unitList3 = new Unit[3];
+            unitList3[0] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(30, 0, 30), UnitType.Mage, 1);
+            unitList3[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
+            unitList3[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
+
+            squad3 = SquadFactory.createSquad(ScreenManager.Game, unitList3, SquadType.Triangle);
+            components.Add(squad3);
+
+            //squad1.setTarget(unitList2[0]);
+            //squad2.setTarget(unitList1[0]);
             
             float cellSize = 2.0f;
             grid = new SpatialHashGrid(map.size.X * cellSize, map.size.Y * cellSize, cellSize, -map.size.X / 2, map.size.Y / 2);
@@ -401,6 +409,20 @@ namespace coal_raider
 
                     foreach (GameComponent gc in components)
                     {
+                        //Will need to remove this so that players cannot direct squads to other squads, they ahve to attack buildings
+                        if (gc is Squad)
+                        {
+                            Squad sq = (Squad)gc;
+                            if (sq.Intersects(singleClick))
+                            {
+                                foreach (Squad s in selectedSquads)
+                                {
+                                    s.setTarget(sq);
+                                }
+                            }
+                        }
+                        //End
+
                         if (gc is Object)
                         {
                             Object o = (Object)gc;
