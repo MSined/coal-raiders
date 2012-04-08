@@ -10,11 +10,14 @@ using Microsoft.Xna.Framework.Input;
 namespace coal_raider
 {
     public enum SquadType
-    {
-        Pentagram,
-        Pyramid,
-        Square,
-        Flank,
+    {   
+        Flank, //6
+        Lane, //2
+        Pentagram, //5
+        Pyramid, //6
+        Solo, //1
+        Square, //4
+        Triangle, //3
     }
 
     public enum SquadSlotType
@@ -30,204 +33,102 @@ namespace coal_raider
         {
             switch(type)
             {
+                case SquadType.Flank:
+                    return createFlank(game, unitList);
+
+                case SquadType.Lane:
+                    return createLane(game, unitList);
+
                 case SquadType.Pentagram:
                     return createPentagram(game, unitList);
 
                 case SquadType.Pyramid:
                     return createPyramid(game, unitList);
 
+                case SquadType.Solo:
+                    return createSolo(game, unitList);
+
                 case SquadType.Square:
                     return createSquare(game, unitList);
 
-                case SquadType.Flank:
-                    return createFlank(game, unitList);
+                case SquadType.Triangle:
+                    return createTriangle(game, unitList);
             }
             return null;
-        }
-
-        private static Squad createPentagram(Game game, Unit[] unitList)
-        {
-            int numUnitsInFormation = 5;
-            Vector3[] formationOffset = {
-                                    new Vector3(-1,0,0),
-                                    new Vector3(1,0,0),
-                                    new Vector3(0,0,1),
-                                    new Vector3(-0.5f,0,-1),
-                                    new Vector3(0.5f,0,-1)
-                                    };
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Ranged,
-                                    };
-
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
-        }
-        public static Vector3[] getPentagramFormationOffset()
-        {
-
-            Vector3[] formationOffset = {
-                                    new Vector3(-1,0,0),
-                                    new Vector3(1,0,0),
-                                    new Vector3(0,0,1),
-                                    new Vector3(-0.5f,0,-1),
-                                    new Vector3(0.5f,0,-1)
-                                    };
-
-            return formationOffset;
-        }
-        public static SquadSlotType[] getPentagramFormationSlotTypes()
-        {
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Ranged,
-                                    };
-
-            return formationSlotTypes;
-        }
-
-        private static Squad createPyramid(Game game, Unit[] unitList)
-        {
-            int numUnitsInFormation = 6;
-            Vector3[] formationOffset = {
-                                    new Vector3(0,0,1),
-                                    new Vector3(0.5f,0,0),
-                                    new Vector3(-0.5f,0,0),
-                                    new Vector3(1,0,-1),
-                                    new Vector3(0,0,-1),
-                                    new Vector3(-1,0,-1)
-                                    };
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Magic,
-                                    SquadSlotType.Ranged,
-                                    };
-
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
-        }
-        public static Vector3[] getPyramidFormationOffset()
-        {
-            Vector3[] formationOffset = {
-                                    new Vector3(0,0,1),
-                                    new Vector3(0.5f,0,0),
-                                    new Vector3(-0.5f,0,0),
-                                    new Vector3(1,0,-1),
-                                    new Vector3(0,0,-1),
-                                    new Vector3(-1,0,-1)
-                                    };
-
-            return formationOffset;
-        }
-        public static SquadSlotType[] getPyramidFormationSlotTypes()
-        {
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Magic,
-                                    SquadSlotType.Ranged,
-                                    };
-
-            return formationSlotTypes;
-        }
-
-        private static Squad createSquare(Game game, Unit[] unitList)
-        {
-            int numUnitsInFormation = 4;
-            Vector3[] formationOffset = {
-                                    new Vector3(0.5f,0,0.5f),
-                                    new Vector3(-0.5f,0,0.5f),
-                                    new Vector3(0.5f,0,-0.5f),
-                                    new Vector3(-0.5f,0,-0.5f)
-                                    };
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Ranged,
-                                    };
-
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
-        }
-        public static Vector3[] getSquareFormationOffset()
-        {
-            Vector3[] formationOffset = {
-                                    new Vector3(0.5f,0,0.5f),
-                                    new Vector3(-0.5f,0,0.5f),
-                                    new Vector3(0.5f,0,-0.5f),
-                                    new Vector3(-0.5f,0,-0.5f)
-                                    };
-
-            return formationOffset;
-        }
-        public static SquadSlotType[] getSquareFormationSlotTypes()
-        {
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Ranged,
-                                    };
-
-            return formationSlotTypes;
         }
 
         private static Squad createFlank(Game game, Unit[] unitList)
         {
             int numUnitsInFormation = 6;
-            Vector3[] formationOffset = {
-                                    new Vector3(1,0,1),
-                                    new Vector3(-1,0,1),
-                                    new Vector3(-0.5f,0,0),
-                                    new Vector3(0.5f,0,0),
-                                    new Vector3(1,0,0),
-                                    new Vector3(-1,0,0)
-                                    };
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Magic,
-                                    SquadSlotType.Magic,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Ranged,
-                                    };
+            Vector3[] formationOffset = getFormationOffset(SquadType.Flank);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Flank);
 
             return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
         }
-        public static Vector3[] getFlankFormationOffset()
-        {
-            Vector3[] formationOffset = {
-                                    new Vector3(1,0,1),
-                                    new Vector3(-1,0,1),
-                                    new Vector3(-0.5f,0,0),
-                                    new Vector3(0.5f,0,0),
-                                    new Vector3(1,0,0),
-                                    new Vector3(-1,0,0)
-                                    };
 
-            return formationOffset;
+        private static Squad createLane(Game game, Unit[] unitList)
+        {
+            int numUnitsInFormation = 2;
+            Vector3[] formationOffset = getFormationOffset(SquadType.Lane);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Lane);
+
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
         }
-        public static SquadSlotType[] getFlankFormationSlotTypes()
-        {
-            SquadSlotType[] formationSlotTypes = {
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Melee,
-                                    SquadSlotType.Magic,
-                                    SquadSlotType.Magic,
-                                    SquadSlotType.Ranged,
-                                    SquadSlotType.Ranged,
-                                    };
 
-            return formationSlotTypes;
+        private static Squad createPentagram(Game game, Unit[] unitList)
+        {
+            int numUnitsInFormation = 5;
+            Vector3[] formationOffset = getFormationOffset(SquadType.Pentagram);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Pentagram);
+
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+        }
+
+        private static Squad createPyramid(Game game, Unit[] unitList)
+        {
+            int numUnitsInFormation = 6;
+            Vector3[] formationOffset = getFormationOffset(SquadType.Pyramid);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Pyramid);
+
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+        }
+
+        private static Squad createSolo(Game game, Unit[] unitList)
+        {
+            int numUnitsInFormation = 1;
+            Vector3[] formationOffset = getFormationOffset(SquadType.Solo);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Solo);
+
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+        }
+
+        private static Squad createSquare(Game game, Unit[] unitList)
+        {
+            int numUnitsInFormation = 4;
+            Vector3[] formationOffset = getFormationOffset(SquadType.Square);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Square);
+
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+        }
+
+        private static Squad createTriangle(Game game, Unit[] unitList)
+        {
+            int numUnitsInFormation = 3;
+            Vector3[] formationOffset = getFormationOffset(SquadType.Triangle);
+            SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Triangle);
+
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+        }
+
+        public static SquadType? getFormationFromCount(int i){
+            foreach (SquadType st in Enum.GetValues(typeof(SquadType)))
+            {
+                if (i == SquadFactory.getFormationUnitCount(st))
+                {
+                    return st;
+                }
+            }
+            return null;
         }
 
         public static int getFormationUnitCount(SquadType s)
@@ -237,20 +138,157 @@ namespace coal_raider
                 case SquadType.Flank:
                     return 6;
 
+                case SquadType.Lane:
+                    return 2;
+
                 case SquadType.Pentagram:
                     return 5;
 
                 case SquadType.Pyramid:
                     return 6;
 
+                case SquadType.Solo:
+                    return 1;
+
                 case SquadType.Square:
                     return 4;
+
+                case SquadType.Triangle:
+                    return 3;
 
                 default:
                     return 0;
             }
         }
 
+        public static Vector3[] getFormationOffset(SquadType s)
+        {
+            switch (s)
+            {
+                case SquadType.Flank:
+                    return new Vector3[] {
+                                            new Vector3(1,0,1),
+                                            new Vector3(-1,0,1),
+                                            new Vector3(-0.5f,0,0),
+                                            new Vector3(0.5f,0,0),
+                                            new Vector3(1,0,0),
+                                            new Vector3(-1,0,0)
+                                            };
+
+                case SquadType.Lane:
+                    return new Vector3[] {
+                                            new Vector3(0.5f,0,0),
+                                            new Vector3(-0.5f,0,0)
+                                            };
+
+                case SquadType.Pentagram:
+                    return new Vector3[] {
+                                            new Vector3(-1,0,0),
+                                            new Vector3(1,0,0),
+                                            new Vector3(0,0,1),
+                                            new Vector3(-0.5f,0,-1),
+                                            new Vector3(0.5f,0,-1)
+                                            };
+
+                case SquadType.Pyramid:
+                    return new Vector3[] {
+                                            new Vector3(0,0,1),
+                                            new Vector3(0.5f,0,0),
+                                            new Vector3(-0.5f,0,0),
+                                            new Vector3(1,0,-1),
+                                            new Vector3(0,0,-1),
+                                            new Vector3(-1,0,-1)
+                                            };
+
+                case SquadType.Solo:
+                    return new Vector3[] {
+                                            new Vector3(0,0,0)
+                                            };
+
+                case SquadType.Square:
+                    return new Vector3[] {
+                                            new Vector3(0.5f,0,0.5f),
+                                            new Vector3(-0.5f,0,0.5f),
+                                            new Vector3(0.5f,0,-0.5f),
+                                            new Vector3(-0.5f,0,-0.5f)
+                                            };
+
+                case SquadType.Triangle:
+                    return new Vector3[] {
+                                            new Vector3(0,0,1),
+                                            new Vector3(0.5f,0,0),
+                                            new Vector3(-0.5f,0,0),
+                                            };
+
+                default:
+                    return null;
+            }
+        }
+
+        public static SquadSlotType[] getFormationSlotTypes(SquadType s)
+        {
+            switch (s)
+            {
+                case SquadType.Flank:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Magic,
+                                                SquadSlotType.Magic,
+                                                SquadSlotType.Ranged,
+                                                SquadSlotType.Ranged,
+                                                };
+
+                case SquadType.Lane:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Magic
+                                                };
+
+                case SquadType.Pentagram:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Ranged,
+                                                SquadSlotType.Ranged,
+                                                };
+
+                case SquadType.Pyramid:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Ranged,
+                                                SquadSlotType.Magic,
+                                                SquadSlotType.Ranged,
+                                                };
+
+                case SquadType.Solo:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee
+                                                };
+
+                case SquadType.Square:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Ranged,
+                                                SquadSlotType.Ranged,
+                                                };
+
+                case SquadType.Triangle:
+                    return new SquadSlotType[] {
+                                                SquadSlotType.Melee,
+                                                SquadSlotType.Ranged,
+                                                SquadSlotType.Ranged,
+                                                };
+
+                default:
+                    return null;
+            }
+        }
+        
         public static int getSlotCost(UnitType uType, SquadSlotType sType)
         {
             switch (uType)

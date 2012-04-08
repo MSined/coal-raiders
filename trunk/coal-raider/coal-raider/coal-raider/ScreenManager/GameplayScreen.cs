@@ -163,11 +163,11 @@ namespace coal_raider
             components.Add(squad1);
 
             Unit[] unitList2 = new Unit[5];
-            unitList2[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior, 1);
-            unitList2[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
-            unitList2[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
-            unitList2[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior, 1);
-            unitList2[4] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, 30), UnitType.Warrior, 1);
+            unitList2[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
+            unitList2[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(10, 0, 10), UnitType.Ranger, 1);
+            unitList2[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(10, 0, 10), UnitType.Ranger, 1);
+            unitList2[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
+            unitList2[4] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
 
             squad2 = SquadFactory.createSquad(ScreenManager.Game, unitList2, SquadType.Pentagram);
             components.Add(squad2);
