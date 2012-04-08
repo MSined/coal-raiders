@@ -40,7 +40,7 @@ namespace coal_raider
             this.unitsBeforeAttack = unitList.Length;
             this.unitList = placeUnits(unitList);
 
-            bigestRange = float.MinValue;
+            bigestRange = 0;
             float totalSpeed = 0;
             foreach (Unit u in unitList)
             {
@@ -136,24 +136,38 @@ namespace coal_raider
 
             Matrix rotation = getRotationMatrix();
             Vector3 anchor = position + avgSpeed * velocity;
-            
-            // Calculate distance to squad target
-            float range = (target.position - this.position).LengthSquared();
+
+            //Debug Stuff
+            BoundingSphere bs = new BoundingSphere(this.position, bigestRange);
+            DebugShapeRenderer.AddBoundingSphere(bs, Color.Red);
+            //End Debug stuff
+
+            BoundingBox bb = new BoundingBox(bs.Center - new Vector3(bigestRange, bigestRange, bigestRange), bs.Center + new Vector3(bigestRange, bigestRange, bigestRange));
+
+            //Get possible attackers
+            List<Object> possibleAttack =  grid.getAttackBoxColliders(bb);
+            List<Object> temp = new List<Object>();
+            foreach (Object o in possibleAttack)
+            {
+                if (o.bounds.Intersects(bs) && !(o is StaticObject))
+                    temp.Add(o);
+            }
+            possibleAttack = temp;
 
             for (int i=0; i < unitList.Length; ++i )
             {
                 Vector3 newPos = anchor + Vector3.Transform(formationOffset[i], rotation);
+                bool attacking = false;
 
                 // Check if the squad is in range
-                if (range < bigestRange)
+                if (possibleAttack.Count > 0)
                 {
-                    // If so, set the unit target to the squad target
-                    unitList[i].setTarget(target.position, velocity);
+                    // If so, tell the unit to select one of the other units and attack
+                    attacking = unitList[i].selectAttack(possibleAttack);
                     wasAttacking = true;
-                    //unitList[i].attacking = true;
                 }
-                // Otherwise
-                else
+                
+                if (!attacking)
                 {
                     // If we were attacking and are no longer, check if squad formation needs
                     // to be changed
@@ -162,7 +176,6 @@ namespace coal_raider
 
                     // Set the unit target to the squad position
                     unitList[i].setTarget(newPos, velocity);
-                    //unitList[i].attacking = false;
                 }
 
                 unitList[i].Update(gameTime, grid, waypointList);
@@ -199,6 +212,14 @@ namespace coal_raider
             foreach (Unit u in unitList)
             {
                 u.Draw(camera);
+            }
+        }
+
+        public void drawHealth(Camera camera, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D healthTexture)
+        {
+            foreach (Unit u in unitList)
+            {
+                u.drawHealth(camera, spriteBatch, graphicsDevice, healthTexture);
             }
         }
 
