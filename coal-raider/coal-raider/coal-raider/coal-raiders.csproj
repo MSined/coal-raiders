@@ -142,6 +142,7 @@
     <Compile Include="ScreenManager\PhonePauseScreen.cs" />
     <Compile Include="ScreenManager\PlayerIndexEventArgs.cs" />
     <Compile Include="Tools\BoundingFrustumRenderer.cs" />
+    <Compile Include="Tools\Spawnpoint.cs" />
     <Compile Include="Tools\DebugShapeRenderer.cs" />
     <Compile Include="Tools\MultiMap.cs" />
     <Compile Include="Tools\SpatialHashGrid.cs" />

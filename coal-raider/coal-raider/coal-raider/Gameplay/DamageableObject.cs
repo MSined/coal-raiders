@@ -14,8 +14,6 @@ namespace coal_raider
 
         public int topHP { get; protected set; }
         public int hp { get; protected set; }
-        public int topSP { get; protected set; }
-        public int sp { get; protected set; }
 
         public int meleeDefense { get; protected set; }
         public int rangeDefense { get; protected set; }
@@ -23,17 +21,16 @@ namespace coal_raider
 
         public int team { get; protected set; }
 
+        private Vector3 blackVector = new Vector3(0, 0, 0);
+
         public DamageableObject(Game game, Model[] modelComponents, Vector3 position,
-            int topHP, int topSP, int meleeDefence, int rangeDefence, int magicDefence, bool isAlive, int team)
+            int topHP, int meleeDefence, int rangeDefence, int magicDefence, bool isAlive, int team)
             : base(game, modelComponents, position, isAlive, true)
         {
             this.team = team;
 
             this.topHP = topHP;
             this.hp = topHP;
-
-            this.topSP = topSP;
-            this.sp = topSP;
 
             this.meleeDefense = meleeDefense;
             this.rangeDefense = rangeDefense;
@@ -81,6 +78,27 @@ namespace coal_raider
             {
                 isAlive = false;
             }
+        }
+
+        public override void Draw(Camera camera)
+        {
+            Matrix[] transforms = new Matrix[modelComponents[0].Bones.Count];
+            modelComponents[0].CopyAbsoluteBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in modelComponents[0].Meshes)
+            {
+                foreach (BasicEffect be in mesh.Effects)
+                {
+                    be.EnableDefaultLighting();
+                    be.SpecularColor = blackVector;
+                    be.Projection = camera.projection;
+                    be.View = camera.view;
+                    be.World = world * mesh.ParentBone.Transform;
+                }
+                mesh.Draw();
+            }
+
+            //DebugShapeRenderer.AddBoundingBox(bounds, Color.Green);
         }
 
     }

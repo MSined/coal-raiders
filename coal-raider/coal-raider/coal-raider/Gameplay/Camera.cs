@@ -20,16 +20,14 @@ namespace coal_raider
         Vector3 cameraDirection;
         Vector3 cameraUp;
 
-        public Vector3 cameraTarget;
+        private Vector3 cameraTarget;
 
         // Current scroll wheel value. It stores the cumulative scroll value since start of game
         // Also used to verify against new scroll values to determine if zoom in or out
         float scrollWheelValue = 0;
 
-        private Game game;
-
-        private Vector3 origPos, origTarget, origUp, origDir, origDistFromPlayer;
-
+        //private Game game;
+        
         private Vector2 screenSizeOver2; // Should be Size technically, but we want floats.
         private Rectangle noActionRectangle;
         private const int MouseCameraBorder = 5; // Really, this should be 1.
@@ -39,7 +37,7 @@ namespace coal_raider
         public Camera(Game game, Vector3 pos /* in respect to player*/, Vector3 target, Vector3 up, Vector2 mapSize)
             : base(game)
         {
-            this.game = game;
+            //this.game = game;
             // Set values and create required matrices
             cameraPosition = pos;
             cameraDistFromPlayer = pos;
@@ -51,17 +49,12 @@ namespace coal_raider
                                                              (float)Game.Window.ClientBounds.Width /
                                                              (float)Game.Window.ClientBounds.Height,
                                                              0.01f, 1000);
-            origPos = pos;
-            origTarget = target;
-            origUp = up;
-            origDir = cameraDirection;
-            origDistFromPlayer = cameraDistFromPlayer;
 
             var vp = game.GraphicsDevice.Viewport;
             noActionRectangle = new Rectangle(MouseCameraBorder, MouseCameraBorder, vp.Width - MouseCameraBorder * 2, vp.Height - MouseCameraBorder * 2);
             screenSizeOver2 = new Vector2(vp.Width / 2, vp.Height / 2);
 
-            this.mapSize = mapSize - new Vector2(7, 5);
+            this.mapSize = mapSize - new Vector2(5, 5);
         }
 
         public override void Initialize()
@@ -75,7 +68,7 @@ namespace coal_raider
             var msV = new Vector3((ms.X - screenSizeOver2.X) / screenSizeOver2.X, 0, (ms.Y - screenSizeOver2.Y) / screenSizeOver2.Y);
             var msPt = new Point(ms.X, ms.Y);
             var mouseMouvementScalar = 0.5f;
-
+            
             if (!noActionRectangle.Contains(msPt))
             {
                 if ((cameraTarget.X >= -mapSize.X && cameraTarget.X <= mapSize.X))
@@ -96,7 +89,7 @@ namespace coal_raider
                     cameraTarget.Z -= msV.Z * mouseMouvementScalar;
                 }
 
-                System.Diagnostics.Debug.WriteLine(cameraTarget.Z);
+                //System.Diagnostics.Debug.WriteLine(cameraTarget.Z);
 
             }
 
@@ -119,6 +112,30 @@ namespace coal_raider
             CreateLookAt();
 
             base.Update(gameTime);
+        }
+
+        public void centerCameraOn(Vector3 v)
+        {
+            cameraTarget = v;
+
+            //make sure its inside the view we want the player to have
+            if (cameraTarget.X < -mapSize.X)
+            {
+                cameraTarget.X = -mapSize.X;
+            }
+            else if (cameraTarget.X > mapSize.X)
+            {
+                cameraTarget.X = mapSize.X;
+            }
+            else if (cameraTarget.Z < -mapSize.Y)
+            {
+                cameraTarget.Z = -mapSize.Y;
+            }
+            else if (cameraTarget.Z > mapSize.Y)
+            {
+                cameraTarget.Z = mapSize.Y;
+            }
+
         }
 
         private void CreateLookAt()

@@ -248,6 +248,7 @@ namespace coal_raider
 
             #endregion
 
+            /*
             Unit[] unitList1 = new Unit[6];
             unitList1[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
             unitList1[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, 45), UnitType.Ranger, 0);
@@ -256,7 +257,7 @@ namespace coal_raider
             unitList1[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(-30, 0, 45), UnitType.Mage, 0);
             unitList1[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
 
-            squad1 = SquadFactory.createSquad(ScreenManager.Game, unitList1, SquadType.Pyramid);
+            squad1 = SquadFactory.createSquad(ScreenManager.Game, unitList1, 0);
             components.Add(squad1);
 
             Unit[] unitList2 = new Unit[5];
@@ -266,7 +267,7 @@ namespace coal_raider
             unitList2[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, -45), UnitType.Warrior, 1);
             unitList2[4] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, -45), UnitType.Warrior, 1);
 
-            squad2 = SquadFactory.createSquad(ScreenManager.Game, unitList2, SquadType.Pentagram);
+            squad2 = SquadFactory.createSquad(ScreenManager.Game, unitList2, 0);
             components.Add(squad2);
 
             Unit[] unitList3 = new Unit[3];
@@ -274,9 +275,9 @@ namespace coal_raider
             unitList3[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, -40), UnitType.Ranger, 1);
             unitList3[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, -40), UnitType.Ranger, 1);
 
-            squad3 = SquadFactory.createSquad(ScreenManager.Game, unitList3, SquadType.Triangle);
+            squad3 = SquadFactory.createSquad(ScreenManager.Game, unitList3, 1);
             components.Add(squad3);
-
+            */
             //squad1.setTarget(unitList2[0]);
             //squad2.setTarget(unitList1[0]);
             
@@ -284,12 +285,20 @@ namespace coal_raider
             grid = new SpatialHashGrid(map.size.X * cellSize, map.size.Y * cellSize, cellSize, -map.size.X / 2, map.size.Y / 2);
             for (int i = 0; i < map.staticObjects.Count; ++i)
                 grid.insertStaticObject(map.staticObjects[i]);
+
+            for (int i = 0; i < map.buildings.Count; ++i)
+            {
+                grid.insertStaticObject(map.buildings[i]);
+                if (map.buildings[i].team == 0) camera.centerCameraOn(map.buildings[i].position);
+            }
             
+            /*
             for (int i = 0; i < unitList1.Length; ++i)//for collisions
                 grid.insertDynamicObject(unitList1[i]);
 
             for (int i = 0; i < unitList2.Length; ++i)//for collisions
                 grid.insertDynamicObject(unitList2[i]);
+             * */
 
             //grid.insertDynamicObject(unit1);
             //grid.insertDynamicObject(unit2);
@@ -492,7 +501,7 @@ namespace coal_raider
                         if (gc is Squad)
                         {
                             Squad s = (Squad)gc;
-                            if (s.Intersects(bFrustrum))
+                            if (s.Intersects(bFrustrum) && s.team == 0)
                                 selectedSquads.Add(s);
                         }
                     }

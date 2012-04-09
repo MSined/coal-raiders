@@ -44,9 +44,9 @@ namespace coal_raider
 
         // Characters initial position is defined by the spawnpoint ther are associated with
         public Unit(Game game, Model[] modelComponents, Vector3 position,
-            UnitType type, int topHP, int topSP, int meleeAttack, int rangeAttack, int magicAttack, int meleeDefence, int rangeDefence, int magicDefence, float speed, bool isAlive, int team,
+            UnitType type, int topHP, int meleeAttack, int rangeAttack, int magicAttack, int meleeDefence, int rangeDefence, int magicDefence, float speed, bool isAlive, int team,
             float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate)
-            : base(game, modelComponents, position, topHP, topSP, meleeDefence, rangeDefence, magicDefence, isAlive, team)
+            : base(game, modelComponents, position, topHP, meleeDefence, rangeDefence, magicDefence, isAlive, team)
         { 
             this.type = type;
             this.speed = speed;
@@ -128,12 +128,14 @@ namespace coal_raider
 
             checkIfDead();
 
+            /*
             spRecoverTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (sp < topSP && spRecoverTimer > spRecoverInterval)
             {
                 sp += spRecoverRate;
                 spRecoverTimer = 0;
             }
+             */
 
             //base.Update(gameTime, colliders, cameraTarget, waypointList);
         }

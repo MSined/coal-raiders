@@ -25,10 +25,12 @@ namespace coal_raider
         // Moved this out of Update function
         Random rand = new Random();
 
-        public bool wasAttacking = false, verifySquad = false;
+        //public bool wasAttacking = false, verifySquad = false;
         int unitsBeforeAttack;
 
-        public Squad(Game game, Unit[] unitList, int numUnitsInFormation, Vector3[] formationOffset, SquadSlotType[] formationSlotTypes)
+        public int team { get; protected set; }
+
+        public Squad(Game game, Unit[] unitList, int numUnitsInFormation, Vector3[] formationOffset, SquadSlotType[] formationSlotTypes, int team)
             : base(game, null, new Vector3(0,0,0), true, false)
         {
             if (unitList.Length != numUnitsInFormation)
@@ -39,6 +41,7 @@ namespace coal_raider
             this.numUnitsInFormation = numUnitsInFormation;
             this.unitsBeforeAttack = unitList.Length;
             this.unitList = placeUnits(unitList);
+            this.team = team;
 
             biggestRange = getBiggestRange();
             avgSpeed = getSpeed();
