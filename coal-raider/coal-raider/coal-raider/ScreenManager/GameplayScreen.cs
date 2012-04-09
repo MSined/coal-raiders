@@ -55,7 +55,7 @@ namespace coal_raider
         // REMOVE THESE TEXTURES
         public static Texture2D wpltex1, wpltex2, wpltex3;
 
-        Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus, resources;
+        Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus, resources, squadsTexture;
         Rectangle mSelectionBox;
             //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
 
@@ -166,6 +166,7 @@ namespace coal_raider
             altMinus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altMinus");
             altPlus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altPlus");
             resources = ScreenManager.Game.Content.Load<Texture2D>(@"UI\resources");
+            squadsTexture = ScreenManager.Game.Content.Load<Texture2D>(@"UI\squads");
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
             #region UI
@@ -792,6 +793,11 @@ namespace coal_raider
                 spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].mageNum, new Vector2(1235, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
             }
 
+            // DrawText REAL VALUES SHOULD BE INSERTED HERE
+            spriteBatch.DrawString(gameFont, "0", new Vector2(1135, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(gameFont, "0", new Vector2(1185, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(gameFont, "0", new Vector2(1235, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+
             // Draw Squad UI Elements here
             foreach (unitUiBox uiBox in unitUIBoxList) 
             {
@@ -825,6 +831,16 @@ namespace coal_raider
                     spriteBatch.Draw(altCreate, uiBox.createRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
             }
+
+            //Draw squads buttons on bottom
+            spriteBatch.Draw(squadsTexture, new Rectangle(275, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(375, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(475, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(575, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(675, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(775, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(875, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(squadsTexture, new Rectangle(975, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
 
             // Draw Resource UI element
             spriteBatch.Draw(resources, new Rectangle(1115, 610, resources.Width, resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
