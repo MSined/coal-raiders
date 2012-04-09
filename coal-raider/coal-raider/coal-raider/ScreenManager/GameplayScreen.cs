@@ -46,7 +46,6 @@ namespace coal_raider
 
         Camera camera;
         Map map;
-        Unit unit1, unit2;
 
         BoundingFrustumRenderer bfRenderer;
 
@@ -54,7 +53,7 @@ namespace coal_raider
 
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
 
-        Texture2D mDottedLine, userInterface, squadCreate, altCreate, altMinus, altPlus;
+        Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus;
         Rectangle mSelectionBox, squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
 
         List<Rectangle> altCreateRec = new List<Rectangle>();
@@ -109,12 +108,12 @@ namespace coal_raider
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
-
             userInterface = ScreenManager.Game.Content.Load<Texture2D>(@"UI\UI");
             squadCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\squadCreate");
             altCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altCreate");
             altMinus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altMinus");
             altPlus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altPlus");
+            blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
             squadCreateRec1 = new Rectangle(1115, 20, squadCreate.Width, squadCreate.Height);
             squadCreateRec2 = new Rectangle(1115, 165, squadCreate.Width, squadCreate.Height);
@@ -186,30 +185,30 @@ namespace coal_raider
             #endregion
 
             Unit[] unitList1 = new Unit[6];
-            unitList1[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior, 0);
-            unitList1[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger, 0);
-            unitList1[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(0, 0, 0), UnitType.Ranger, 0);
-            unitList1[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior, 0);
-            unitList1[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(0, 0, 0), UnitType.Mage, 0);
-            unitList1[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(0, 0, 0), UnitType.Warrior, 0);
+            unitList1[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
+            unitList1[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, 45), UnitType.Ranger, 0);
+            unitList1[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, 45), UnitType.Ranger, 0);
+            unitList1[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
+            unitList1[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(-30, 0, 45), UnitType.Mage, 0);
+            unitList1[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
 
             squad1 = SquadFactory.createSquad(ScreenManager.Game, unitList1, SquadType.Pyramid);
             components.Add(squad1);
 
             Unit[] unitList2 = new Unit[5];
-            unitList2[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
-            unitList2[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(10, 0, 10), UnitType.Ranger, 1);
-            unitList2[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(10, 0, 10), UnitType.Ranger, 1);
-            unitList2[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
-            unitList2[4] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(10, 0, 10), UnitType.Warrior, 1);
+            unitList2[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, -45), UnitType.Warrior, 1);
+            unitList2[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, -45), UnitType.Ranger, 1);
+            unitList2[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, -45), UnitType.Ranger, 1);
+            unitList2[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, -45), UnitType.Warrior, 1);
+            unitList2[4] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(30, 0, -45), UnitType.Warrior, 1);
 
             squad2 = SquadFactory.createSquad(ScreenManager.Game, unitList2, SquadType.Pentagram);
             components.Add(squad2);
 
             Unit[] unitList3 = new Unit[3];
-            unitList3[0] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(30, 0, 30), UnitType.Mage, 1);
-            unitList3[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
-            unitList3[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(30, 0, 30), UnitType.Ranger, 1);
+            unitList3[0] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(-30, 0, -40), UnitType.Mage, 1);
+            unitList3[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, -40), UnitType.Ranger, 1);
+            unitList3[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, -40), UnitType.Ranger, 1);
 
             squad3 = SquadFactory.createSquad(ScreenManager.Game, unitList3, SquadType.Triangle);
             components.Add(squad3);
@@ -612,12 +611,12 @@ namespace coal_raider
                 if (gc is DamageableObject)
                 {
                     DamageableObject o = (DamageableObject)gc;
-                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, mDottedLine);
+                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, blankTexture);
                 }
                 if (gc is Squad)
                 {
                     Squad o = (Squad)gc;
-                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, mDottedLine);
+                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, blankTexture);
                 }
             }
 
