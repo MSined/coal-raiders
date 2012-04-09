@@ -55,7 +55,7 @@ namespace coal_raider
         // REMOVE THESE TEXTURES
         public static Texture2D wpltex1, wpltex2, wpltex3;
 
-        Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus;
+        Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus, resources;
         Rectangle mSelectionBox;
             //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
 
@@ -165,6 +165,7 @@ namespace coal_raider
             altCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altCreate");
             altMinus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altMinus");
             altPlus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altPlus");
+            resources = ScreenManager.Game.Content.Load<Texture2D>(@"UI\resources");
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
             #region UI
@@ -663,7 +664,7 @@ namespace coal_raider
                 else if (!unitUIBoxList[i].create && mouseState.LeftButton == ButtonState.Released)
                 {
                     unitUIBoxList[i].create = true;
-                    //create squad here
+                    //create squad code here
                 }
             }
             #endregion
@@ -766,6 +767,23 @@ namespace coal_raider
                 spriteBatch.Draw(altMinus, rec, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
             }*/
 
+            // Draw Text here
+            for (int i = 0; i < 4; i++)
+            {
+                spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].warriorNum, new Vector2(1135, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].rangerNum, new Vector2(1185, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].mageNum, new Vector2(1235, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            }
+
+            // Draw Squad UI Elements here
             foreach (unitUiBox uiBox in unitUIBoxList) 
             {
                 spriteBatch.Draw(squadCreate, uiBox.mainRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
@@ -798,6 +816,10 @@ namespace coal_raider
                     spriteBatch.Draw(altCreate, uiBox.createRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
             }
+
+            // Draw Resource UI element
+            spriteBatch.Draw(resources, new Rectangle(1115, 610, resources.Width, resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+
         }
 
         /// <summary>
