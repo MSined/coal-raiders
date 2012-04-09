@@ -29,95 +29,97 @@ namespace coal_raider
 
     static class SquadFactory
     {
-        public static Squad createSquad(Game game, Unit[] unitList, SquadType type)
+        public static Squad createSquad(Game game, Unit[] unitList, int team)
         {
+            SquadType? type = getFormationFromCount(unitList.Length);
+
             switch(type)
             {
                 case SquadType.Flank:
-                    return createFlank(game, unitList);
+                    return createFlank(game, unitList, team);
 
                 case SquadType.Lane:
-                    return createLane(game, unitList);
+                    return createLane(game, unitList, team);
 
                 case SquadType.Pentagram:
-                    return createPentagram(game, unitList);
+                    return createPentagram(game, unitList, team);
 
                 case SquadType.Pyramid:
-                    return createPyramid(game, unitList);
+                    return createPyramid(game, unitList, team);
 
                 case SquadType.Solo:
-                    return createSolo(game, unitList);
+                    return createSolo(game, unitList, team);
 
                 case SquadType.Square:
-                    return createSquare(game, unitList);
+                    return createSquare(game, unitList, team);
 
                 case SquadType.Triangle:
-                    return createTriangle(game, unitList);
+                    return createTriangle(game, unitList, team);
             }
             return null;
         }
 
-        private static Squad createFlank(Game game, Unit[] unitList)
+        private static Squad createFlank(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 6;
             Vector3[] formationOffset = getFormationOffset(SquadType.Flank);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Flank);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
-        private static Squad createLane(Game game, Unit[] unitList)
+        private static Squad createLane(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 2;
             Vector3[] formationOffset = getFormationOffset(SquadType.Lane);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Lane);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
-        private static Squad createPentagram(Game game, Unit[] unitList)
+        private static Squad createPentagram(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 5;
             Vector3[] formationOffset = getFormationOffset(SquadType.Pentagram);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Pentagram);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
-        private static Squad createPyramid(Game game, Unit[] unitList)
+        private static Squad createPyramid(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 6;
             Vector3[] formationOffset = getFormationOffset(SquadType.Pyramid);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Pyramid);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
-        private static Squad createSolo(Game game, Unit[] unitList)
+        private static Squad createSolo(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 1;
             Vector3[] formationOffset = getFormationOffset(SquadType.Solo);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Solo);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
-        private static Squad createSquare(Game game, Unit[] unitList)
+        private static Squad createSquare(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 4;
             Vector3[] formationOffset = getFormationOffset(SquadType.Square);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Square);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
-        private static Squad createTriangle(Game game, Unit[] unitList)
+        private static Squad createTriangle(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 3;
             Vector3[] formationOffset = getFormationOffset(SquadType.Triangle);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Triangle);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }
 
         public static SquadType? getFormationFromCount(int i){

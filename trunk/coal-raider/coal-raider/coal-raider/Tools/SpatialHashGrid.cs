@@ -283,12 +283,12 @@ namespace coal_raider
         {
             // cellID corresponding to lower left corner of bounds
             // Uses the worldLeftX and worldBottomY to create a 3D offset relative to the maps position
-            int x1 = (int)(bb.Min.X / cellSize - worldLeftX);
-            int y1 = (int)(bb.Min.Z / cellSize + worldBottomY);
+            int x1 = (int)(Math.Floor(bb.Min.X / cellSize) - worldLeftX);
+            int y1 = (int)(Math.Floor(bb.Min.Z / cellSize) + worldBottomY);
             // cellID corresponding to upper right corner of bounds
             // Uses the worldLeftX and worldBottomY to create a 3D offset relative to the maps position
-            int x2 = (int)(bb.Max.X / cellSize - worldLeftX);
-            int y2 = (int)(bb.Max.Z / cellSize + worldBottomY);
+            int x2 = (int)(Math.Floor(bb.Max.X / cellSize) - worldLeftX);
+            int y2 = (int)(Math.Floor(bb.Max.Z / cellSize) + worldBottomY);
 
             // The previous gets the top left and bottom right corner cell locations of
             // the passed bounding box
@@ -306,7 +306,7 @@ namespace coal_raider
                     tempID = i + j * cellsPerRow;
                     if (tempID < 0)
                         continue;
-                    cellIDs.Add(i + j * cellsPerRow);
+                    cellIDs.Add(tempID);
                 }
             }
 

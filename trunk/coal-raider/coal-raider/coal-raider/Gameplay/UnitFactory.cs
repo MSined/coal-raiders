@@ -35,7 +35,6 @@ namespace coal_raider
         private static Unit createMage(Game game, Model[] modelComponents, Vector3 position, int team)
         {
             int topHP = 2000;
-            int topSP = 2000;
             float speed = 0.05f;
 
             float attackRange = 3f;
@@ -54,14 +53,13 @@ namespace coal_raider
             float armRotationSpeed = 10f;
             
             return new Unit(game, modelComponents, position, UnitType.Mage,
-                            topHP, topSP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
+                            topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
                             armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate);
         }
 
         private static Unit createRanger(Game game, Model[] modelComponents, Vector3 position, int team)
         {
             int topHP = 2000;
-            int topSP = 1000;
             float speed = 0.07f;
 
             float attackRange = 4f;
@@ -80,14 +78,13 @@ namespace coal_raider
             float armRotationSpeed = 10f;
 
             return new Unit(game, modelComponents, position, UnitType.Ranger,
-                            topHP, topSP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
+                            topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
                             armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate);
         }
 
         private static Unit createWarrior(Game game, Model[] modelComponents, Vector3 position, int team)
         {
             int topHP = 4000;
-            int topSP = 400;
             float speed = 0.06f;
 
             float attackRange = 1f;
@@ -106,7 +103,7 @@ namespace coal_raider
             float armRotationSpeed = 10f;
 
             return new Unit(game, modelComponents, position, UnitType.Warrior,
-                            topHP, topSP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
+                            topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
                             armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate);
         }
 

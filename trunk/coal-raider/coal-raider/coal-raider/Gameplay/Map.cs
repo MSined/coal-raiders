@@ -17,6 +17,8 @@ namespace coal_raider
         protected Matrix world = Matrix.Identity;
         public Vector2 size { get; protected set; }
         public List<StaticObject> staticObjects { get; protected set; }
+        public List<DamageableObject> buildings { get; protected set; }
+        public List<Spawnpoint> spawnpoints { get; protected set; }
 
         public List<Waypoint> waypointList = new List<Waypoint>();
 
@@ -47,13 +49,19 @@ namespace coal_raider
             Model[] ground = new Model[1];
             ground[0] = modelComponents[3];
 
+            Model[] building = new Model[1];
+            building[0] = modelComponents[4];
+
             Model[][] modelArrays = {
                                         mountain,
                                         tree,
-                                        ground
+                                        ground,
+                                        building
                                     };
 
             staticObjects = new List<StaticObject>();
+            buildings = new List<DamageableObject>();
+            spawnpoints = new List<Spawnpoint>();
 
             buildMapFromFile(mapFileName, modelArrays);
 
@@ -116,8 +124,30 @@ namespace coal_raider
                                 staticObjects.Add(new StaticObject(game, modelArrays[2], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), false));
                                 continue;
                             }
-                            mapBool[x, y] = false;
 
+                            if (i.Length == 2)
+                            {
+                                char l0 = i[0];
+                                char l1 = i[1];
+
+                                if (l0.Equals('S'))
+                                {
+                                    mapBool[x, y] = true;
+                                    staticObjects.Add(new StaticObject(game, modelArrays[2], new Vector3((x * 2) - size.X, 0, (2 * y) - size.Y), false));
+                                    spawnpoints.Add(new Spawnpoint(game, waypointModel, new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), int.Parse(l1.ToString())));
+                                    continue;
+                                }
+
+                                if (l0.Equals('B'))
+                                {
+                                    mapBool[x, y] = false;
+                                    int buildingHp = 100000;
+                                    buildings.Add(new DamageableObject(game, modelArrays[3], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), buildingHp, 0, 0, 0, true, int.Parse(l1.ToString())));
+                                    continue;
+                                }
+                            }
+
+                            mapBool[x, y] = false;
                             staticObjects.Add(new StaticObject(game, modelArrays[int.Parse(i)], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), true));
                         }
                     }
@@ -187,6 +217,14 @@ namespace coal_raider
         public void Draw(Camera camera)
         {
             foreach (StaticObject so in staticObjects)
+            {
+                if (camera.inView(so))
+                {
+                    so.Draw(camera);
+                }
+            }
+
+            foreach (DamageableObject so in buildings)
             {
                 if (camera.inView(so))
                 {
