@@ -53,7 +53,7 @@ namespace coal_raider
 
         public void drawHealth(Camera camera, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D healthTexture)
         {
-            if (this.isAlive)
+            if (this.isAlive && hp != topHP)
             {
                 int healthBarWidth = 20;
                 int healthBarHeight = 5;
