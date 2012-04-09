@@ -34,7 +34,9 @@ namespace coal_raider
         private Rectangle noActionRectangle;
         private const int MouseCameraBorder = 5; // Really, this should be 1.
 
-        public Camera(Game game, Vector3 pos /* in respect to player*/, Vector3 target, Vector3 up)
+        private Vector2 mapSize;
+
+        public Camera(Game game, Vector3 pos /* in respect to player*/, Vector3 target, Vector3 up, Vector2 mapSize)
             : base(game)
         {
             this.game = game;
@@ -59,6 +61,7 @@ namespace coal_raider
             noActionRectangle = new Rectangle(MouseCameraBorder, MouseCameraBorder, vp.Width - MouseCameraBorder * 2, vp.Height - MouseCameraBorder * 2);
             screenSizeOver2 = new Vector2(vp.Width / 2, vp.Height / 2);
 
+            this.mapSize = mapSize - new Vector2(7, 5);
         }
 
         public override void Initialize()
@@ -75,20 +78,20 @@ namespace coal_raider
 
             if (!noActionRectangle.Contains(msPt))
             {
-                if ((cameraTarget.X >= -27 && cameraTarget.X <= 27))
+                if ((cameraTarget.X >= -mapSize.X && cameraTarget.X <= mapSize.X))
                 {
                     cameraTarget.X += msV.X * mouseMouvementScalar;
                 }
-                if (!(cameraTarget.X >= -27 && cameraTarget.X <= 27))//undo move if out of screen
+                if (!(cameraTarget.X >= -mapSize.X && cameraTarget.X <= mapSize.X))//undo move if out of screen
                 {
                     cameraTarget.X -= msV.X * mouseMouvementScalar;
                 }
 
-                if ((cameraTarget.Z >= -27 && cameraTarget.Z <= 27))
+                if ((cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y))
                 {
                     cameraTarget.Z += msV.Z * mouseMouvementScalar;
                 }
-                if (!(cameraTarget.Z >= -27 && cameraTarget.Z <= 27))//undo move if out of screen
+                if (!(cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y))//undo move if out of screen
                 {
                     cameraTarget.Z -= msV.Z * mouseMouvementScalar;
                 }
