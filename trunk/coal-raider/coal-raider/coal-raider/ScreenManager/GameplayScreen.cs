@@ -142,10 +142,6 @@ namespace coal_raider
         /// </summary>
         public override void Activate(bool instancePreserved)
         {
-            // Create camera and add to components list
-            camera = new Camera(ScreenManager.Game, new Vector3(0, 20, 10), Vector3.Zero, -Vector3.UnitZ);
-            components.Add(camera);
-
             // Initialize Models
             groundTileModel = ScreenManager.Game.Content.Load<Model>(@"Models\ground");
             mountainModel = ScreenManager.Game.Content.Load<Model>(@"Models\mountain");
@@ -213,6 +209,10 @@ namespace coal_raider
 
             map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice);
             components.Add(map);
+
+            // Create camera and add to components list
+            camera = new Camera(ScreenManager.Game, new Vector3(0, 20, 10), Vector3.Zero, -Vector3.UnitZ, map.size);
+            components.Add(camera);
 
             Model[] w = new Model[1];
             w[0] = unitModelWarrior;
