@@ -54,11 +54,8 @@ namespace coal_raider
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
 
         Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus;
-        Rectangle mSelectionBox, squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
-
-        List<Rectangle> altCreateRec = new List<Rectangle>();
-        List<Rectangle> altPlusRec = new List<Rectangle>();
-        List<Rectangle> altMinusRec = new List<Rectangle>();
+        Rectangle mSelectionBox;
+            //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
 
         List<Unit> testUnitList = new List<Unit>();
         List<Squad> selectedSquads = new List<Squad>();
@@ -84,6 +81,59 @@ namespace coal_raider
             
         }
 
+        #region UI
+        /*List<Rectangle> altCreateRec = new List<Rectangle>();
+        List<Rectangle> altPlusRec = new List<Rectangle>();
+        List<Rectangle> altMinusRec = new List<Rectangle>();*/
+        List<unitUiBox> unitUIBoxList = new List<unitUiBox>();
+        public class unitUiBox 
+        {
+            public Rectangle mainRect;
+            public Vector2 position;
+            public Rectangle warriorPlusRect;
+            public Rectangle rangerPlusRect;
+            public Rectangle magePlusRect;
+            public Rectangle warriorMinusRect;
+            public Rectangle rangerMinusRect;
+            public Rectangle mageMinusRect;
+            public Rectangle createRect;
+
+            public unitUiBox(Vector2 position, int squadCreateWidth, int squadCreateHeight, int altPlusMinusWidth, int altPlusMinusHeight, int altCreateWidth, int altCreateHeight)
+            {
+                this.position = position;
+                mainRect = new Rectangle((int)position.X, (int)position.Y, squadCreateWidth, squadCreateHeight);
+                warriorPlusRect = new Rectangle((int)position.X, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
+                rangerPlusRect = new Rectangle((int)position.X + 50, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
+                magePlusRect = new Rectangle((int)position.X + 100, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
+                warriorMinusRect = new Rectangle((int)position.X + 25, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
+                rangerMinusRect = new Rectangle((int)position.X + 75, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
+                mageMinusRect = new Rectangle((int)position.X + 125, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
+                createRect = new Rectangle((int)position.X, (int)position.Y + 100, altCreateWidth, altCreateHeight);
+
+                warriorPlus = true;
+                rangerPlus = true;
+                magePlus = true;
+                warriorMinus = true;
+                rangerMinus = true;
+                mageMinus = true;
+                create = true;
+                warriorNum = 0;
+                rangerNum = 0;
+                mageNum = 0;
+            }
+
+            public bool warriorPlus;
+            public bool rangerPlus;
+            public bool magePlus;
+            public bool warriorMinus;
+            public bool rangerMinus;
+            public bool mageMinus;
+            public bool create;
+            public int warriorNum;
+            public int rangerNum;
+            public int mageNum;
+        }
+        #endregion
 
         /// <summary>
         /// Load graphics content for the game.
@@ -115,7 +165,13 @@ namespace coal_raider
             altPlus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altPlus");
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
-            squadCreateRec1 = new Rectangle(1115, 20, squadCreate.Width, squadCreate.Height);
+            #region UI
+            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 20), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
+            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 165), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
+            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 310), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
+            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 455), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
+
+            /*squadCreateRec1 = new Rectangle(1115, 20, squadCreate.Width, squadCreate.Height);
             squadCreateRec2 = new Rectangle(1115, 165, squadCreate.Width, squadCreate.Height);
             squadCreateRec3 = new Rectangle(1115, 310, squadCreate.Width, squadCreate.Height);
             squadCreateRec4 = new Rectangle(1115, 455, squadCreate.Width, squadCreate.Height);
@@ -139,7 +195,8 @@ namespace coal_raider
                 {
                     altMinusRec.Add(new Rectangle(1140 + (j * 50), 95 + (i * 145), altMinus.Width, altMinus.Height));
                 }
-            }
+            }*/
+            #endregion
 
             Model[] a = new Model[5];
             a[0] = mountainModel;
@@ -314,6 +371,8 @@ namespace coal_raider
                 /*----- GAME UPDATE GOES HERE -----*/
                 camera.Update(gameTime);
 
+                
+
                 #region Updates
                 List<Object> colliders = new List<Object>();
                 GameComponent[] gcc = new GameComponent[components.Count];
@@ -469,8 +528,139 @@ namespace coal_raider
                         }
                     }
                 }
-
             }
+
+            #region UI boxes
+            for (int i = 0; i < unitUIBoxList.Count; i++)
+            {
+                //warrior
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].warriorPlus &&
+                    mouseState.X > unitUIBoxList[i].warriorPlusRect.Left &&
+                    mouseState.X < unitUIBoxList[i].warriorPlusRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].warriorPlusRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].warriorPlusRect.Bottom)
+                {
+                    unitUIBoxList[i].warriorPlus = false;
+                }
+                else if (!unitUIBoxList[i].warriorPlus && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].warriorPlus = true;
+                    if (unitUIBoxList[i].warriorNum + unitUIBoxList[i].rangerNum + unitUIBoxList[i].mageNum < 6)
+                    {
+                        ++unitUIBoxList[i].warriorNum;
+                    }
+                }
+
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].warriorMinus &&
+                    mouseState.X > unitUIBoxList[i].warriorMinusRect.Left &&
+                    mouseState.X < unitUIBoxList[i].warriorMinusRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].warriorMinusRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].warriorMinusRect.Bottom)
+                {
+                    unitUIBoxList[i].warriorMinus = false;
+                }
+                else if (!unitUIBoxList[i].warriorMinus && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].warriorMinus = true;
+                    if (unitUIBoxList[i].warriorNum > 0)
+                    {
+                        --unitUIBoxList[i].warriorNum;
+                    }
+                }
+
+                //ranger
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].rangerPlus &&
+                    mouseState.X > unitUIBoxList[i].rangerPlusRect.Left &&
+                    mouseState.X < unitUIBoxList[i].rangerPlusRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].rangerPlusRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].rangerPlusRect.Bottom)
+                {
+                    unitUIBoxList[i].rangerPlus = false;
+                }
+                else if (!unitUIBoxList[i].rangerPlus && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].rangerPlus = true;
+                    if (unitUIBoxList[i].warriorNum + unitUIBoxList[i].rangerNum + unitUIBoxList[i].mageNum < 6)
+                    {
+                        ++unitUIBoxList[i].rangerNum;
+                    }
+                }
+
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].rangerMinus &&
+                    mouseState.X > unitUIBoxList[i].rangerMinusRect.Left &&
+                    mouseState.X < unitUIBoxList[i].rangerMinusRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].rangerMinusRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].rangerMinusRect.Bottom)
+                {
+                    unitUIBoxList[i].rangerMinus = false;
+                }
+                else if (!unitUIBoxList[i].rangerMinus && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].rangerMinus = true;
+                    if (unitUIBoxList[i].rangerNum > 0)
+                    {
+                        --unitUIBoxList[i].rangerNum;
+                    }
+                }
+
+                //mage
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].magePlus &&
+                    mouseState.X > unitUIBoxList[i].magePlusRect.Left &&
+                    mouseState.X < unitUIBoxList[i].magePlusRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].magePlusRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].magePlusRect.Bottom)
+                {
+                    unitUIBoxList[i].magePlus = false;
+                }
+                else if (!unitUIBoxList[i].magePlus && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].magePlus = true;
+                    if (unitUIBoxList[i].warriorNum + unitUIBoxList[i].rangerNum + unitUIBoxList[i].mageNum < 6)
+                    {
+                        ++unitUIBoxList[i].mageNum;
+                    }
+                }
+
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].mageMinus &&
+                    mouseState.X > unitUIBoxList[i].mageMinusRect.Left &&
+                    mouseState.X < unitUIBoxList[i].mageMinusRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].mageMinusRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].mageMinusRect.Bottom)
+                {
+                    unitUIBoxList[i].mageMinus = false;
+                }
+                else if (!unitUIBoxList[i].mageMinus && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].mageMinus = true;
+                    if (unitUIBoxList[i].mageNum > 0)
+                    {
+                        --unitUIBoxList[i].mageNum;
+                    }
+                }
+
+                //create
+                if (mouseState.LeftButton == ButtonState.Pressed &&
+                    unitUIBoxList[i].create &&
+                    mouseState.X > unitUIBoxList[i].createRect.Left &&
+                    mouseState.X < unitUIBoxList[i].createRect.Right &&
+                    mouseState.Y > unitUIBoxList[i].createRect.Top &&
+                    mouseState.Y < unitUIBoxList[i].createRect.Bottom)
+                {
+                    unitUIBoxList[i].create = false;
+                }
+                else if (!unitUIBoxList[i].create && mouseState.LeftButton == ButtonState.Released)
+                {
+                    unitUIBoxList[i].create = true;
+                    //create squad here
+                }
+            }
+            #endregion
         }
 
         private void DrawSelectionBox(Rectangle box)
@@ -550,7 +740,7 @@ namespace coal_raider
         private void drawUIElements()
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            spriteBatch.Draw(squadCreate, squadCreateRec1, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+            /*spriteBatch.Draw(squadCreate, squadCreateRec1, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
             spriteBatch.Draw(squadCreate, squadCreateRec2, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
             spriteBatch.Draw(squadCreate, squadCreateRec3, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
             spriteBatch.Draw(squadCreate, squadCreateRec4, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
@@ -568,6 +758,39 @@ namespace coal_raider
             foreach (Rectangle rec in altMinusRec)
             {
                 spriteBatch.Draw(altMinus, rec, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            }*/
+
+            foreach (unitUiBox uiBox in unitUIBoxList) 
+            {
+                spriteBatch.Draw(squadCreate, uiBox.mainRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                if (uiBox.warriorPlus)
+                {
+                    spriteBatch.Draw(altPlus, uiBox.warriorPlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
+                if (uiBox.rangerPlus)
+                {
+                    spriteBatch.Draw(altPlus, uiBox.rangerPlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
+                if (uiBox.magePlus)
+                {
+                    spriteBatch.Draw(altPlus, uiBox.magePlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
+                if (uiBox.warriorMinus)
+                {
+                    spriteBatch.Draw(altMinus, uiBox.warriorMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
+                if (uiBox.rangerMinus)
+                {
+                    spriteBatch.Draw(altMinus, uiBox.rangerMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
+                if (uiBox.mageMinus)
+                {
+                    spriteBatch.Draw(altMinus, uiBox.mageMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
+                if (uiBox.create)
+                {
+                    spriteBatch.Draw(altCreate, uiBox.createRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                }
             }
         }
 
