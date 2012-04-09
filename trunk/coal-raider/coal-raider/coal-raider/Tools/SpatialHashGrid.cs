@@ -298,10 +298,15 @@ namespace coal_raider
             List<int> cellIDs = new List<int>();
             // Check these values, from y1 to y2, it may be ++ and not --
             // Consequently the comparison operator as well
-            for(int i = x1; i < x2; ++i)
+            int tempID = 0;
+            for(int i = x1; i <= x2; ++i)
             {
-                for (int j = y1; j < y2; ++j)
+                for (int j = y1; j <= y2; ++j)
                 {
+
+                    tempID = i + j * cellsPerRow;
+                    if (tempID < 0)
+                        continue;
                     cellIDs.Add(i + j * cellsPerRow);
                 }
             }
