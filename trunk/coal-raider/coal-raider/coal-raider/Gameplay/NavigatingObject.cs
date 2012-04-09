@@ -52,7 +52,10 @@ namespace coal_raider
                     if (pathToTarget.Count != 0)
                     {
                         if (pathStep < pathToTarget.Count)
+                        {
+                            pathToTarget[pathStep].closed = false;
                             subTarget = pathToTarget[pathStep++];
+                        }
                         else
                         {
                             targetPosition = null;
@@ -205,11 +208,19 @@ namespace coal_raider
                     endNodeRecord.estimatedTotalCost = endNodeCost + endNodeHeuristic;
 
                     if (!containedInList(openList, endNode, out nodeFoundInList))
+                    {
                         openList.Add(endNodeRecord);
+                        // DEBUG STUFF
+                        if (endNodeRecord.currentWaypoint != null)
+                            endNodeRecord.currentWaypoint.open = true;
+                    }
                 }
 
                 openList.Remove(current);
                 closedList.Add(current);
+                // DEBUG STUFF
+                if (current.currentWaypoint != null)
+                    current.currentWaypoint.closed = true;
             }
 
             if (current.currentWaypoint.ID != nearestToTarget.ID)

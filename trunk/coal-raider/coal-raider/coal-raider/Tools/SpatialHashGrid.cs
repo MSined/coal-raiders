@@ -74,7 +74,6 @@ namespace coal_raider
                 ++i;
             }
         }
-
         public void removeStaticObject(Object obj)
         {
             int[] cellIDs = getCellIDs(obj);

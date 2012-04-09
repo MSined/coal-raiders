@@ -22,6 +22,10 @@ namespace coal_raider
         Matrix world;
         Model model;
 
+        // REMOVE THESE VARIABLES
+        public Texture2D texture1 = GameplayScreen.wpltex1, texture2 = GameplayScreen.wpltex2, texture3 = GameplayScreen.wpltex3;
+        public bool closed = false, open = false;
+
         public Waypoint(Game game, Model model, Vector3 position)
         {
             this.ID = IDCtr++;
@@ -42,6 +46,13 @@ namespace coal_raider
                 foreach (BasicEffect be in mesh.Effects)
                 {
                     be.EnableDefaultLighting();
+                    // REMOVE TEXTURE ENABLED AND RELATED CODE
+                    be.TextureEnabled = true;
+                    be.Texture = texture1;
+                    if (closed)
+                        be.Texture = texture2;
+                    else if (open)
+                        be.Texture = texture3;
                     be.SpecularPower = 10f;
                     be.Projection = camera.projection;
                     be.View = camera.view;

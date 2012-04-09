@@ -16,7 +16,8 @@ namespace coal_raider
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        // REMOVE PUBLIC STATIC
+        public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         ScreenManager screenManager;
         ScreenFactory screenFactory;

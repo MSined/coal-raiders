@@ -52,6 +52,8 @@ namespace coal_raider
         Squad squad1, squad2, squad3;
 
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
+        // REMOVE THESE TEXTURES
+        public static Texture2D wpltex1, wpltex2, wpltex3;
 
         Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus;
         Rectangle mSelectionBox;
@@ -155,7 +157,11 @@ namespace coal_raider
             unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\mage");
             selectionRingModel = ScreenManager.Game.Content.Load<Model>(@"Models\SelectionRing");
 
-            Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\waypointModel");
+            Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\wpLargeModel");
+            // REMOVE THESE
+            wpltex1 = ScreenManager.Game.Content.Load<Texture2D>(@"Models\wpLargeTex");
+            wpltex2 = ScreenManager.Game.Content.Load<Texture2D>(@"Models\wpLargeTex2");
+            wpltex3 = ScreenManager.Game.Content.Load<Texture2D>(@"Models\wpLargeTex3");
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
             userInterface = ScreenManager.Game.Content.Load<Texture2D>(@"UI\UI");
