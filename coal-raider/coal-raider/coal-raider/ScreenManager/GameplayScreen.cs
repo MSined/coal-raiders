@@ -54,8 +54,12 @@ namespace coal_raider
 
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
 
-        Texture2D mDottedLine, userInterface;
-        Rectangle mSelectionBox;
+        Texture2D mDottedLine, userInterface, squadCreate, altCreate, altMinus, altPlus;
+        Rectangle mSelectionBox, squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
+
+        List<Rectangle> altCreateRec = new List<Rectangle>();
+        List<Rectangle> altPlusRec = new List<Rectangle>();
+        List<Rectangle> altMinusRec = new List<Rectangle>();
 
         List<Unit> testUnitList = new List<Unit>();
         List<Squad> selectedSquads = new List<Squad>();
@@ -106,7 +110,37 @@ namespace coal_raider
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
 
-            userInterface = ScreenManager.Game.Content.Load<Texture2D>("UI");
+            userInterface = ScreenManager.Game.Content.Load<Texture2D>(@"UI\UI");
+            squadCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\squadCreate");
+            altCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altCreate");
+            altMinus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altMinus");
+            altPlus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altPlus");
+
+            squadCreateRec1 = new Rectangle(1115, 20, squadCreate.Width, squadCreate.Height);
+            squadCreateRec2 = new Rectangle(1115, 165, squadCreate.Width, squadCreate.Height);
+            squadCreateRec3 = new Rectangle(1115, 310, squadCreate.Width, squadCreate.Height);
+            squadCreateRec4 = new Rectangle(1115, 455, squadCreate.Width, squadCreate.Height);
+
+            for (int i = 0; i < 4; i++)
+            {
+                altCreateRec.Add(new Rectangle(1115, 120 + (i * 145), altCreate.Width, altCreate.Height));
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    altPlusRec.Add(new Rectangle(1115 + (j * 50), 95 + (i * 145), altPlus.Width, altPlus.Height));
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    altMinusRec.Add(new Rectangle(1140 + (j * 50), 95 + (i * 145), altMinus.Width, altMinus.Height));
+                }
+            }
 
             Model[] a = new Model[5];
             a[0] = mountainModel;
@@ -514,6 +548,30 @@ namespace coal_raider
 
         }
 
+        private void drawUIElements()
+        {
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            spriteBatch.Draw(squadCreate, squadCreateRec1, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(squadCreate, squadCreateRec2, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(squadCreate, squadCreateRec3, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(squadCreate, squadCreateRec4, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+
+            foreach (Rectangle rec in altCreateRec)
+            {
+                spriteBatch.Draw(altCreate, rec, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            }
+
+            foreach (Rectangle rec in altPlusRec)
+            {
+                spriteBatch.Draw(altPlus, rec, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            }
+
+            foreach (Rectangle rec in altMinusRec)
+            {
+                spriteBatch.Draw(altMinus, rec, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            }
+        }
+
         /// <summary>
         /// Draws the gameplay screen.
         /// </summary>
@@ -540,6 +598,7 @@ namespace coal_raider
             map.Draw(camera);
 
             drawSelectedSquads();
+            drawUIElements();
 
             GameComponent[] gcc = new GameComponent[components.Count];
             components.CopyTo(gcc, 0);
@@ -565,7 +624,7 @@ namespace coal_raider
             //bfRenderer.Draw(camera);
             DebugShapeRenderer.Draw(gameTime, camera.view, camera.projection);
 
-            spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
 
             DrawSelectionBox(mSelectionBox);
 
