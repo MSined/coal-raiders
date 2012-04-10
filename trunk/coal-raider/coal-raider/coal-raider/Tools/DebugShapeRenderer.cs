@@ -83,7 +83,8 @@ namespace coal_raider
         {
             // If we already have a graphics device, we've already initialized once. We don't allow that.
             if (graphics != null)
-                throw new InvalidOperationException("Initialize can only be called once.");
+                return;
+                //throw new InvalidOperationException("Initialize can only be called once.");
 
             // Save the graphics device
             graphics = graphicsDevice;

@@ -49,7 +49,7 @@ namespace coal_raider
 
         BoundingFrustumRenderer bfRenderer;
 
-        Squad squad1, squad2, squad3;
+        //Squad squad1, squad2, squad3;
 
         Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
         // REMOVE THESE TEXTURES
@@ -66,7 +66,6 @@ namespace coal_raider
         #endregion
 
         #region Initialization
-
 
         /// <summary>
         /// Constructor.
@@ -116,8 +115,6 @@ namespace coal_raider
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
-
-
 
             #region UI
 
@@ -464,6 +461,18 @@ namespace coal_raider
                 {
                     Ray singleClick = camera.GetMouseRay(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), ScreenManager.Game);
 
+                    foreach (DamageableObject d in map.buildings)
+                    {
+                        if (singleClick.Intersects(d.bounds).HasValue)
+                        {
+                            foreach (Squad s in selectedSquads)
+                            {
+                                s.setTarget(d);
+                            }
+                        }
+                    }
+
+                    /*
                     foreach (GameComponent gc in components)
                     {
                         //Will need to remove this so that players cannot direct squads to other squads, they ahve to attack buildings
@@ -480,9 +489,9 @@ namespace coal_raider
                         }
                         //End
 
-                        if (gc is Object)
+                        if (gc is DamageableObject)
                         {
-                            Object o = (Object)gc;
+                            DamageableObject o = (DamageableObject)gc;
                             if (singleClick.Intersects(o.bounds).HasValue)
                             {
                                 foreach (Squad s in selectedSquads)
@@ -491,7 +500,8 @@ namespace coal_raider
                                 }
                             }
                         }
-                    }
+                     
+                    }* */
                 }
             }
 
@@ -622,7 +632,58 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].create && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].create = true;
-                    //create squad code here
+                    
+                    //If there is not enough units, skip it!
+
+                    int playerTeam = 0;
+
+                    Model[] w = new Model[1];
+                    w[0] = unitModelWarrior;
+
+                    Model[] r = new Model[1];
+                    r[0] = unitModelRanger;
+
+                    Model[] m = new Model[1];
+                    m[0] = unitModelMage;
+
+                    Vector3 spawnPosition = new Vector3();
+
+                    foreach (Spawnpoint sp in map.spawnpoints)
+                    {
+                        if (sp.team == playerTeam) spawnPosition = sp.position;
+                    }
+
+                    List<Unit> uList = new List<Unit>();
+                    for (int j = 0; j < userInterface.unitUIBoxList[i].warriorNum; ++j)
+                    {
+                        uList.Add(UnitFactory.createUnit(ScreenManager.Game, w, spawnPosition, UnitType.Warrior, playerTeam));
+                    }
+                    for (int j = 0; j < userInterface.unitUIBoxList[i].rangerNum; ++j)
+                    {
+                        uList.Add(UnitFactory.createUnit(ScreenManager.Game, r, spawnPosition, UnitType.Ranger, playerTeam));
+                    }
+                    for (int j = 0; j < userInterface.unitUIBoxList[i].mageNum; ++j)
+                    {
+                        uList.Add(UnitFactory.createUnit(ScreenManager.Game, m, spawnPosition, UnitType.Mage, playerTeam));
+                    }
+
+                    if (uList.Count != 0)
+                    {
+
+                        Squad squad = SquadFactory.createSquad(ScreenManager.Game, uList.ToArray(), playerTeam);
+                        components.Add(squad);
+
+                        List<DamageableObject> possibleTargets = new List<DamageableObject>();
+
+                        //Give the Squad a target
+                        foreach (DamageableObject d in map.buildings)
+                        {
+                            if (d.team != playerTeam) possibleTargets.Add(d);
+                        }
+
+                        //return any of the possible targets
+                        squad.setTarget(possibleTargets.ToArray()[random.Next(possibleTargets.Count)]);
+                    }
                 }
             }
             #endregion
