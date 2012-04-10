@@ -55,7 +55,7 @@ namespace coal_raider
 
         //Squad squad1, squad2, squad3;
 
-        Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel;
+        Model mountainModel, treeModel, buildingModel, unitModelWarrior, unitModelRanger, unitModelMage, groundTileModel, selectionRingModel, EunitModelWarrior, EunitModelRanger, EunitModelMage;
         // REMOVE THESE TEXTURES
         public static Texture2D wpltex1, wpltex2, wpltex3;
 
@@ -117,6 +117,11 @@ namespace coal_raider
             unitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\warrior");
             unitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\ranger");
             unitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\mage");
+
+            EunitModelWarrior = ScreenManager.Game.Content.Load<Model>(@"Models\Ewarrior");
+            EunitModelRanger = ScreenManager.Game.Content.Load<Model>(@"Models\Eranger");
+            EunitModelMage = ScreenManager.Game.Content.Load<Model>(@"Models\Emage");
+
             selectionRingModel = ScreenManager.Game.Content.Load<Model>(@"Models\SelectionRing");
 
             Model waypointModel = ScreenManager.Game.Content.Load<Model>(@"Models\wpLargeModel");
@@ -178,13 +183,13 @@ namespace coal_raider
             components.Add(camera);
 
             Model[] w = new Model[1];
-            w[0] = unitModelWarrior;
+            w[0] = EunitModelWarrior;
 
             Model[] r = new Model[1];
-            r[0] = unitModelRanger;
+            r[0] = EunitModelRanger;
 
             Model[] m = new Model[1];
-            m[0] = unitModelMage;
+            m[0] = EunitModelMage;
 
             Model[][] unitModels = 
                 {
@@ -697,7 +702,6 @@ namespace coal_raider
                     userInterface.unitUIBoxList[i].create = true;
 
                     //If there is not enough units, skip it!
-
                     Model[] w = new Model[1];
                     w[0] = unitModelWarrior;
 
