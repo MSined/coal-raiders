@@ -584,10 +584,9 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].warriorPlus && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].warriorPlus = true;
-                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6 && warriorResourceCount > 0)
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
                     {
                         ++userInterface.unitUIBoxList[i].warriorNum;
-                        warriorResourceCount--;
                     }
                 }
 
@@ -606,7 +605,6 @@ namespace coal_raider
                     if (userInterface.unitUIBoxList[i].warriorNum > 0)
                     {
                         --userInterface.unitUIBoxList[i].warriorNum;
-                        warriorResourceCount++;
                     }
                 }
 
@@ -623,10 +621,9 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].rangerPlus && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].rangerPlus = true;
-                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6 && rangerResourceCount > 0)
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
                     {
                         ++userInterface.unitUIBoxList[i].rangerNum;
-                        rangerResourceCount--;
                     }
                 }
 
@@ -645,7 +642,6 @@ namespace coal_raider
                     if (userInterface.unitUIBoxList[i].rangerNum > 0)
                     {
                         --userInterface.unitUIBoxList[i].rangerNum;
-                        rangerResourceCount++;
                     }
                 }
 
@@ -662,10 +658,9 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].magePlus && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].magePlus = true;
-                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6 && mageResourceCount > 0)
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
                     {
                         ++userInterface.unitUIBoxList[i].mageNum;
-                        mageResourceCount--;
                     }
                 }
 
@@ -684,7 +679,6 @@ namespace coal_raider
                     if (userInterface.unitUIBoxList[i].mageNum > 0)
                     {
                         --userInterface.unitUIBoxList[i].mageNum;
-                        mageResourceCount++;
                     }
                 }
 
@@ -701,7 +695,7 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].create && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].create = true;
-                    
+
                     //If there is not enough units, skip it!
 
                     Model[] w = new Model[1];
@@ -723,15 +717,27 @@ namespace coal_raider
                     List<Unit> uList = new List<Unit>();
                     for (int j = 0; j < userInterface.unitUIBoxList[i].warriorNum; ++j)
                     {
-                        uList.Add(UnitFactory.createUnit(ScreenManager.Game, w, spawnPosition, UnitType.Warrior, playerTeam));
+                        if (warriorResourceCount > 0)
+                        {
+                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, w, spawnPosition, UnitType.Warrior, playerTeam));
+                            warriorResourceCount--;
+                        }
                     }
                     for (int j = 0; j < userInterface.unitUIBoxList[i].rangerNum; ++j)
                     {
-                        uList.Add(UnitFactory.createUnit(ScreenManager.Game, r, spawnPosition, UnitType.Ranger, playerTeam));
+                        if (rangerResourceCount > 0)
+                        {
+                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, r, spawnPosition, UnitType.Ranger, playerTeam));
+                            rangerResourceCount--;
+                        }
                     }
                     for (int j = 0; j < userInterface.unitUIBoxList[i].mageNum; ++j)
                     {
-                        uList.Add(UnitFactory.createUnit(ScreenManager.Game, m, spawnPosition, UnitType.Mage, playerTeam));
+                        if (mageResourceCount > 0)
+                        {
+                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, m, spawnPosition, UnitType.Mage, playerTeam));
+                            mageResourceCount--;
+                        }
                     }
 
                     if (uList.Count != 0)
