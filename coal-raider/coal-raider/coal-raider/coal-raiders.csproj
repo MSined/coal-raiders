@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gameplay\AI.cs" />
     <Compile Include="Gameplay\Camera.cs" />
     <Compile Include="Gameplay\DamageableObject.cs" />
     <Compile Include="Gameplay\SquadFactory.cs" />

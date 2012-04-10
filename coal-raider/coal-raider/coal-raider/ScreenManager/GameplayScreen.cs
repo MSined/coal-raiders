@@ -46,6 +46,10 @@ namespace coal_raider
 
         Camera camera;
         Map map;
+        AI ai;
+
+        int playerTeam = 0;
+        int aiTeam = 1;
 
         BoundingFrustumRenderer bfRenderer;
 
@@ -181,6 +185,25 @@ namespace coal_raider
 
             Model[] m = new Model[1];
             m[0] = unitModelMage;
+
+            Model[][] unitModels = 
+                {
+                    w,
+                    r,
+                    m
+                };
+
+            DamageableObject aiTarget = null;
+            foreach (DamageableObject b in map.buildings)
+            {
+                if (b.team != aiTeam)
+                {
+                    aiTarget = b;
+                    break;
+                }
+            }
+
+            ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, AI.Difficulty.Easy);
 
             /*
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-10, 0, -10), UnitType.Warrior, 1);
@@ -350,6 +373,10 @@ namespace coal_raider
                 /*----- GAME UPDATE GOES HERE -----*/
                 camera.Update(gameTime);
 
+                Squad newSquad = ai.Update(gameTime);
+                if (!(newSquad == null)){
+                    components.Add(newSquad);
+                }
                 cooldown1 += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (cooldown1 > 5000)
                 {
@@ -676,8 +703,6 @@ namespace coal_raider
                     userInterface.unitUIBoxList[i].create = true;
                     
                     //If there is not enough units, skip it!
-
-                    int playerTeam = 0;
 
                     Model[] w = new Model[1];
                     w[0] = unitModelWarrior;
