@@ -125,6 +125,12 @@ namespace coal_raider
                                 continue;
                             }
 
+                            if (i.Equals("+"))
+                            {
+                                staticObjects.Add(new StaticObject(game, modelArrays[2], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), false));
+                                continue;
+                            }
+
                             if (i.Length == 2)
                             {
                                 char l0 = i[0];
