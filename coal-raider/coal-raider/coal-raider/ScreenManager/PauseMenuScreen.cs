@@ -9,6 +9,7 @@
 
 #region Using Statements
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 #endregion
 
 namespace coal_raider
@@ -39,6 +40,8 @@ namespace coal_raider
             // Add entries to the menu.
             MenuEntries.Add(resumeGameMenuEntry);
             MenuEntries.Add(quitGameMenuEntry);
+
+            MediaPlayer.Pause();
         }
 
 
@@ -52,13 +55,16 @@ namespace coal_raider
         /// </summary>
         void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            const string message = "Are you sure you want to quit this game?";
+            //const string message = "Are you sure you want to quit this game?";
 
-            MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
+            //MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
 
-            confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
+            //confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
 
-            ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
+            //ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
+
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new MainMenuScreen(ScreenManager));
         }
 
 
@@ -70,7 +76,7 @@ namespace coal_raider
         void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
-                                                           new MainMenuScreen());
+                                                           new MainMenuScreen(ScreenManager));
         }
 
 

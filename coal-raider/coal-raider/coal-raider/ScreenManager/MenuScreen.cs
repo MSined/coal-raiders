@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 #endregion
 
 namespace coal_raider
@@ -175,6 +176,8 @@ namespace coal_raider
         /// </summary>
         protected virtual void OnCancel(PlayerIndex playerIndex)
         {
+            if (MediaPlayer.State == MediaState.Paused)
+                MediaPlayer.Resume();
             ExitScreen();
         }
 
