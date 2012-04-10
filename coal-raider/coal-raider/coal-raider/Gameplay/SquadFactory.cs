@@ -11,7 +11,7 @@ namespace coal_raider
 {
     public enum SquadType
     {   
-        Flank, //6
+        //Flank, //6
         Lane, //2
         Pentagram, //5
         Pyramid, //6
@@ -35,8 +35,10 @@ namespace coal_raider
 
             switch(type)
             {
+                    /*
                 case SquadType.Flank:
                     return createFlank(game, unitList, team);
+                     * */
 
                 case SquadType.Lane:
                     return createLane(game, unitList, team);
@@ -58,7 +60,7 @@ namespace coal_raider
             }
             return null;
         }
-
+        /*
         private static Squad createFlank(Game game, Unit[] unitList, int team)
         {
             int numUnitsInFormation = 6;
@@ -66,7 +68,7 @@ namespace coal_raider
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Flank);
 
             return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
-        }
+        }*/
 
         private static Squad createLane(Game game, Unit[] unitList, int team)
         {
@@ -137,8 +139,9 @@ namespace coal_raider
         {
             switch (s)
             {
+                    /*
                 case SquadType.Flank:
-                    return 6;
+                    return 6;*/
 
                 case SquadType.Lane:
                     return 2;
@@ -167,6 +170,7 @@ namespace coal_raider
         {
             switch (s)
             {
+                    /*
                 case SquadType.Flank:
                     return new Vector3[] {
                                             new Vector3(1,0,1),
@@ -175,7 +179,7 @@ namespace coal_raider
                                             new Vector3(0.5f,0,0),
                                             new Vector3(1,0,0),
                                             new Vector3(-1,0,0)
-                                            };
+                                            };*/
 
                 case SquadType.Lane:
                     return new Vector3[] {
@@ -231,6 +235,7 @@ namespace coal_raider
         {
             switch (s)
             {
+                    /*
                 case SquadType.Flank:
                     return new SquadSlotType[] {
                                                 SquadSlotType.Melee,
@@ -239,7 +244,7 @@ namespace coal_raider
                                                 SquadSlotType.Magic,
                                                 SquadSlotType.Ranged,
                                                 SquadSlotType.Ranged,
-                                                };
+                                                };*/
 
                 case SquadType.Lane:
                     return new SquadSlotType[] {

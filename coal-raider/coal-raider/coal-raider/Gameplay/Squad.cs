@@ -163,8 +163,9 @@ namespace coal_raider
             {
                 velocity.Normalize();
                 float angle = (float)Math.Asin(velocity.X);
-                if (velocity.Z > 0) angle = -angle;
-                return Matrix.CreateRotationY(-angle);
+                if (velocity.Z < 0) angle -= MathHelper.ToRadians(180) ;
+                if (velocity.X > 0) angle = - angle;
+                return Matrix.CreateRotationY(angle);
             }
             return Matrix.Identity;
         }
