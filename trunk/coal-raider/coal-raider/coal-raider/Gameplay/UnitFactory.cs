@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 
 namespace coal_raider
@@ -51,10 +52,12 @@ namespace coal_raider
             float armUpAngle = -80f;
             float armDownAngle = 15f;
             float armRotationSpeed = 10f;
+
+            SoundEffect attackSound = game.Content.Load<SoundEffect>(@"Sounds/staff");
             
             return new Unit(game, modelComponents, position, UnitType.Mage,
                             topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
-                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate);
+                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound);
         }
 
         private static Unit createRanger(Game game, Model[] modelComponents, Vector3 position, int team)
@@ -77,9 +80,11 @@ namespace coal_raider
             float armDownAngle = 0f;
             float armRotationSpeed = 10f;
 
+            SoundEffect attackSound = game.Content.Load<SoundEffect>(@"Sounds/gun");
+
             return new Unit(game, modelComponents, position, UnitType.Ranger,
                             topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
-                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate);
+                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound);
         }
 
         private static Unit createWarrior(Game game, Model[] modelComponents, Vector3 position, int team)
@@ -102,9 +107,11 @@ namespace coal_raider
             float armDownAngle = 15f;
             float armRotationSpeed = 10f;
 
+            SoundEffect attackSound = game.Content.Load<SoundEffect>(@"Sounds/sword");
+
             return new Unit(game, modelComponents, position, UnitType.Warrior,
                             topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
-                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate);
+                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound);
         }
 
     }

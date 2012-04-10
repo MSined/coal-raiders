@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 
 namespace coal_raider
@@ -36,6 +37,8 @@ namespace coal_raider
         private Vector3 unitDir = Vector3.Zero;
         private Matrix meshWorld;
 
+        private SoundEffect attackSound;
+
         protected int[] attributes { get; private set; }
 
         //public Boolean poisoned = false, checkBoxCollision = false;
@@ -45,7 +48,7 @@ namespace coal_raider
         // Characters initial position is defined by the spawnpoint ther are associated with
         public Unit(Game game, Model[] modelComponents, Vector3 position,
             UnitType type, int topHP, int meleeAttack, int rangeAttack, int magicAttack, int meleeDefence, int rangeDefence, int magicDefence, float speed, bool isAlive, int team,
-            float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate)
+            float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate, SoundEffect attackSound)
             : base(game, modelComponents, position, topHP, meleeDefence, rangeDefence, magicDefence, isAlive, team)
         { 
             this.type = type;
@@ -62,6 +65,7 @@ namespace coal_raider
             this.armRotationSpeed = armRotationSpeed;
             this.attackRange = attackRange;
             this.attackRate = attackRate;
+            this.attackSound = attackSound;
         }
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
@@ -206,7 +210,10 @@ namespace coal_raider
                     {
                         armRotation -= armRotationSpeed;
                         if (armRotation < armUpAngle)
+                        {
+                            attackSound.Play();
                             armMoveUp = false;
+                        }
                     }
                     else
                     {

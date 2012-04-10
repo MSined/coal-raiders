@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 #endregion
 
@@ -43,6 +44,8 @@ namespace coal_raider
 
         InputAction pauseAction;
         /*---- End Original GameplayScreen Fields -----*/
+
+        Song bgMusic;
 
         Camera camera;
         Map map;
@@ -133,6 +136,11 @@ namespace coal_raider
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
+            bgMusic = ScreenManager.Game.Content.Load<Song>(@"Sounds\PrivateReflection");
+
+            MediaPlayer.Play(bgMusic);
+            MediaPlayer.IsRepeating = true;
+
             #region UI
 
             userInterface = new UserInterface(ScreenManager.Game);
@@ -208,7 +216,7 @@ namespace coal_raider
                 }
             }
 
-            ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, AI.Difficulty.Easy);
+            ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, AI.Difficulty.Hard);
 
             /*
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-10, 0, -10), UnitType.Warrior, 1);

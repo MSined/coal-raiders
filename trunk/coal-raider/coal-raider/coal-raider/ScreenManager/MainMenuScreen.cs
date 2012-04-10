@@ -9,6 +9,7 @@
 
 #region Using Statements
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 #endregion
 
 namespace coal_raider
@@ -21,10 +22,11 @@ namespace coal_raider
         #region Initialization
 
 
+            Song bgMusic;
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
-        public MainMenuScreen()
+        public MainMenuScreen(ScreenManager sm)
             : base("Main Menu")
         {
             // Create our menu entries.
@@ -41,6 +43,11 @@ namespace coal_raider
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
+
+            bgMusic = sm.Game.Content.Load<Song>(@"Sounds\Stormfront");
+
+            MediaPlayer.Play(bgMusic);
+            MediaPlayer.IsRepeating = true;
         }
 
 
@@ -73,13 +80,15 @@ namespace coal_raider
         /// </summary>
         protected override void OnCancel(PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?";
+            //const string message = "Are you sure you want to exit this sample?";
 
-            MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
+            //MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
 
-            confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
+            //confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
 
-            ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
+            //ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
+
+            ScreenManager.Game.Exit();
         }
 
 
