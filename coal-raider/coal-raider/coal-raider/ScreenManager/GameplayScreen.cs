@@ -63,6 +63,14 @@ namespace coal_raider
 
         List<Unit> testUnitList = new List<Unit>();
         List<Squad> selectedSquads = new List<Squad>();
+
+        float cooldown1;
+        float cooldown2;
+        float cooldown3;
+
+        int warriorResourceCount;
+        int mageResourceCount;
+        int rangerResourceCount;
         #endregion
 
         #region Initialization
@@ -119,6 +127,10 @@ namespace coal_raider
             #region UI
 
             userInterface = new UserInterface(ScreenManager.Game);
+
+            cooldown1 = 0;
+            cooldown2 = 0;
+            cooldown3 = 0;
 
             /*squadCreateRec1 = new Rectangle(1115, 20, squadCreate.Width, squadCreate.Height);
             squadCreateRec2 = new Rectangle(1115, 165, squadCreate.Width, squadCreate.Height);
@@ -249,6 +261,11 @@ namespace coal_raider
             //grid.insertDynamicObject(unit1);
             //grid.insertDynamicObject(unit2);
 
+            // Resource Counter
+            warriorResourceCount = 5;
+            mageResourceCount = 5;
+            rangerResourceCount = 5;
+
             // Initialize our renderer
             DebugShapeRenderer.Initialize(ScreenManager.Game.GraphicsDevice);
 
@@ -333,7 +350,26 @@ namespace coal_raider
                 /*----- GAME UPDATE GOES HERE -----*/
                 camera.Update(gameTime);
 
-                
+                cooldown1 += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (cooldown1 > 5000)
+                {
+                    cooldown1 = 0;
+                    warriorResourceCount++;
+                }
+
+                cooldown2 += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (cooldown2 > 7500)
+                {
+                    cooldown2 = 0;
+                    rangerResourceCount++;
+                }
+
+                cooldown3 += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (cooldown3 > 10000)
+                {
+                    cooldown3 = 0;
+                    mageResourceCount++;
+                }
 
                 #region Updates
                 List<Object> colliders = new List<Object>();
@@ -521,9 +557,10 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].warriorPlus && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].warriorPlus = true;
-                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6 && warriorResourceCount > 0)
                     {
                         ++userInterface.unitUIBoxList[i].warriorNum;
+                        warriorResourceCount--;
                     }
                 }
 
@@ -542,6 +579,7 @@ namespace coal_raider
                     if (userInterface.unitUIBoxList[i].warriorNum > 0)
                     {
                         --userInterface.unitUIBoxList[i].warriorNum;
+                        warriorResourceCount++;
                     }
                 }
 
@@ -558,9 +596,10 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].rangerPlus && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].rangerPlus = true;
-                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6 && rangerResourceCount > 0)
                     {
                         ++userInterface.unitUIBoxList[i].rangerNum;
+                        rangerResourceCount--;
                     }
                 }
 
@@ -579,6 +618,7 @@ namespace coal_raider
                     if (userInterface.unitUIBoxList[i].rangerNum > 0)
                     {
                         --userInterface.unitUIBoxList[i].rangerNum;
+                        rangerResourceCount++;
                     }
                 }
 
@@ -595,9 +635,10 @@ namespace coal_raider
                 else if (!userInterface.unitUIBoxList[i].magePlus && mouseState.LeftButton == ButtonState.Released)
                 {
                     userInterface.unitUIBoxList[i].magePlus = true;
-                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6 && mageResourceCount > 0)
                     {
                         ++userInterface.unitUIBoxList[i].mageNum;
+                        mageResourceCount--;
                     }
                 }
 
@@ -616,6 +657,7 @@ namespace coal_raider
                     if (userInterface.unitUIBoxList[i].mageNum > 0)
                     {
                         --userInterface.unitUIBoxList[i].mageNum;
+                        mageResourceCount++;
                     }
                 }
 
@@ -803,9 +845,9 @@ namespace coal_raider
             }
 
             // DrawText REAL VALUES SHOULD BE INSERTED HERE
-            spriteBatch.DrawString(gameFont, "0", new Vector2(1135, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(gameFont, "0", new Vector2(1185, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(gameFont, "0", new Vector2(1235, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(gameFont, "" + warriorResourceCount, new Vector2(1135, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(gameFont, "" + rangerResourceCount, new Vector2(1185, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(gameFont, "" + mageResourceCount, new Vector2(1235, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
 
             // Draw Squad UI Elements here
             foreach (unitUIBox uiBox in userInterface.unitUIBoxList) 
@@ -847,8 +889,11 @@ namespace coal_raider
                 spriteBatch.Draw(userInterface.squadsTexture, new Rectangle(275 + i * 100, 625, userInterface.squadsTexture.Width, userInterface.squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
             }
 
-            // Draw Resource UI element
-            spriteBatch.Draw(userInterface.resources, new Rectangle(1115, 610, userInterface.resources.Width, userInterface.resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            // Draw Resource UI elements
+            spriteBatch.Draw(userInterface.resources, new Rectangle(1115, 610, userInterface.resources.Width, userInterface.resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+            userInterface.drawCooldowns(5000, cooldown1, 0, ScreenManager);
+            userInterface.drawCooldowns(7500, cooldown2, 1, ScreenManager);
+            userInterface.drawCooldowns(10000, cooldown3, 2, ScreenManager);
 
         }
 
