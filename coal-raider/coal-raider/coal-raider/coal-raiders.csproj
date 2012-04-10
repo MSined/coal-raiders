@@ -116,8 +116,10 @@
     <Compile Include="Gameplay\Object.cs" />
     <Compile Include="Gameplay\Squad.cs" />
     <Compile Include="Gameplay\StaticObject.cs" />
+    <Compile Include="Gameplay\UserInterface.cs" />
     <Compile Include="Gameplay\Unit.cs" />
     <Compile Include="Gameplay\UnitFactory.cs" />
+    <Compile Include="Gameplay\unitUIBox.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="InputAction.cs" />
     <Compile Include="InputState.cs" />

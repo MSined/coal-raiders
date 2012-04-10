@@ -55,7 +55,9 @@ namespace coal_raider
         // REMOVE THESE TEXTURES
         public static Texture2D wpltex1, wpltex2, wpltex3;
 
-        Texture2D mDottedLine, userInterface, blankTexture, squadCreate, altCreate, altMinus, altPlus, resources, squadsTexture;
+        UserInterface userInterface;
+
+        Texture2D mDottedLine, blankTexture;
         Rectangle mSelectionBox;
             //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
 
@@ -87,54 +89,7 @@ namespace coal_raider
         /*List<Rectangle> altCreateRec = new List<Rectangle>();
         List<Rectangle> altPlusRec = new List<Rectangle>();
         List<Rectangle> altMinusRec = new List<Rectangle>();*/
-        List<unitUiBox> unitUIBoxList = new List<unitUiBox>();
-        public class unitUiBox 
-        {
-            public Rectangle mainRect;
-            public Vector2 position;
-            public Rectangle warriorPlusRect;
-            public Rectangle rangerPlusRect;
-            public Rectangle magePlusRect;
-            public Rectangle warriorMinusRect;
-            public Rectangle rangerMinusRect;
-            public Rectangle mageMinusRect;
-            public Rectangle createRect;
-
-            public unitUiBox(Vector2 position, int squadCreateWidth, int squadCreateHeight, int altPlusMinusWidth, int altPlusMinusHeight, int altCreateWidth, int altCreateHeight)
-            {
-                this.position = position;
-                mainRect = new Rectangle((int)position.X, (int)position.Y, squadCreateWidth, squadCreateHeight);
-                warriorPlusRect = new Rectangle((int)position.X, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
-                rangerPlusRect = new Rectangle((int)position.X + 50, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
-                magePlusRect = new Rectangle((int)position.X + 100, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
-                warriorMinusRect = new Rectangle((int)position.X + 25, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
-                rangerMinusRect = new Rectangle((int)position.X + 75, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
-                mageMinusRect = new Rectangle((int)position.X + 125, (int)position.Y + 75, altPlusMinusWidth, altPlusMinusHeight);
-                createRect = new Rectangle((int)position.X, (int)position.Y + 100, altCreateWidth, altCreateHeight);
-
-                warriorPlus = true;
-                rangerPlus = true;
-                magePlus = true;
-                warriorMinus = true;
-                rangerMinus = true;
-                mageMinus = true;
-                create = true;
-                warriorNum = 0;
-                rangerNum = 0;
-                mageNum = 0;
-            }
-
-            public bool warriorPlus;
-            public bool rangerPlus;
-            public bool magePlus;
-            public bool warriorMinus;
-            public bool rangerMinus;
-            public bool mageMinus;
-            public bool create;
-            public int warriorNum;
-            public int rangerNum;
-            public int mageNum;
-        }
+        
         #endregion
 
         /// <summary>
@@ -160,20 +115,13 @@ namespace coal_raider
             wpltex3 = ScreenManager.Game.Content.Load<Texture2D>(@"Models\wpLargeTex3");
 
             mDottedLine = ScreenManager.Game.Content.Load<Texture2D>("DottedLine");
-            userInterface = ScreenManager.Game.Content.Load<Texture2D>(@"UI\UI");
-            squadCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\squadCreate");
-            altCreate = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altCreate");
-            altMinus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altMinus");
-            altPlus = ScreenManager.Game.Content.Load<Texture2D>(@"UI\altPlus");
-            resources = ScreenManager.Game.Content.Load<Texture2D>(@"UI\resources");
-            squadsTexture = ScreenManager.Game.Content.Load<Texture2D>(@"UI\squads");
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
+
+
             #region UI
-            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 20), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
-            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 165), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
-            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 310), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
-            unitUIBoxList.Add(new unitUiBox(new Vector2(1115, 455), squadCreate.Width, squadCreate.Height, altPlus.Width, altPlus.Height, altCreate.Width, altCreate.Height));
+
+            userInterface = new UserInterface(ScreenManager.Game);
 
             /*squadCreateRec1 = new Rectangle(1115, 20, squadCreate.Width, squadCreate.Height);
             squadCreateRec2 = new Rectangle(1115, 165, squadCreate.Width, squadCreate.Height);
@@ -548,132 +496,132 @@ namespace coal_raider
             }
 
             #region UI boxes
-            for (int i = 0; i < unitUIBoxList.Count; i++)
+            for (int i = 0; i < userInterface.unitUIBoxList.Count; i++)
             {
                 //warrior
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].warriorPlus &&
-                    mouseState.X > unitUIBoxList[i].warriorPlusRect.Left &&
-                    mouseState.X < unitUIBoxList[i].warriorPlusRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].warriorPlusRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].warriorPlusRect.Bottom)
+                    userInterface.unitUIBoxList[i].warriorPlus &&
+                    mouseState.X > userInterface.unitUIBoxList[i].warriorPlusRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].warriorPlusRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].warriorPlusRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].warriorPlusRect.Bottom)
                 {
-                    unitUIBoxList[i].warriorPlus = false;
+                    userInterface.unitUIBoxList[i].warriorPlus = false;
                 }
-                else if (!unitUIBoxList[i].warriorPlus && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].warriorPlus && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].warriorPlus = true;
-                    if (unitUIBoxList[i].warriorNum + unitUIBoxList[i].rangerNum + unitUIBoxList[i].mageNum < 6)
+                    userInterface.unitUIBoxList[i].warriorPlus = true;
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
                     {
-                        ++unitUIBoxList[i].warriorNum;
+                        ++userInterface.unitUIBoxList[i].warriorNum;
                     }
                 }
 
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].warriorMinus &&
-                    mouseState.X > unitUIBoxList[i].warriorMinusRect.Left &&
-                    mouseState.X < unitUIBoxList[i].warriorMinusRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].warriorMinusRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].warriorMinusRect.Bottom)
+                    userInterface.unitUIBoxList[i].warriorMinus &&
+                    mouseState.X > userInterface.unitUIBoxList[i].warriorMinusRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].warriorMinusRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].warriorMinusRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].warriorMinusRect.Bottom)
                 {
-                    unitUIBoxList[i].warriorMinus = false;
+                    userInterface.unitUIBoxList[i].warriorMinus = false;
                 }
-                else if (!unitUIBoxList[i].warriorMinus && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].warriorMinus && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].warriorMinus = true;
-                    if (unitUIBoxList[i].warriorNum > 0)
+                    userInterface.unitUIBoxList[i].warriorMinus = true;
+                    if (userInterface.unitUIBoxList[i].warriorNum > 0)
                     {
-                        --unitUIBoxList[i].warriorNum;
+                        --userInterface.unitUIBoxList[i].warriorNum;
                     }
                 }
 
                 //ranger
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].rangerPlus &&
-                    mouseState.X > unitUIBoxList[i].rangerPlusRect.Left &&
-                    mouseState.X < unitUIBoxList[i].rangerPlusRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].rangerPlusRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].rangerPlusRect.Bottom)
+                    userInterface.unitUIBoxList[i].rangerPlus &&
+                    mouseState.X > userInterface.unitUIBoxList[i].rangerPlusRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].rangerPlusRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].rangerPlusRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].rangerPlusRect.Bottom)
                 {
-                    unitUIBoxList[i].rangerPlus = false;
+                    userInterface.unitUIBoxList[i].rangerPlus = false;
                 }
-                else if (!unitUIBoxList[i].rangerPlus && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].rangerPlus && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].rangerPlus = true;
-                    if (unitUIBoxList[i].warriorNum + unitUIBoxList[i].rangerNum + unitUIBoxList[i].mageNum < 6)
+                    userInterface.unitUIBoxList[i].rangerPlus = true;
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
                     {
-                        ++unitUIBoxList[i].rangerNum;
+                        ++userInterface.unitUIBoxList[i].rangerNum;
                     }
                 }
 
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].rangerMinus &&
-                    mouseState.X > unitUIBoxList[i].rangerMinusRect.Left &&
-                    mouseState.X < unitUIBoxList[i].rangerMinusRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].rangerMinusRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].rangerMinusRect.Bottom)
+                    userInterface.unitUIBoxList[i].rangerMinus &&
+                    mouseState.X > userInterface.unitUIBoxList[i].rangerMinusRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].rangerMinusRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].rangerMinusRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].rangerMinusRect.Bottom)
                 {
-                    unitUIBoxList[i].rangerMinus = false;
+                    userInterface.unitUIBoxList[i].rangerMinus = false;
                 }
-                else if (!unitUIBoxList[i].rangerMinus && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].rangerMinus && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].rangerMinus = true;
-                    if (unitUIBoxList[i].rangerNum > 0)
+                    userInterface.unitUIBoxList[i].rangerMinus = true;
+                    if (userInterface.unitUIBoxList[i].rangerNum > 0)
                     {
-                        --unitUIBoxList[i].rangerNum;
+                        --userInterface.unitUIBoxList[i].rangerNum;
                     }
                 }
 
                 //mage
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].magePlus &&
-                    mouseState.X > unitUIBoxList[i].magePlusRect.Left &&
-                    mouseState.X < unitUIBoxList[i].magePlusRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].magePlusRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].magePlusRect.Bottom)
+                    userInterface.unitUIBoxList[i].magePlus &&
+                    mouseState.X > userInterface.unitUIBoxList[i].magePlusRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].magePlusRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].magePlusRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].magePlusRect.Bottom)
                 {
-                    unitUIBoxList[i].magePlus = false;
+                    userInterface.unitUIBoxList[i].magePlus = false;
                 }
-                else if (!unitUIBoxList[i].magePlus && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].magePlus && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].magePlus = true;
-                    if (unitUIBoxList[i].warriorNum + unitUIBoxList[i].rangerNum + unitUIBoxList[i].mageNum < 6)
+                    userInterface.unitUIBoxList[i].magePlus = true;
+                    if (userInterface.unitUIBoxList[i].warriorNum + userInterface.unitUIBoxList[i].rangerNum + userInterface.unitUIBoxList[i].mageNum < 6)
                     {
-                        ++unitUIBoxList[i].mageNum;
+                        ++userInterface.unitUIBoxList[i].mageNum;
                     }
                 }
 
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].mageMinus &&
-                    mouseState.X > unitUIBoxList[i].mageMinusRect.Left &&
-                    mouseState.X < unitUIBoxList[i].mageMinusRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].mageMinusRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].mageMinusRect.Bottom)
+                    userInterface.unitUIBoxList[i].mageMinus &&
+                    mouseState.X > userInterface.unitUIBoxList[i].mageMinusRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].mageMinusRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].mageMinusRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].mageMinusRect.Bottom)
                 {
-                    unitUIBoxList[i].mageMinus = false;
+                    userInterface.unitUIBoxList[i].mageMinus = false;
                 }
-                else if (!unitUIBoxList[i].mageMinus && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].mageMinus && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].mageMinus = true;
-                    if (unitUIBoxList[i].mageNum > 0)
+                    userInterface.unitUIBoxList[i].mageMinus = true;
+                    if (userInterface.unitUIBoxList[i].mageNum > 0)
                     {
-                        --unitUIBoxList[i].mageNum;
+                        --userInterface.unitUIBoxList[i].mageNum;
                     }
                 }
 
                 //create
                 if (mouseState.LeftButton == ButtonState.Pressed &&
-                    unitUIBoxList[i].create &&
-                    mouseState.X > unitUIBoxList[i].createRect.Left &&
-                    mouseState.X < unitUIBoxList[i].createRect.Right &&
-                    mouseState.Y > unitUIBoxList[i].createRect.Top &&
-                    mouseState.Y < unitUIBoxList[i].createRect.Bottom)
+                    userInterface.unitUIBoxList[i].create &&
+                    mouseState.X > userInterface.unitUIBoxList[i].createRect.Left &&
+                    mouseState.X < userInterface.unitUIBoxList[i].createRect.Right &&
+                    mouseState.Y > userInterface.unitUIBoxList[i].createRect.Top &&
+                    mouseState.Y < userInterface.unitUIBoxList[i].createRect.Bottom)
                 {
-                    unitUIBoxList[i].create = false;
+                    userInterface.unitUIBoxList[i].create = false;
                 }
-                else if (!unitUIBoxList[i].create && mouseState.LeftButton == ButtonState.Released)
+                else if (!userInterface.unitUIBoxList[i].create && mouseState.LeftButton == ButtonState.Released)
                 {
-                    unitUIBoxList[i].create = true;
+                    userInterface.unitUIBoxList[i].create = true;
                     //create squad code here
                 }
             }
@@ -780,17 +728,17 @@ namespace coal_raider
             // Draw Text here
             for (int i = 0; i < 4; i++)
             {
-                spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].warriorNum, new Vector2(1135, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(gameFont, "" + userInterface.unitUIBoxList[i].warriorNum, new Vector2(1135, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < 4; i++)
             {
-                spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].rangerNum, new Vector2(1185, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(gameFont, "" + userInterface.unitUIBoxList[i].rangerNum, new Vector2(1185, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < 4; i++)
             {
-                spriteBatch.DrawString(gameFont, "" + unitUIBoxList[i].mageNum, new Vector2(1235, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(gameFont, "" + userInterface.unitUIBoxList[i].mageNum, new Vector2(1235, 20 + i * 145), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
             }
 
             // DrawText REAL VALUES SHOULD BE INSERTED HERE
@@ -799,51 +747,47 @@ namespace coal_raider
             spriteBatch.DrawString(gameFont, "0", new Vector2(1235, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
 
             // Draw Squad UI Elements here
-            foreach (unitUiBox uiBox in unitUIBoxList) 
+            foreach (unitUIBox uiBox in userInterface.unitUIBoxList) 
             {
-                spriteBatch.Draw(squadCreate, uiBox.mainRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+                spriteBatch.Draw(userInterface.squadCreate, uiBox.mainRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
                 if (uiBox.warriorPlus)
                 {
-                    spriteBatch.Draw(altPlus, uiBox.warriorPlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altPlus, uiBox.warriorPlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
                 if (uiBox.rangerPlus)
                 {
-                    spriteBatch.Draw(altPlus, uiBox.rangerPlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altPlus, uiBox.rangerPlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
                 if (uiBox.magePlus)
                 {
-                    spriteBatch.Draw(altPlus, uiBox.magePlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altPlus, uiBox.magePlusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
                 if (uiBox.warriorMinus)
                 {
-                    spriteBatch.Draw(altMinus, uiBox.warriorMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altMinus, uiBox.warriorMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
                 if (uiBox.rangerMinus)
                 {
-                    spriteBatch.Draw(altMinus, uiBox.rangerMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altMinus, uiBox.rangerMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
                 if (uiBox.mageMinus)
                 {
-                    spriteBatch.Draw(altMinus, uiBox.mageMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altMinus, uiBox.mageMinusRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
                 if (uiBox.create)
                 {
-                    spriteBatch.Draw(altCreate, uiBox.createRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                    spriteBatch.Draw(userInterface.altCreate, uiBox.createRect, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 }
             }
 
             //Draw squads buttons on bottom
-            spriteBatch.Draw(squadsTexture, new Rectangle(275, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(375, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(475, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(575, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(675, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(775, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(875, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(squadsTexture, new Rectangle(975, 625, squadsTexture.Width, squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            for (int i = 0; i < 8; i++)
+            {
+                spriteBatch.Draw(userInterface.squadsTexture, new Rectangle(275 + i * 100, 625, userInterface.squadsTexture.Width, userInterface.squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            }
 
             // Draw Resource UI element
-            spriteBatch.Draw(resources, new Rectangle(1115, 610, resources.Width, resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(userInterface.resources, new Rectangle(1115, 610, userInterface.resources.Width, userInterface.resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
 
         }
 
@@ -899,8 +843,8 @@ namespace coal_raider
             //bfRenderer.Draw(camera);
             DebugShapeRenderer.Draw(gameTime, camera.view, camera.projection);
 
-            spriteBatch.Draw(userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
-
+            spriteBatch.Draw(userInterface.userInterface, new Rectangle(0, 0, ScreenManager.Game.GraphicsDevice.Viewport.Width, ScreenManager.Game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+            
             DrawSelectionBox(mSelectionBox);
 
             spriteBatch.End();
