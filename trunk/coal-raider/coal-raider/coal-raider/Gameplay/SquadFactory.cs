@@ -192,8 +192,8 @@ namespace coal_raider
                                             new Vector3(-1,0,0),
                                             new Vector3(1,0,0),
                                             new Vector3(0,0,1),
-                                            new Vector3(-0.5f,0,-1),
-                                            new Vector3(0.5f,0,-1)
+                                            new Vector3(-0.5f,0,-1.2f),
+                                            new Vector3(0.5f,0,-1.2f)
                                             };
 
                 case SquadType.Pyramid:
@@ -201,9 +201,9 @@ namespace coal_raider
                                             new Vector3(0,0,1),
                                             new Vector3(0.5f,0,0),
                                             new Vector3(-0.5f,0,0),
-                                            new Vector3(1,0,-1),
-                                            new Vector3(0,0,-1),
-                                            new Vector3(-1,0,-1)
+                                            new Vector3(1,0,-1.2f),
+                                            new Vector3(0,0,-1.2f),
+                                            new Vector3(-1,0,-1.2f)
                                             };
 
                 case SquadType.Solo:
@@ -213,15 +213,15 @@ namespace coal_raider
 
                 case SquadType.Square:
                     return new Vector3[] {
-                                            new Vector3(0.5f,0,0.5f),
-                                            new Vector3(-0.5f,0,0.5f),
-                                            new Vector3(0.5f,0,-0.5f),
-                                            new Vector3(-0.5f,0,-0.5f)
+                                            new Vector3(0.7f,0,0.7f),
+                                            new Vector3(-0.7f,0,0.7f),
+                                            new Vector3(0.7f,0,-0.5f),
+                                            new Vector3(-0.7f,0,-0.7f)
                                             };
 
                 case SquadType.Triangle:
                     return new Vector3[] {
-                                            new Vector3(0,0,1),
+                                            new Vector3(0,0,1.2f),
                                             new Vector3(0.5f,0,0),
                                             new Vector3(-0.5f,0,0),
                                             };
