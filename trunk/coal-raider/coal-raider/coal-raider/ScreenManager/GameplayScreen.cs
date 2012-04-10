@@ -158,7 +158,7 @@ namespace coal_raider
             components.Add(map);
 
             // Create camera and add to components list
-            camera = new Camera(ScreenManager.Game, new Vector3(0, 20, 10), Vector3.Zero, -Vector3.UnitZ, map.size);
+            camera = new Camera(ScreenManager.Game, new Vector3(0, 30, 20), Vector3.Zero, -Vector3.UnitZ, map.size);
             components.Add(camera);
 
             Model[] w = new Model[1];
@@ -196,12 +196,12 @@ namespace coal_raider
 
             /*
             Unit[] unitList1 = new Unit[6];
-            unitList1[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
-            unitList1[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, 45), UnitType.Ranger, 0);
-            unitList1[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, 45), UnitType.Ranger, 0);
-            unitList1[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
-            unitList1[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(-30, 0, 45), UnitType.Mage, 0);
-            unitList1[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, 45), UnitType.Warrior, 0);
+            unitList1[0] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, -40), UnitType.Warrior, 0);
+            unitList1[1] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, -40), UnitType.Ranger, 0);
+            unitList1[2] = UnitFactory.createUnit(ScreenManager.Game, r, new Vector3(-30, 0, -40), UnitType.Ranger, 0);
+            unitList1[3] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, -40), UnitType.Warrior, 0);
+            unitList1[4] = UnitFactory.createUnit(ScreenManager.Game, m, new Vector3(-30, 0, -40), UnitType.Mage, 0);
+            unitList1[5] = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-30, 0, -40), UnitType.Warrior, 0);
 
             squad1 = SquadFactory.createSquad(ScreenManager.Game, unitList1, 0);
             components.Add(squad1);
@@ -876,6 +876,7 @@ namespace coal_raider
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
             map.Draw(camera);
+            map.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, blankTexture);
 
             drawSelectedSquads();
             drawUIElements();

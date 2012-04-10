@@ -73,18 +73,18 @@ namespace coal_raider
                 Vector3 targetPos = (Vector3)targetPosition;
 
                 // If the intended target is within reach
-                float distToTargetSquared = (targetPos - this.position).LengthSquared();
-                float distToSubTargetSquared = (subTarget.position - this.position).LengthSquared();
+                float distToTarget = (targetPos - this.position).Length();
+                float distToSubTarget = (subTarget.position - this.position).Length();
 
                 // Start following the path
-                if (distToSubTargetSquared < 1)
+                if (distToSubTarget < 1)
                 {
                     // If there are still subTargets in the list
                     // Go to the next one
                     if (pathStep < pathToTarget.Count)
                         subTarget = pathToTarget[pathStep++];
                     // Otherwise head back to the spawnpoint
-                    else if (distToSubTargetSquared <= 0.5)
+                    else if (distToSubTarget <= 1)
                     {
                         velocity = Vector3.Zero;
                         //target = this.spawnPoint;
@@ -121,7 +121,7 @@ namespace coal_raider
             startRecord.costSoFar = 0;
             startRecord.fromWaypoint = null;
             startRecord.fromNode = new NodeRecord[1];
-            startRecord.estimatedTotalCost = (startRecord.currentWaypoint.position - nearestToTarget.position).LengthSquared();
+            startRecord.estimatedTotalCost = (startRecord.currentWaypoint.position - nearestToTarget.position).Length();
 
             openList.Add(startRecord);
 
@@ -197,7 +197,7 @@ namespace coal_raider
                     {
                         endNodeRecord = endNode;
 
-                        endNodeHeuristic = (endNode.currentWaypoint.position - nearestToTarget.position).LengthSquared();
+                        endNodeHeuristic = (endNode.currentWaypoint.position - nearestToTarget.position).Length();
                     }
 
                     endNodeRecord.costSoFar = endNodeCost;
@@ -263,7 +263,7 @@ namespace coal_raider
             Waypoint nearest = null;
             foreach (Waypoint w in waypointsList)
             {
-                float t = (position - w.position).LengthSquared();
+                float t = (position - w.position).Length();
                 if (t < dist)
                 {
                     nearest = w;
