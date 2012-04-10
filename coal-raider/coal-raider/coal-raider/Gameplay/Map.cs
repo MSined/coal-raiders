@@ -202,7 +202,7 @@ namespace coal_raider
                                         continue;
                                     edge = new Waypoint.Edge();
                                     edge.connectedTo = mapTemp[x + i, y + j];
-                                    edge.length = (mapTemp[x, y].position - edge.connectedTo.position).LengthSquared();
+                                    edge.length = (mapTemp[x, y].position - edge.connectedTo.position).Length();
                                     mapTemp[x, y].connectedEdges.Add(edge);
                                 }
                             }
@@ -235,6 +235,17 @@ namespace coal_raider
             foreach (Waypoint w in waypointList)
             {
                 w.Draw(camera);
+            }
+        }
+
+        public void drawHealth(Camera camera, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D healthTexture)
+        {
+            foreach (DamageableObject d in buildings)
+            {
+                if (camera.inView(d))
+                {
+                    d.drawHealth(camera, spriteBatch, graphicsDevice, healthTexture);
+                }
             }
         }
     }
