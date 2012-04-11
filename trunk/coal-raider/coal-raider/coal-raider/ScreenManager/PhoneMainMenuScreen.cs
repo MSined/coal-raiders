@@ -36,7 +36,7 @@ namespace coal_raider
         void playButton_Tapped(object sender, EventArgs e)
         {
             // When the "Play" button is tapped, we load the GameplayScreen
-            LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new GameplayScreen());
+            //LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new GameplayScreen());
         }
 
         void sfxButton_Tapped(object sender, EventArgs e)

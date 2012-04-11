@@ -22,7 +22,10 @@ namespace coal_raider
         #region Initialization
 
 
-            Song bgMusic;
+        Song bgMusic;
+
+        public static AI.Difficulty difficulty;
+
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
@@ -62,7 +65,7 @@ namespace coal_raider
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen());
+                               new GameplayScreen(difficulty));
         }
 
 
