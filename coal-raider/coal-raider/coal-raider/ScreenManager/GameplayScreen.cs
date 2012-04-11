@@ -78,6 +78,8 @@ namespace coal_raider
         int warriorResourceCount;
         int mageResourceCount;
         int rangerResourceCount;
+
+        AI.Difficulty difficulty;
         #endregion
 
         #region Initialization
@@ -85,7 +87,7 @@ namespace coal_raider
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GameplayScreen()
+        public GameplayScreen(AI.Difficulty difficulty)
         {
             /*---- Original GameplayScreen Initialization -----*/
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -96,7 +98,7 @@ namespace coal_raider
                 new Keys[] { Keys.Escape },
                 true);
             /*---- End Original GameplayScreen Initialization -----*/
-            
+            this.difficulty = difficulty;
         }
 
         #region UI
@@ -216,7 +218,7 @@ namespace coal_raider
                 }
             }
 
-            ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, AI.Difficulty.Hard);
+            ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, difficulty);
 
             /*
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-10, 0, -10), UnitType.Warrior, 1);

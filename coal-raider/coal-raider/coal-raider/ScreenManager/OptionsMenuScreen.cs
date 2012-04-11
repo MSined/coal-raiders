@@ -26,6 +26,9 @@ namespace coal_raider
         MenuEntry languageMenuEntry;
         MenuEntry frobnicateMenuEntry;
         MenuEntry elfMenuEntry;
+        MenuEntry difficultyMenuEntry;
+
+        AI.Difficulty difficulty;
 
         enum Ungulate
         {
@@ -38,6 +41,9 @@ namespace coal_raider
 
         static string[] languages = { "C#", "French", "Deoxyribonucleic acid" };
         static int currentLanguage = 0;
+
+        static string[] difficultyText = { "Easy", "Medium", "Hard" };
+        static int currentDifficulty = 0;
 
         static bool frobnicate = true;
 
@@ -60,6 +66,8 @@ namespace coal_raider
             //frobnicateMenuEntry = new MenuEntry(string.Empty);
             //elfMenuEntry = new MenuEntry(string.Empty);
 
+            difficultyMenuEntry = new MenuEntry(string.Empty);
+
             SetMenuEntryText();
 
             MenuEntry back = new MenuEntry("Back");
@@ -69,6 +77,7 @@ namespace coal_raider
             //languageMenuEntry.Selected += LanguageMenuEntrySelected;
             //frobnicateMenuEntry.Selected += FrobnicateMenuEntrySelected;
             //elfMenuEntry.Selected += ElfMenuEntrySelected;
+            difficultyMenuEntry.Selected += DifficultyMenuEntrySelected;
             back.Selected += OnCancel;
             
             // Add entries to the menu.
@@ -76,7 +85,11 @@ namespace coal_raider
             //MenuEntries.Add(languageMenuEntry);
             //MenuEntries.Add(frobnicateMenuEntry);
             //MenuEntries.Add(elfMenuEntry);
+            MenuEntries.Add(difficultyMenuEntry);
             MenuEntries.Add(back);
+
+            difficulty = AI.Difficulty.Easy;
+            MainMenuScreen.difficulty = difficulty;
         }
 
 
@@ -89,6 +102,7 @@ namespace coal_raider
             //languageMenuEntry.Text = "Language: " + languages[currentLanguage];
             //frobnicateMenuEntry.Text = "Frobnicate: " + (frobnicate ? "on" : "off");
             //elfMenuEntry.Text = "elf: " + elf;
+            difficultyMenuEntry.Text = "Difficulty: " + difficultyText[currentDifficulty];
         }
 
 
@@ -106,6 +120,28 @@ namespace coal_raider
 
             if (currentUngulate > Ungulate.Llama)
                 currentUngulate = 0;
+
+            SetMenuEntryText();
+        }
+
+        void DifficultyMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            currentDifficulty = (currentDifficulty + 1) % difficultyText.Length;
+            if (currentDifficulty == 0)
+            {
+                difficulty = AI.Difficulty.Easy;
+                MainMenuScreen.difficulty = difficulty;
+            }
+            else if (currentDifficulty == 1)
+            {
+                difficulty = AI.Difficulty.Medium;
+                MainMenuScreen.difficulty = difficulty;
+            }
+            else if (currentDifficulty == 2)
+            {
+                difficulty = AI.Difficulty.Hard;
+                MainMenuScreen.difficulty = difficulty;
+            }
 
             SetMenuEntryText();
         }
