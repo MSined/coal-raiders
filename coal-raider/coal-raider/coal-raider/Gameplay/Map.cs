@@ -148,6 +148,7 @@ namespace coal_raider
                                 {
                                     mapBool[x, y] = false;
                                     int buildingHp = 100000;
+                                    staticObjects.Add(new StaticObject(game, modelArrays[2], new Vector3((x * 2) - size.X, 0, (2 * y) - size.Y), false));
                                     buildings.Add(new DamageableObject(game, modelArrays[3], new Vector3((x++ * 2) - size.X, 0, (2 * y) - size.Y), buildingHp, 0, 0, 0, true, int.Parse(l1.ToString())));
                                     continue;
                                 }
@@ -232,7 +233,7 @@ namespace coal_raider
 
             foreach (DamageableObject so in buildings)
             {
-                if (camera.inView(so))
+                if (camera.inView(so) && so.isAlive)
                 {
                     so.Draw(camera);
                 }
