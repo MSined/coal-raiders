@@ -54,7 +54,7 @@ namespace coal_raider
             noActionRectangle = new Rectangle(MouseCameraBorder, MouseCameraBorder, vp.Width - MouseCameraBorder * 2, vp.Height - MouseCameraBorder * 2);
             screenSizeOver2 = new Vector2(vp.Width / 2, vp.Height / 2);
 
-            this.mapSize = mapSize - new Vector2(20, 20);
+            this.mapSize = mapSize - new Vector2(5, 5);
         }
 
         public override void Initialize()
