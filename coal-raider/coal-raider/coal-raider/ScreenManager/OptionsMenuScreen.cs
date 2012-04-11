@@ -46,7 +46,7 @@ namespace coal_raider
         static string[] difficultyText = { "Easy", "Medium", "Hard" };
         static int currentDifficulty = 0;
 
-        static string[] mapText = { "Map 1", "Map 2", "Map 3" };
+        static string[] mapText = { "Map 1 - 1VS2", "Map 2 - 1VS3", "Map 3 - 1VS1" };
         static int currentMap = 0;
 
         static bool frobnicate = true;
