@@ -24,6 +24,8 @@ namespace coal_raider
         private Vector3[] formationOffset; 
         private SquadSlotType[] formationSlotTypes;
 
+        bool wasAttacking = false;
+
         // Moved this out of Update function
         private Random rand = new Random();
          
@@ -110,8 +112,10 @@ namespace coal_raider
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
         {
             //updatePosition();
-            if(!attacking)
+            if (!attacking)
+            {
                 this.position += this.velocity * this.formationMovementSpeed;
+            }
 
             if (target != null)
             {
@@ -167,7 +171,18 @@ namespace coal_raider
                 unitList[i].Update(gameTime, grid, waypointList);
 
                 if (unitList[i].attacking)
+                {
                     attacking = true;
+                    wasAttacking = true;
+                }
+            }
+
+            if (wasAttacking && !attacking)
+            {
+                wasAttacking = false;
+                updatePosition();
+                moveToTargetPosition(waypointList);
+                newTargetPosition = true;
             }
         }
 

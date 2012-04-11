@@ -80,11 +80,11 @@ namespace coal_raider
                     cameraTarget.X -= msV.X * mouseMouvementScalar;
                 }
 
-                if ((cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y-7))
+                if ((cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y))
                 {
                     cameraTarget.Z += msV.Z * mouseMouvementScalar;
                 }
-                if (!(cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y-7))//undo move if out of screen
+                if (!(cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y))//undo move if out of screen
                 {
                     cameraTarget.Z -= msV.Z * mouseMouvementScalar;
                 }
