@@ -14,19 +14,20 @@ namespace coal_raider
         public int numUnitsInFormation;
 
         public Object target { get; protected set; }
-        public float avgSpeed;
-        public float biggestRange;
+        private float avgSpeed;
+        private float biggestRange;
+        private float minRange = 3;
 
-        public Unit[] unitList;
+        public Unit[] unitList { get; protected set; }
 
-        Vector3[] formationOffset;
-        SquadSlotType[] formationSlotTypes;
+        private Vector3[] formationOffset; 
+        private SquadSlotType[] formationSlotTypes;
 
         // Moved this out of Update function
-        Random rand = new Random();
-
+        private Random rand = new Random();
+         
         //public bool wasAttacking = false, verifySquad = false;
-        int unitsBeforeAttack;
+        private int unitsBeforeAttack;
 
         public int team { get; protected set; }
 
@@ -45,7 +46,8 @@ namespace coal_raider
 
             biggestRange = getBiggestRange();
             avgSpeed = getSpeed();
-                        
+            updatePosition();
+
             target = null;
         }
 
@@ -163,8 +165,7 @@ namespace coal_raider
             {
                 velocity.Normalize();
                 float angle = (float)Math.Asin(velocity.X);
-                if (velocity.Z < 0) angle -= MathHelper.ToRadians(180) ;
-                if (velocity.X > 0) angle = - angle;
+                if (velocity.Z < 0) angle = - (angle - MathHelper.ToRadians(180));
                 return Matrix.CreateRotationY(angle);
             }
             return Matrix.Identity;
@@ -234,8 +235,11 @@ namespace coal_raider
             float br = 0;
             foreach (Unit u in unitList)
             {
-                if (u.attackRange > br) br = u.attackRange;
+                if (u.attackRange > br) br = u.attackRange + 0.5f;
             }
+
+            if (br < minRange) br = minRange;
+
             return br;
         }
 
@@ -295,7 +299,8 @@ namespace coal_raider
                 // Set other necessary information for formation operation
                 biggestRange = getBiggestRange();
                 avgSpeed = getSpeed();
-               
+
+                //newTargetPosition = false;
                 //target = null;
             }
         }

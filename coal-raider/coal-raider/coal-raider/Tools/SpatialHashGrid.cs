@@ -316,6 +316,9 @@ namespace coal_raider
             int cellID = -1;
             while (index < cellIDs.Count && (cellID = cellIDs[index]) != -1)
             {
+                if (cellID >= dynamicCells.Count)
+                    continue;
+
                 int len = dynamicCells[cellID].Count;
                 for (int j = 0; j < len; ++j)
                 {

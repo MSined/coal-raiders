@@ -66,7 +66,7 @@ namespace coal_raider
 
         Texture2D mDottedLine, blankTexture;
         Rectangle mSelectionBox;
-            //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
+        //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
 
         List<Unit> testUnitList = new List<Unit>();
         List<Squad> selectedSquads = new List<Squad>();
@@ -75,9 +75,9 @@ namespace coal_raider
         float cooldown2;
         float cooldown3;
 
-        int warriorResourceCount;
-        int mageResourceCount;
-        int rangerResourceCount;
+        int warriorResourceCount = 99;
+        int mageResourceCount = 99;
+        int rangerResourceCount = 99;
 
         AI.Difficulty difficulty;
         #endregion
@@ -285,6 +285,7 @@ namespace coal_raider
             for (int i = 0; i < map.buildings.Count; ++i)
             {
                 grid.insertStaticObject(map.buildings[i]);
+                components.Add(map.buildings[i]);
                 if (map.buildings[i].team == 0) camera.centerCameraOn(map.buildings[i].position);
             }
             
@@ -298,11 +299,6 @@ namespace coal_raider
 
             //grid.insertDynamicObject(unit1);
             //grid.insertDynamicObject(unit2);
-
-            // Resource Counter
-            warriorResourceCount = 5;
-            mageResourceCount = 5;
-            rangerResourceCount = 5;
 
             // Initialize our renderer
             DebugShapeRenderer.Initialize(ScreenManager.Game.GraphicsDevice);
@@ -894,6 +890,7 @@ namespace coal_raider
             spriteBatch.DrawString(gameFont, "" + rangerResourceCount, new Vector2(1185, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
             spriteBatch.DrawString(gameFont, "" + mageResourceCount, new Vector2(1235, 685), Color.White, 0, Vector2.Zero, 0.65f, SpriteEffects.None, 0);
 
+
             // Draw Squad UI Elements here
             foreach (unitUIBox uiBox in userInterface.unitUIBoxList) 
             {
@@ -928,11 +925,13 @@ namespace coal_raider
                 }
             }
 
+            /*
             //Draw squads buttons on bottom
             for (int i = 0; i < 8; i++)
             {
                 spriteBatch.Draw(userInterface.squadsTexture, new Rectangle(275 + i * 100, 625, userInterface.squadsTexture.Width, userInterface.squadsTexture.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
             }
+             * */
 
             // Draw Resource UI elements
             spriteBatch.Draw(userInterface.resources, new Rectangle(1115, 610, userInterface.resources.Width, userInterface.resources.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
@@ -977,8 +976,8 @@ namespace coal_raider
             {
                 if (gc is Object)
                 {
-                    Object o = (Object)gc;
-                    o.Draw(camera);
+                    //Object o = (Object)gc;
+                    //o.Draw(camera);
                 }
                 if (gc is DamageableObject)
                 {
@@ -987,8 +986,9 @@ namespace coal_raider
                 }
                 if (gc is Squad)
                 {
-                    Squad o = (Squad)gc;
-                    o.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, blankTexture);
+                    Squad s = (Squad)gc;
+                    s.Draw(camera);
+                    s.drawHealth(camera, spriteBatch, ScreenManager.GraphicsDevice, blankTexture);
                 }
             }
 
