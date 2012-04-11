@@ -54,7 +54,7 @@ namespace coal_raider
             noActionRectangle = new Rectangle(MouseCameraBorder, MouseCameraBorder, vp.Width - MouseCameraBorder * 2, vp.Height - MouseCameraBorder * 2);
             screenSizeOver2 = new Vector2(vp.Width / 2, vp.Height / 2);
 
-            this.mapSize = mapSize - new Vector2(5, 5);
+            this.mapSize = mapSize - new Vector2(20, 20);
         }
 
         public override void Initialize()
@@ -80,11 +80,11 @@ namespace coal_raider
                     cameraTarget.X -= msV.X * mouseMouvementScalar;
                 }
 
-                if ((cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y))
+                if ((cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y-7))
                 {
                     cameraTarget.Z += msV.Z * mouseMouvementScalar;
                 }
-                if (!(cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y))//undo move if out of screen
+                if (!(cameraTarget.Z >= -mapSize.Y && cameraTarget.Z <= mapSize.Y-7))//undo move if out of screen
                 {
                     cameraTarget.Z -= msV.Z * mouseMouvementScalar;
                 }
