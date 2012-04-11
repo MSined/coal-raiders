@@ -80,6 +80,11 @@ namespace coal_raider
             }
         }
 
+        public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
+        {
+            checkIfDead();
+        }
+
         public override void Draw(Camera camera)
         {
             Matrix[] transforms = new Matrix[modelComponents[0].Bones.Count];

@@ -98,6 +98,8 @@ namespace coal_raider
                         moving = false;
                         attacking = true;
 
+                        newVel.Normalize();
+                        lookDirection = newVel;
                         attackTarget.receiveDamage(meleeAttack, rangeAttack, magicAttack);
                     }
                     else
@@ -267,7 +269,7 @@ namespace coal_raider
         public override void Draw(Camera camera)
         {
             // Required to stop drawing players that are dead and should not be drawn
-            if (this.isAlive)
+            if (this.isAlive && camera.inView(this))
             {
                 Matrix[] transforms = new Matrix[modelComponents[0].Bones.Count];
                 modelComponents[0].CopyAbsoluteBoneTransformsTo(transforms);

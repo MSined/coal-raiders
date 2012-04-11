@@ -192,8 +192,8 @@ namespace coal_raider
                                             new Vector3(-1,0,0),
                                             new Vector3(1,0,0),
                                             new Vector3(0,0,1),
-                                            new Vector3(-0.5f,0,-1.2f),
-                                            new Vector3(0.5f,0,-1.2f)
+                                            new Vector3(-0.7f,0,-1),
+                                            new Vector3(0.7f,0,-1)
                                             };
 
                 case SquadType.Pyramid:
@@ -201,14 +201,14 @@ namespace coal_raider
                                             new Vector3(0,0,1),
                                             new Vector3(0.5f,0,0),
                                             new Vector3(-0.5f,0,0),
-                                            new Vector3(1,0,-1.2f),
-                                            new Vector3(0,0,-1.2f),
-                                            new Vector3(-1,0,-1.2f)
+                                            new Vector3(1,0,-1),
+                                            new Vector3(0,0,-1),
+                                            new Vector3(-1,0,-1)
                                             };
 
                 case SquadType.Solo:
                     return new Vector3[] {
-                                            new Vector3(0,0,0)
+                                            new Vector3(0.01f,0,0)
                                             };
 
                 case SquadType.Square:
