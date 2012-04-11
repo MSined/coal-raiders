@@ -41,22 +41,22 @@ namespace coal_raider
                      * */
 
                 case SquadType.Lane:
-                    return createLane(game, unitList, team);
+                    return createLane(game, unitList, team, AveragePosition(unitList));
 
                 case SquadType.Pentagram:
-                    return createPentagram(game, unitList, team);
+                    return createPentagram(game, unitList, team, AveragePosition(unitList));
 
                 case SquadType.Pyramid:
-                    return createPyramid(game, unitList, team);
+                    return createPyramid(game, unitList, team, AveragePosition(unitList));
 
                 case SquadType.Solo:
-                    return createSolo(game, unitList, team);
+                    return createSolo(game, unitList, team, AveragePosition(unitList));
 
                 case SquadType.Square:
-                    return createSquare(game, unitList, team);
+                    return createSquare(game, unitList, team, AveragePosition(unitList));
 
                 case SquadType.Triangle:
-                    return createTriangle(game, unitList, team);
+                    return createTriangle(game, unitList, team, AveragePosition(unitList));
             }
             return null;
         }
@@ -70,58 +70,58 @@ namespace coal_raider
             return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
         }*/
 
-        private static Squad createLane(Game game, Unit[] unitList, int team)
+        private static Squad createLane(Game game, Unit[] unitList, int team, Vector3 startPos)
         {
             int numUnitsInFormation = 2;
             Vector3[] formationOffset = getFormationOffset(SquadType.Lane);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Lane);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team, startPos);
         }
 
-        private static Squad createPentagram(Game game, Unit[] unitList, int team)
+        private static Squad createPentagram(Game game, Unit[] unitList, int team, Vector3 startPos)
         {
             int numUnitsInFormation = 5;
             Vector3[] formationOffset = getFormationOffset(SquadType.Pentagram);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Pentagram);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team, startPos);
         }
 
-        private static Squad createPyramid(Game game, Unit[] unitList, int team)
+        private static Squad createPyramid(Game game, Unit[] unitList, int team, Vector3 startPos)
         {
             int numUnitsInFormation = 6;
             Vector3[] formationOffset = getFormationOffset(SquadType.Pyramid);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Pyramid);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team, startPos);
         }
 
-        private static Squad createSolo(Game game, Unit[] unitList, int team)
+        private static Squad createSolo(Game game, Unit[] unitList, int team, Vector3 startPos)
         {
             int numUnitsInFormation = 1;
             Vector3[] formationOffset = getFormationOffset(SquadType.Solo);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Solo);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team, startPos);
         }
 
-        private static Squad createSquare(Game game, Unit[] unitList, int team)
+        private static Squad createSquare(Game game, Unit[] unitList, int team, Vector3 startPos)
         {
             int numUnitsInFormation = 4;
             Vector3[] formationOffset = getFormationOffset(SquadType.Square);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Square);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team, startPos);
         }
 
-        private static Squad createTriangle(Game game, Unit[] unitList, int team)
+        private static Squad createTriangle(Game game, Unit[] unitList, int team, Vector3 startPos)
         {
             int numUnitsInFormation = 3;
             Vector3[] formationOffset = getFormationOffset(SquadType.Triangle);
             SquadSlotType[] formationSlotTypes = getFormationSlotTypes(SquadType.Triangle);
 
-            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team);
+            return new Squad(game, unitList, numUnitsInFormation, formationOffset, formationSlotTypes, team, startPos);
         }
 
         public static SquadType? getFormationFromCount(int i){
@@ -183,27 +183,27 @@ namespace coal_raider
 
                 case SquadType.Lane:
                     return new Vector3[] {
-                                            new Vector3(0.5f,0,0),
-                                            new Vector3(-0.5f,0,0)
+                                            new Vector3(0.7f,0,0),
+                                            new Vector3(-0.7f,0,0)
                                             };
 
                 case SquadType.Pentagram:
                     return new Vector3[] {
-                                            new Vector3(-1,0,0),
-                                            new Vector3(1,0,0),
-                                            new Vector3(0,0,1),
-                                            new Vector3(-0.7f,0,-1),
-                                            new Vector3(0.7f,0,-1)
+                                            new Vector3(-1.2f,0,0),
+                                            new Vector3(1.2f,0,0),
+                                            new Vector3(0,0,1.2f),
+                                            new Vector3(-0.7f,0,-1.2f),
+                                            new Vector3(0.7f,0,-1.2f)
                                             };
 
                 case SquadType.Pyramid:
                     return new Vector3[] {
-                                            new Vector3(0,0,1),
-                                            new Vector3(0.5f,0,0),
-                                            new Vector3(-0.5f,0,0),
-                                            new Vector3(1,0,-1),
-                                            new Vector3(0,0,-1),
-                                            new Vector3(-1,0,-1)
+                                            new Vector3(0,0,1.2f),
+                                            new Vector3(0.7f,0,0),
+                                            new Vector3(-0.7f,0,0),
+                                            new Vector3(1,0,-1.2f),
+                                            new Vector3(0,0,-1.2f),
+                                            new Vector3(-1.2f,0,-1.2f)
                                             };
 
                 case SquadType.Solo:
@@ -215,15 +215,15 @@ namespace coal_raider
                     return new Vector3[] {
                                             new Vector3(0.7f,0,0.7f),
                                             new Vector3(-0.7f,0,0.7f),
-                                            new Vector3(0.7f,0,-0.5f),
+                                            new Vector3(0.7f,0,-0.7f),
                                             new Vector3(-0.7f,0,-0.7f)
                                             };
 
                 case SquadType.Triangle:
                     return new Vector3[] {
                                             new Vector3(0,0,1.2f),
-                                            new Vector3(0.5f,0,0),
-                                            new Vector3(-0.5f,0,0),
+                                            new Vector3(0.7f,0,0),
+                                            new Vector3(-0.7f,0,0),
                                             };
 
                 default:
@@ -338,6 +338,15 @@ namespace coal_raider
 
             }
             throw new NotSupportedException();
+        }
+
+        public static Vector3 AveragePosition(Unit[] list)
+        {
+            Vector3 tPos = Vector3.Zero;
+            foreach (Unit u in list)
+                tPos += u.position;
+
+            return tPos / list.Length;
         }
     }
 }

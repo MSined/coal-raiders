@@ -37,7 +37,7 @@ namespace coal_raider
         private static Unit createMage(Game game, Model[] modelComponents, Vector3 position, int team, Camera camera)
         {
             int topHP = 2000;
-            float speed = 0.05f;
+            float speed = 0.07f;
 
             float attackRange = 3f;
             float attackRate = 2000f; //in miliseconds
@@ -66,7 +66,7 @@ namespace coal_raider
         private static Unit createRanger(Game game, Model[] modelComponents, Vector3 position, int team, Camera camera)
         {
             int topHP = 2000;
-            float speed = 0.07f;
+            float speed = 0.09f;
 
             float attackRange = 4f;
             float attackRate = 1000f; //in miliseconds
@@ -93,7 +93,7 @@ namespace coal_raider
         private static Unit createWarrior(Game game, Model[] modelComponents, Vector3 position, int team, Camera camera)
         {
             int topHP = 4000;
-            float speed = 0.06f;
+            float speed = 0.08f;
 
             float attackRange = 1f;
             float attackRate = 300f; //interval in miliseconds
