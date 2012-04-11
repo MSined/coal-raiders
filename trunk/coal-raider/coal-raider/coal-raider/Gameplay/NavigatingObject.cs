@@ -33,7 +33,9 @@ namespace coal_raider
         public NavigatingObject(Game game, Model[] modelComponents, Vector3 position, bool isAlive, bool canCollide)
             : base(game, modelComponents, position, isAlive, canCollide)
         {
-
+            lookDirection = new Vector3(1, 0, 0);
+            velocity = new Vector3(1, 0, 0);
+            this.position = position;
         }
 
         protected void moveToTargetPosition(List<Waypoint> waypointsList)

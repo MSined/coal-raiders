@@ -34,7 +34,7 @@ namespace coal_raider
         /// Constructor fills in the menu contents.
         /// </summary>
         public MainMenuScreen(ScreenManager sm)
-            : base("Main Menu")
+            : base("Coal Raiders")
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
