@@ -67,6 +67,8 @@ namespace coal_raider
         Texture2D mDottedLine, blankTexture;
         Rectangle mSelectionBox;
         //squadCreateRec1, squadCreateRec2, squadCreateRec3, squadCreateRec4;
+        Texture2D bgLand;
+        Rectangle bgLandRect = new Rectangle(0, 0, 1280, 720);
 
         List<Unit> testUnitList = new List<Unit>();
         List<Squad> selectedSquads = new List<Squad>();
@@ -142,6 +144,8 @@ namespace coal_raider
             blankTexture = ScreenManager.Game.Content.Load<Texture2D>("blank");
 
             bgMusic = ScreenManager.Game.Content.Load<Song>(@"Sounds\PrivateReflection");
+
+            bgLand = ScreenManager.Game.Content.Load<Texture2D>(@"bgLand");
 
             MediaPlayer.Play(bgMusic);
             MediaPlayer.IsRepeating = true;
@@ -992,7 +996,9 @@ namespace coal_raider
                                    enemyPosition, Color.DarkRed);
             spriteBatch.End();
              * */
-
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            spriteBatch.Draw(bgLand, Vector2.Zero, bgLandRect, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            spriteBatch.End();
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
