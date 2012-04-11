@@ -39,6 +39,8 @@ namespace coal_raider
 
         private SoundEffect attackSound;
 
+        private Camera camera;
+
         protected int[] attributes { get; private set; }
 
         //public Boolean poisoned = false, checkBoxCollision = false;
@@ -48,7 +50,7 @@ namespace coal_raider
         // Characters initial position is defined by the spawnpoint ther are associated with
         public Unit(Game game, Model[] modelComponents, Vector3 position,
             UnitType type, int topHP, int meleeAttack, int rangeAttack, int magicAttack, int meleeDefence, int rangeDefence, int magicDefence, float speed, bool isAlive, int team,
-            float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate, SoundEffect attackSound)
+            float armUpAngle, float armDownAngle, float armRotationSpeed, float attackRange, float attackRate, SoundEffect attackSound, Camera camera)
             : base(game, modelComponents, position, topHP, meleeDefence, rangeDefence, magicDefence, isAlive, team)
         { 
             this.type = type;
@@ -66,6 +68,8 @@ namespace coal_raider
             this.attackRange = attackRange;
             this.attackRate = attackRate;
             this.attackSound = attackSound;
+
+            this.camera = camera;
         }
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
@@ -105,7 +109,7 @@ namespace coal_raider
                 }
             }
 
-            updateAnimation(gameTime);
+            updateAnimation(gameTime, camera);
 
             if (moving && !(velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0))
             {
@@ -192,7 +196,7 @@ namespace coal_raider
             lookDirection = orientation;
         }
 
-        private void updateAnimation(GameTime gameTime)
+        private void updateAnimation(GameTime gameTime, Camera cam)
         {
             Quaternion q;
             Vector3 s, t;
@@ -211,7 +215,10 @@ namespace coal_raider
                         armRotation -= armRotationSpeed;
                         if (armRotation < armUpAngle)
                         {
-                            attackSound.Play();
+                            float dist = (cam.cameraTarget - position).LengthSquared();
+                            float vol = dist / 300;
+                            float scaledVol = (vol >= 1 ? 0 : (1 - vol));
+                            attackSound.Play(scaledVol, 0.0f, 0.0f);
                             armMoveUp = false;
                         }
                     }

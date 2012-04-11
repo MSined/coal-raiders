@@ -74,7 +74,7 @@ namespace coal_raider
             }
         }
 
-        public Squad Update(GameTime gametime)
+        public Squad Update(GameTime gametime, Camera camera)
         {
             Squad squad = null;
             spawnTimer += gametime.ElapsedGameTime.Milliseconds;
@@ -97,15 +97,15 @@ namespace coal_raider
                 List<Unit> uList = new List<Unit>();
                 for (int j = 0; j < squadComp.X; ++j)
                 {
-                    uList.Add(UnitFactory.createUnit(game, models[0], s.position, UnitType.Warrior, aiTeam));
+                    uList.Add(UnitFactory.createUnit(game, models[0], s.position, UnitType.Warrior, aiTeam, camera));
                 }
                 for (int j = 0; j < squadComp.Y; ++j)
                 {
-                    uList.Add(UnitFactory.createUnit(game, models[1], s.position, UnitType.Ranger, aiTeam));
+                    uList.Add(UnitFactory.createUnit(game, models[1], s.position, UnitType.Ranger, aiTeam, camera));
                 }
                 for (int j = 0; j < squadComp.Z; ++j)
                 {
-                    uList.Add(UnitFactory.createUnit(game, models[2], s.position, UnitType.Mage, aiTeam));
+                    uList.Add(UnitFactory.createUnit(game, models[2], s.position, UnitType.Mage, aiTeam, camera));
                 }
 
                 if (uList.Count != 0)
