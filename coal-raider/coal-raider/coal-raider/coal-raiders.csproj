@@ -132,6 +132,8 @@
     <Compile Include="ScreenManager.cs" />
     <Compile Include="ScreenManager\BackgroundScreen.cs" />
     <Compile Include="ScreenManager\Button.cs" />
+    <Compile Include="ScreenManager\TutorialMenuScreen.cs" />
+    <Compile Include="ScreenManager\EndMenuScreen.cs" />
     <Compile Include="ScreenManager\GameplayScreen.cs" />
     <Compile Include="ScreenManager\LoadingScreen.cs" />
     <Compile Include="ScreenManager\MainMenuScreen.cs" />

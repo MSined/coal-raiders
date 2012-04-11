@@ -27,6 +27,7 @@ namespace coal_raider
         MenuEntry frobnicateMenuEntry;
         MenuEntry elfMenuEntry;
         MenuEntry difficultyMenuEntry;
+        MenuEntry mapMenuEntry;
 
         AI.Difficulty difficulty;
 
@@ -44,6 +45,9 @@ namespace coal_raider
 
         static string[] difficultyText = { "Easy", "Medium", "Hard" };
         static int currentDifficulty = 0;
+
+        static string[] mapText = { "Map 1", "Map 2", "Map 3" };
+        static int currentMap = 0;
 
         static bool frobnicate = true;
 
@@ -67,6 +71,7 @@ namespace coal_raider
             //elfMenuEntry = new MenuEntry(string.Empty);
 
             difficultyMenuEntry = new MenuEntry(string.Empty);
+            mapMenuEntry = new MenuEntry(string.Empty);
 
             SetMenuEntryText();
 
@@ -78,6 +83,7 @@ namespace coal_raider
             //frobnicateMenuEntry.Selected += FrobnicateMenuEntrySelected;
             //elfMenuEntry.Selected += ElfMenuEntrySelected;
             difficultyMenuEntry.Selected += DifficultyMenuEntrySelected;
+            mapMenuEntry.Selected += MapMenuEntrySelected;
             back.Selected += OnCancel;
             
             // Add entries to the menu.
@@ -86,6 +92,7 @@ namespace coal_raider
             //MenuEntries.Add(frobnicateMenuEntry);
             //MenuEntries.Add(elfMenuEntry);
             MenuEntries.Add(difficultyMenuEntry);
+            MenuEntries.Add(mapMenuEntry);
             MenuEntries.Add(back);
 
             difficulty = AI.Difficulty.Easy;
@@ -103,6 +110,7 @@ namespace coal_raider
             //frobnicateMenuEntry.Text = "Frobnicate: " + (frobnicate ? "on" : "off");
             //elfMenuEntry.Text = "elf: " + elf;
             difficultyMenuEntry.Text = "Difficulty: " + difficultyText[currentDifficulty];
+            mapMenuEntry.Text = "Map: " + mapText[currentMap];
         }
 
 
@@ -141,6 +149,25 @@ namespace coal_raider
             {
                 difficulty = AI.Difficulty.Hard;
                 MainMenuScreen.difficulty = difficulty;
+            }
+
+            SetMenuEntryText();
+        }
+
+        void MapMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            currentMap = (currentMap + 1) % mapText.Length;
+            if (currentMap == 0)
+            {
+                MainMenuScreen.mapfile = ".\\map1.txt";
+            }
+            else if (currentMap == 1)
+            {
+                MainMenuScreen.mapfile = ".\\map2.txt";
+            }
+            else if (currentMap == 2)
+            {
+                MainMenuScreen.mapfile = ".\\map3.txt";
             }
 
             SetMenuEntryText();

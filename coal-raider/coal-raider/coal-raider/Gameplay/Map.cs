@@ -29,9 +29,9 @@ namespace coal_raider
 
         GraphicsDevice graphics;
 
-        string mapFileName = ".\\map1.txt";
+        //string mapFileName = ".\\map1.txt";
 
-        public Map(Game game, Model[] modelComponents, GraphicsDevice graphics)
+        public Map(Game game, Model[] modelComponents, GraphicsDevice graphics, string mapFileName)
             : base(game)
         {
             this.game = game;

@@ -26,6 +26,8 @@ namespace coal_raider
 
         public static AI.Difficulty difficulty;
 
+        public static string mapfile = ".\\map1.txt";
+
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
@@ -35,11 +37,13 @@ namespace coal_raider
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");
+            MenuEntry tutorialMenuEntry = new MenuEntry("Tutorial");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
+            tutorialMenuEntry.Selected += TutorialMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
             // Add entries to the menu.
@@ -65,7 +69,7 @@ namespace coal_raider
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(difficulty));
+                               new GameplayScreen(difficulty, mapfile));
         }
 
 
@@ -75,6 +79,14 @@ namespace coal_raider
         void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
+        }
+
+        /// <summary>
+        /// Event handler for when the Options menu entry is selected.
+        /// </summary>
+        void TutorialMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.AddScreen(new TutorialMenuScreen(), e.PlayerIndex);
         }
 
 
