@@ -128,7 +128,7 @@ namespace coal_raider
                 int entryNum = 0;
                 foreach (MenuEntry entry in menuEntries)
                 {
-                    Rectangle entryPosition = new Rectangle((int)entry.Position.X, (int)entry.Position.Y, entry.GetWidth(this), entry.GetHeight(this));
+                    Rectangle entryPosition = new Rectangle((int)entry.Position.X, (int)entry.Position.Y - 17, entry.GetWidth(this), entry.GetHeight(this));
                     if (entryPosition.Contains(input.CurrentMouseState.X, input.CurrentMouseState.Y))
                     {
                         OnSelectEntry(entryNum, playerIndex);
@@ -142,7 +142,7 @@ namespace coal_raider
             foreach (MenuEntry entry in menuEntries)
             {
                 
-                Rectangle entryPosition = new Rectangle((int)entry.Position.X, (int)entry.Position.Y, entry.GetWidth(this), entry.GetHeight(this));
+                Rectangle entryPosition = new Rectangle((int)entry.Position.X, (int)entry.Position.Y - 17, entry.GetWidth(this), entry.GetHeight(this));
                 if (entryPosition.Contains(input.CurrentMouseState.X, input.CurrentMouseState.Y))
                 {
                     selectedEntry = entryCounter;
