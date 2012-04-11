@@ -303,6 +303,7 @@ namespace coal_raider
                     uList.Add(u);
                 }                    
             }
+
             unitList = uList.ToArray();
 
             int currentUnitCount = unitList.Length;

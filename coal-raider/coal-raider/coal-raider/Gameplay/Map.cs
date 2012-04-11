@@ -17,8 +17,8 @@ namespace coal_raider
         protected Matrix world = Matrix.Identity;
         public Vector2 size { get; protected set; }
         public List<StaticObject> staticObjects { get; protected set; }
-        public List<DamageableObject> buildings { get; protected set; }
-        public List<Spawnpoint> spawnpoints { get; protected set; }
+        public static List<DamageableObject> buildings { get; protected set; }
+        public static List<Spawnpoint> spawnpoints { get; protected set; }
 
         public List<Waypoint> waypointList = new List<Waypoint>();
 

@@ -35,7 +35,7 @@ namespace coal_raider
             // Extend battery life under lock.
             InactiveSleepTime = TimeSpan.FromSeconds(1);
 
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             InitializePortraitGraphics();
 
             // Create the screen factory and add it to the Services
