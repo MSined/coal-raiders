@@ -1053,6 +1053,8 @@ namespace coal_raider
         {
             foreach (Squad s in selectedSquads)
             {
+                if (!s.isAlive) continue;
+
                 Matrix[] transforms = new Matrix[selectionRingModel.Bones.Count];
                 selectionRingModel.CopyAbsoluteBoneTransformsTo(transforms);
 
