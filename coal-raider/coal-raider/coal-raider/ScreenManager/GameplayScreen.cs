@@ -75,9 +75,9 @@ namespace coal_raider
         float cooldown2;
         float cooldown3;
 
-        int warriorResourceCount = 99;
-        int mageResourceCount = 99;
-        int rangerResourceCount = 99;
+        int warriorResourceCount = 5;
+        int mageResourceCount = 5;
+        int rangerResourceCount = 5;
 
         AI.Difficulty difficulty;
         #endregion
