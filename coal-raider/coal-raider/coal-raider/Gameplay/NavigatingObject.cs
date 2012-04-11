@@ -272,6 +272,5 @@ namespace coal_raider
             }
             return nearest;
         }
-
     }
 }

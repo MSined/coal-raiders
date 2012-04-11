@@ -17,6 +17,7 @@ namespace coal_raider
         private float avgSpeed;
         private float biggestRange;
         private float minRange = 3;
+        private float formationMovementSpeed = 0.06f;
 
         public Unit[] unitList { get; protected set; }
 
@@ -28,11 +29,12 @@ namespace coal_raider
          
         //public bool wasAttacking = false, verifySquad = false;
         private int unitsBeforeAttack;
+        public bool attacking = false;
 
         public int team { get; protected set; }
 
-        public Squad(Game game, Unit[] unitList, int numUnitsInFormation, Vector3[] formationOffset, SquadSlotType[] formationSlotTypes, int team)
-            : base(game, null, new Vector3(0,0,0), true, false)
+        public Squad(Game game, Unit[] unitList, int numUnitsInFormation, Vector3[] formationOffset, SquadSlotType[] formationSlotTypes, int team, Vector3 startPos)
+            : base(game, null, startPos, true, false)
         {
             if (unitList.Length != numUnitsInFormation)
                 throw new NotImplementedException();
@@ -107,7 +109,9 @@ namespace coal_raider
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
         {
-            updatePosition();
+            //updatePosition();
+            if(!attacking)
+                this.position += this.velocity * this.formationMovementSpeed;
 
             if (target != null)
             {
@@ -116,7 +120,7 @@ namespace coal_raider
             }
 
             Matrix rotation = getRotationMatrix();
-            Vector3 anchor = position + avgSpeed * velocity;
+            //Vector3 anchor = position + avgSpeed * velocity;
 
             //Debug Stuff
             BoundingSphere bs = new BoundingSphere(this.position, biggestRange);
@@ -130,17 +134,23 @@ namespace coal_raider
             //Get possible attackers
             List<Object> possibleAttack =  grid.getAttackBoxColliders(bb);
             List<Object> temp = new List<Object>();
+            // This process can be done in "getAttackBoxColliders" so as to avoid
+            // doing it again over here
             foreach (Object o in possibleAttack)
             {
                 if (o.bounds.Intersects(bs) && !(o is StaticObject))
                     temp.Add(o);
             }
             possibleAttack = temp;
+            
+            // Moved these outside of loop for efficiency
+            attacking = false;
+            Vector3 newPos = Vector3.Zero;
 
             for (int i=0; i < unitList.Length; ++i )
             {
-                Vector3 newPos = anchor + Vector3.Transform(formationOffset[i], rotation);
-                bool attacking = false;
+                newPos = this.position + Vector3.Transform(formationOffset[i], rotation);
+                //bool attacking = false;
 
                 // Check if the squad is in range
                 if (possibleAttack.Count > 0)
@@ -155,8 +165,10 @@ namespace coal_raider
                     unitList[i].setTarget(newPos, velocity);
                 }
                 unitList[i].Update(gameTime, grid, waypointList);
-            }
 
+                if (unitList[i].attacking)
+                    attacking = true;
+            }
         }
 
         private Matrix getRotationMatrix()
@@ -250,7 +262,8 @@ namespace coal_raider
             {
                 totalSpeed += u.speed;
             }
-            return totalSpeed / numUnitsInFormation;
+            // Make the avg speed a slightly smaller value than the real speed of the units
+            return totalSpeed / (numUnitsInFormation * 1.5f);
         }
 
         private void checkSquad()

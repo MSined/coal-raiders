@@ -32,10 +32,11 @@ namespace coal_raider
         private int spRecoverRate = 5;
 
         private float armRotation = 0, leftLegRotation = 0, rightLegRotation = 0, attackRate = 0, attackTimer = 0, armUpAngle = 0, armDownAngle = 0, armRotationSpeed = 0;
-        private bool armMoveUp = true, leftLegMoveForward = true, attacking = false, moving = false;
+        private bool armMoveUp = true, leftLegMoveForward = true, moving = false;
         private Matrix armWorld = Matrix.Identity, leftLegWorld = Matrix.Identity, rightLegWorld = Matrix.Identity;
         private Vector3 unitDir = Vector3.Zero;
         private Matrix meshWorld;
+        public bool attacking = false;
 
         private SoundEffect attackSound;
 
@@ -74,12 +75,18 @@ namespace coal_raider
 
         public override void Update(GameTime gameTime, SpatialHashGrid grid, List<Waypoint> waypointList)
         {
-
             if (targetPosition != null)
             {
                 //moveToTargetPosition(waypointList);
                 velocity = (Vector3)targetPosition - position;
             }
+
+            CheckCollisions(grid.getPotentialColliders(this));
+
+            DebugShapeRenderer.AddLine(new Vector3(this.position.X, this.position.Y + 1, this.position.Z),
+                                       new Vector3(this.position.X + this.velocity.X * 2, this.position.Y + 1 + this.velocity.Y * 2, this.position.Z + this.velocity.Z * 2),
+                                       Color.Black);
+
             moving = true;
 
             if (attackTarget != null)
@@ -134,7 +141,7 @@ namespace coal_raider
             world = Matrix.CreateRotationY(-angle) * Matrix.CreateTranslation(position);
 
             //check collisions after moved
-            CheckCollisions(grid.getPotentialColliders(this));
+            //CheckCollisions(grid.getPotentialColliders(this));
 
             checkIfDead();
 
@@ -311,35 +318,71 @@ namespace coal_raider
         {
             foreach (Object o in colliders)
             {
-                if (o.collideable && o.isAlive && bounds.Intersects(o.bounds))
+                if (o.collideable && o.isAlive)// && bounds.Intersects(o.bounds))
                 {
-                    if (o is StaticObject || o is Unit)
+                    // If we have already collided
+                    if (bounds.Intersects(o.bounds))// && (o is StaticObject || o is Unit))
                     {
-                        //neutralize the Z movement if going in a collision by moving up/down
-                        if ((bounds.Max.X > o.bounds.Min.X && bounds.Max.X < o.bounds.Max.X) ||
-                            (bounds.Min.X > o.bounds.Min.X && bounds.Min.X < o.bounds.Max.X))
+                        if (o is StaticObject || o is Unit)
                         {
-                            Vector3 dir = o.position - position;
-                            dir.Normalize();
-                            position -= speed * new Vector3(0, 0, dir.Z);
-                        }
+                            //neutralize the Z movement if going in a collision by moving up/down
+                            if ((bounds.Max.X > o.bounds.Min.X && bounds.Max.X < o.bounds.Max.X) ||
+                                (bounds.Min.X > o.bounds.Min.X && bounds.Min.X < o.bounds.Max.X))
+                            {
+                                Vector3 dir = o.position - position;
+                                dir.Normalize();
+                                position -= speed * new Vector3(0, 0, dir.Z);
+                            }
 
-                        //neutralize the X movement if going in a collision by moving left/right
-                        if ((bounds.Max.Z > o.bounds.Min.Z && bounds.Max.Z < o.bounds.Max.Z) ||
-                            (bounds.Min.Z > o.bounds.Min.Z && bounds.Min.Z < o.bounds.Max.Z))
-                        {
-                            Vector3 dir = o.position - position;
-                            dir.Normalize();
-                            position -= speed * new Vector3(dir.X, 0, 0);
-                        }
+                            //neutralize the X movement if going in a collision by moving left/right
+                            if ((bounds.Max.Z > o.bounds.Min.Z && bounds.Max.Z < o.bounds.Max.Z) ||
+                                (bounds.Min.Z > o.bounds.Min.Z && bounds.Min.Z < o.bounds.Max.Z))
+                            {
+                                Vector3 dir = o.position - position;
+                                dir.Normalize();
+                                position -= speed * new Vector3(dir.X, 0, 0);
+                            }
 
-                        /*update bounds again to make sure Character does not get stuck
-                        if (bounds.FloatIntersects(o.bounds))
-                        {//push against the building
-                            Vector3 moveBack = position - o.position;
-                            moveBack.Normalize();
-                            position += moveBack * speed;
-                        }*/
+                            /*update bounds again to make sure Character does not get stuck
+                            if (bounds.FloatIntersects(o.bounds))
+                            {//push against the building
+                                Vector3 moveBack = position - o.position;
+                                moveBack.Normalize();
+                                position += moveBack * speed;
+                            }*/
+                       }
+                    }
+                    // If we are not colliding, then avoid
+                    else
+                    {
+                        if (o is Unit && !attacking)
+                            continue;
+
+                        Vector3 lookahead = this.velocity;
+                        lookahead.Normalize();
+                        // Get ray directions
+                        Vector3 rayDirLeft = Vector3.Transform(lookahead, Matrix.CreateRotationY(MathHelper.ToRadians(30)));
+                        Vector3 rayDirRight = Vector3.Transform(lookahead, Matrix.CreateRotationY(MathHelper.ToRadians(-30)));
+                        // Create rays from unit
+                        Ray leftRay = new Ray(this.position, rayDirLeft);
+                        Ray rightRay = new Ray(this.position, rayDirRight);
+
+                        float leftSide = 0, rightSide = 0;
+
+                        // If left ray hits something, get its value
+                        if (leftRay.Intersects(o.bounds).HasValue)
+                            leftSide = (float)leftRay.Intersects(o.bounds).Value;
+
+                        // get right ray value
+                        if (rightRay.Intersects(o.bounds).HasValue)
+                            rightSide = (float)rightRay.Intersects(o.bounds).Value;
+
+                        // Check if left side collision, turn right
+                        if (leftSide < rightSide)
+                            velocity += -rayDirRight;
+                        // Otherwise turn to the left
+                        else if (leftSide > rightSide)
+                            velocity += -rayDirLeft;
                     }
                 }
             }
