@@ -342,11 +342,13 @@ namespace coal_raider
 
         public static Vector3 AveragePosition(Unit[] list)
         {
-            Vector3 tPos = Vector3.Zero;
-            foreach (Unit u in list)
-                tPos += u.position;
+            Vector3 totalPosition = new Vector3();
+            for (int i = 0; i < list.Length; ++i)
+            {
+                totalPosition += list[i].position;// -Vector3.Transform(formationOffset[i], rotation);
+            }
 
-            return tPos / list.Length;
+            return totalPosition / list.Length;
         }
     }
 }

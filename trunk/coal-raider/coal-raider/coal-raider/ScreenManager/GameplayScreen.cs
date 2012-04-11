@@ -52,6 +52,7 @@ namespace coal_raider
         AI ai;
 
         int playerTeam = 0;
+        // Only used to initially set the enemy of the AI
         int aiTeam = 1;
 
         BoundingFrustumRenderer bfRenderer;
@@ -77,11 +78,13 @@ namespace coal_raider
         float cooldown2;
         float cooldown3;
 
-        int warriorResourceCount = 5;
-        int mageResourceCount = 5;
-        int rangerResourceCount = 5;
+        int warriorResourceCount = 155;
+        int mageResourceCount = 155;
+        int rangerResourceCount = 155;
 
         AI.Difficulty difficulty;
+        public static int[] teamSquadCtrs = new int[4];
+        public AI[] aiList = new AI[4];
 
         string mapFilename;
         #endregion
@@ -216,7 +219,7 @@ namespace coal_raider
                 };
 
             DamageableObject aiTarget = null;
-            foreach (DamageableObject b in map.buildings)
+            foreach (DamageableObject b in Map.buildings)
             {
                 if (b.team != aiTeam)
                 {
@@ -225,7 +228,13 @@ namespace coal_raider
                 }
             }
 
-            ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, difficulty);
+            // Set new AI for each base created
+            for(int i = 0; i < Map.spawnpoints.Count; ++i)
+                if (Map.spawnpoints[i].team != 0)
+                    aiList[i] = new AI(ScreenManager.Game, unitModels, Map.spawnpoints[i], difficulty);
+            
+
+            //ai = new AI(ScreenManager.Game, unitModels, map.spawnpoints, aiTarget, difficulty);
 
             /*
             unit1 = UnitFactory.createUnit(ScreenManager.Game, w, new Vector3(-10, 0, -10), UnitType.Warrior, 1);
@@ -289,11 +298,11 @@ namespace coal_raider
             for (int i = 0; i < map.staticObjects.Count; ++i)
                 grid.insertStaticObject(map.staticObjects[i]);
 
-            for (int i = 0; i < map.buildings.Count; ++i)
+            for (int i = 0; i < Map.buildings.Count; ++i)
             {
-                grid.insertStaticObject(map.buildings[i]);
-                components.Add(map.buildings[i]);
-                if (map.buildings[i].team == 0) camera.centerCameraOn(map.buildings[i].position);
+                grid.insertStaticObject(Map.buildings[i]);
+                components.Add(Map.buildings[i]);
+                if (Map.buildings[i].team == 0) camera.centerCameraOn(Map.buildings[i].position);
             }
             
             /*
@@ -391,9 +400,16 @@ namespace coal_raider
                 /*----- GAME UPDATE GOES HERE -----*/
                 camera.Update(gameTime);
 
-                Squad newSquad = ai.Update(gameTime, camera);
-                if (!(newSquad == null)){
-                    components.Add(newSquad);
+                for (int i = 0; i < aiList.Length; ++i)
+                {
+                    if (aiList[i] != null)
+                    {
+                        Squad newSquad = aiList[i].Update(gameTime, camera);
+                        if (!(newSquad == null))
+                        {
+                            components.Add(newSquad);
+                        }
+                    }
                 }
 
                 cooldown1 += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -421,6 +437,10 @@ namespace coal_raider
                 List<Object> colliders = new List<Object>();
                 GameComponent[] gcc = new GameComponent[components.Count];
                 components.CopyTo(gcc, 0);
+                Squad temp;
+                // Reset the team counters before the components update
+                for (int i = 0; i < teamSquadCtrs.Length; ++i)
+                    teamSquadCtrs[i] = 0;
                 foreach (GameComponent gc in gcc)
                 {
                     if (!(gc is Object))
@@ -433,6 +453,11 @@ namespace coal_raider
                         // Only update if the object is alive
                         if (o.isAlive)
                         {
+                            if (o is Squad)
+                            {
+                                temp = (Squad)o;
+                                ++teamSquadCtrs[temp.team];
+                            }
                             //colliders = grid.getPotentialColliders(o);
                             o.Update(gameTime, grid, map.waypointList);
                             //colliders.Clear();
@@ -450,11 +475,16 @@ namespace coal_raider
 
                 bool playerWin = true;
                 bool aiWin = true;
-                foreach (DamageableObject d in map.buildings)
+                foreach (DamageableObject d in Map.buildings)
                 {
-                    if (!d.isAlive) continue;
-                    if (d.team == aiTeam)
-                        playerWin = false;
+                    if(!d.isAlive)
+                        continue;
+
+                    // Check for each ai team number
+                    for(int i = 1; i <= aiList.Length; ++i)
+                        if (d.team == i)
+                            playerWin = false;
+
                     if (d.team == playerTeam)
                         aiWin = false;
                 }
@@ -462,14 +492,14 @@ namespace coal_raider
                 if (playerWin)
                 {
                     ScreenManager.AddScreen(new EndMenuScreen("You win!"), ControllingPlayer);
-                    int i = 1;
-                    ++i;
+                    //int i = 1;
+                    //++i;
                 }
                 else if (aiWin)
                 {
                     ScreenManager.AddScreen(new EndMenuScreen("You lose!"), ControllingPlayer);
-                    int i = 1;
-                    ++i;
+                    //int i = 1;
+                    //++i;
                 }
 
                 #endregion
@@ -571,7 +601,7 @@ namespace coal_raider
                 {
                     Ray singleClick = camera.GetMouseRay(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y), ScreenManager.Game);
 
-                    foreach (DamageableObject d in map.buildings)
+                    foreach (DamageableObject d in Map.buildings)
                     {
                         if (singleClick.Intersects(d.bounds).HasValue)
                         {
@@ -755,7 +785,7 @@ namespace coal_raider
 
                     Vector3 spawnPosition = new Vector3();
 
-                    foreach (Spawnpoint sp in map.spawnpoints)
+                    foreach (Spawnpoint sp in Map.spawnpoints)
                     {
                         if (sp.team == playerTeam) spawnPosition = sp.position;
                     }
@@ -795,7 +825,7 @@ namespace coal_raider
                         List<DamageableObject> possibleTargets = new List<DamageableObject>();
 
                         //Give the Squad a target
-                        foreach (DamageableObject d in map.buildings)
+                        foreach (DamageableObject d in Map.buildings)
                         {
                             if (d.team != playerTeam) possibleTargets.Add(d);
                         }

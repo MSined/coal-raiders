@@ -77,6 +77,16 @@ namespace coal_raider
             if (hp <= 0)
             {
                 isAlive = false;
+
+                if (!(this is Unit))
+                {
+                    Spawnpoint r = null;
+                    foreach (Spawnpoint s in Map.spawnpoints)
+                        if (s.team == this.team)
+                            r = s;
+                    if (r != null)
+                        Map.spawnpoints.Remove(r);
+                }
             }
         }
 

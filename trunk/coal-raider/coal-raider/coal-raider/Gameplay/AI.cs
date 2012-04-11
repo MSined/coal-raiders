@@ -38,6 +38,11 @@ namespace coal_raider
         int maxAddWarrior, maxAddRanger, maxAddMage;
         Model[][] models;
 
+        
+        Spawnpoint aiSpawnpoint;
+        
+
+        /*
         public AI(Game game, Model[][] models, List<Spawnpoint> spawnpoints, DamageableObject target, Difficulty difficulty)
         {
             this.game = game;
@@ -50,6 +55,21 @@ namespace coal_raider
             {
                 if (sp.team == aiTeam) aiSpawnpoints.Add(sp);
             }
+        }
+        */
+
+        public AI(Game game, Model[][] models, Spawnpoint spawnPoint, Difficulty difficulty)
+        {
+            this.aiTeam = spawnPoint.team;
+            this.game = game;
+            this.models = models;
+            //this.target = target;
+            setDifficulty(difficulty);
+            aiSpawnpoint = spawnPoint;
+            // Set initial target to the player
+            foreach (DamageableObject dob in Map.buildings)
+                if (dob.team == 0)
+                    this.target = dob;
         }
 
         private void setDifficulty(Difficulty difficulty)
@@ -76,6 +96,8 @@ namespace coal_raider
 
         public Squad Update(GameTime gametime, Camera camera)
         {
+            this.target = getTargetWithMostSquads();
+
             Squad squad = null;
             spawnTimer += gametime.ElapsedGameTime.Milliseconds;
             unitTimer += gametime.ElapsedGameTime.Milliseconds;
@@ -90,22 +112,22 @@ namespace coal_raider
 
             if (spawnTimer > spawnTime && (numWarrior + numRanger + numMage) > 0)
             {
-                Spawnpoint s = aiSpawnpoints.ToArray()[random.Next(aiSpawnpoints.Count)];
+                //Spawnpoint s = aiSpawnpoints.ToArray()[random.Next(aiSpawnpoints.Count)];
 
                 Vector3 squadComp = getSquadComp();
 
                 List<Unit> uList = new List<Unit>();
                 for (int j = 0; j < squadComp.X; ++j)
                 {
-                    uList.Add(UnitFactory.createUnit(game, models[0], s.position, UnitType.Warrior, aiTeam, camera));
+                    uList.Add(UnitFactory.createUnit(game, models[0], aiSpawnpoint.position, UnitType.Warrior, aiTeam, camera));
                 }
                 for (int j = 0; j < squadComp.Y; ++j)
                 {
-                    uList.Add(UnitFactory.createUnit(game, models[1], s.position, UnitType.Ranger, aiTeam, camera));
+                    uList.Add(UnitFactory.createUnit(game, models[1], aiSpawnpoint.position, UnitType.Ranger, aiTeam, camera));
                 }
                 for (int j = 0; j < squadComp.Z; ++j)
                 {
-                    uList.Add(UnitFactory.createUnit(game, models[2], s.position, UnitType.Mage, aiTeam, camera));
+                    uList.Add(UnitFactory.createUnit(game, models[2], aiSpawnpoint.position, UnitType.Mage, aiTeam, camera));
                 }
 
                 if (uList.Count != 0)
@@ -158,6 +180,32 @@ namespace coal_raider
             numMage -= (int)comp.Z;
 
             return comp;
+        }
+
+        private DamageableObject getTargetWithMostSquads()
+        {
+            int i = 0;
+            int max = 0;
+            int teamNum = 0;
+            DamageableObject d = this.target;
+
+            while (i < GameplayScreen.teamSquadCtrs.Length)
+            {
+                if (i != this.aiTeam && max < GameplayScreen.teamSquadCtrs[i])
+                {
+                    max = GameplayScreen.teamSquadCtrs[i];
+                    teamNum = i;
+                }
+                ++i;
+            }
+
+            foreach (DamageableObject dob in Map.buildings)
+            {
+                if (dob.team == teamNum)
+                    d = dob;
+            }
+
+            return d;
         }
     }
 }
