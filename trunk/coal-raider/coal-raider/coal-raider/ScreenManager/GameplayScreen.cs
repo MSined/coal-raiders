@@ -80,6 +80,8 @@ namespace coal_raider
         int rangerResourceCount = 5;
 
         AI.Difficulty difficulty;
+
+        string mapFilename;
         #endregion
 
         #region Initialization
@@ -87,7 +89,7 @@ namespace coal_raider
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GameplayScreen(AI.Difficulty difficulty)
+        public GameplayScreen(AI.Difficulty difficulty, string mapFilename)
         {
             /*---- Original GameplayScreen Initialization -----*/
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -99,6 +101,7 @@ namespace coal_raider
                 true);
             /*---- End Original GameplayScreen Initialization -----*/
             this.difficulty = difficulty;
+            this.mapFilename = mapFilename;
         }
 
         #region UI
@@ -185,7 +188,7 @@ namespace coal_raider
             a[3] = groundTileModel;
             a[4] = buildingModel;
 
-            map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice);
+            map = new Map(ScreenManager.Game, a, ScreenManager.GraphicsDevice, mapFilename);
             components.Add(map);
 
             // Create camera and add to components list
@@ -454,13 +457,13 @@ namespace coal_raider
 
                 if (playerWin)
                 {
-                    //Player Mother fucking wins!!!
+                    ScreenManager.AddScreen(new EndMenuScreen("You win!"), ControllingPlayer);
                     int i = 1;
                     ++i;
                 }
                 else if (aiWin)
                 {
-                    //AI Mother fucking wins!!!
+                    ScreenManager.AddScreen(new EndMenuScreen("You lose!"), ControllingPlayer);
                     int i = 1;
                     ++i;
                 }
