@@ -218,6 +218,7 @@ namespace coal_raider
                         if (armRotation < armUpAngle)
                         {
                             float dist = (cam.cameraTarget - position).LengthSquared();
+                            if (float.IsNaN(dist)) dist = 0;
                             float vol = dist / 300;
                             float scaledVol = (vol >= 1 ? 0 : (1 - vol));
                             attackSound.Play(scaledVol, 0.0f, 0.0f);
@@ -290,7 +291,7 @@ namespace coal_raider
                     foreach (BasicEffect be in mesh.Effects)
                     {
                         be.EnableDefaultLighting();
-                        be.SpecularPower = 10f;
+                        be.SpecularColor = blackVector;
                         be.Projection = camera.projection;
                         be.View = camera.view;
                         be.World = meshWorld * mesh.ParentBone.Transform;

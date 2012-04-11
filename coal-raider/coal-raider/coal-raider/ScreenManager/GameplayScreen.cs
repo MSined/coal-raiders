@@ -388,6 +388,7 @@ namespace coal_raider
                 if (!(newSquad == null)){
                     components.Add(newSquad);
                 }
+
                 cooldown1 += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (cooldown1 > 5000)
                 {
@@ -436,6 +437,34 @@ namespace coal_raider
                         }
                     }
                 }
+                #endregion
+
+                #region End Game
+
+                bool playerWin = true;
+                bool aiWin = true;
+                foreach (DamageableObject d in map.buildings)
+                {
+                    if (!d.isAlive) continue;
+                    if (d.team == aiTeam)
+                        playerWin = false;
+                    if (d.team == playerTeam)
+                        aiWin = false;
+                }
+
+                if (playerWin)
+                {
+                    //Player Mother fucking wins!!!
+                    int i = 1;
+                    ++i;
+                }
+                else if (aiWin)
+                {
+                    //AI Mother fucking wins!!!
+                    int i = 1;
+                    ++i;
+                }
+
                 #endregion
             }
         }
@@ -974,11 +1003,12 @@ namespace coal_raider
             components.CopyTo(gcc, 0);
             foreach (GameComponent gc in gcc)
             {
+                /*
                 if (gc is Object)
                 {
-                    //Object o = (Object)gc;
-                    //o.Draw(camera);
-                }
+                    Object o = (Object)gc;
+                    o.Draw(camera);
+                }*/
                 if (gc is DamageableObject)
                 {
                     DamageableObject o = (DamageableObject)gc;

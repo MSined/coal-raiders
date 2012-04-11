@@ -21,7 +21,7 @@ namespace coal_raider
 
         public int team { get; protected set; }
 
-        private Vector3 blackVector = new Vector3(0, 0, 0);
+        protected Vector3 blackVector = new Vector3(0, 0, 0);
 
         public DamageableObject(Game game, Model[] modelComponents, Vector3 position,
             int topHP, int meleeDefence, int rangeDefence, int magicDefence, bool isAlive, int team)
