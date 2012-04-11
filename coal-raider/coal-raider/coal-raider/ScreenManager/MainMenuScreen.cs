@@ -24,6 +24,8 @@ namespace coal_raider
 
         Song bgMusic;
 
+        ScreenManager sm;
+
         public static AI.Difficulty difficulty;
 
         public static string mapfile = ".\\map1.txt";
@@ -49,7 +51,10 @@ namespace coal_raider
             // Add entries to the menu.
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
+            MenuEntries.Add(tutorialMenuEntry);
             MenuEntries.Add(exitMenuEntry);
+
+            this.sm = sm;
 
             bgMusic = sm.Game.Content.Load<Song>(@"Sounds\Stormfront");
 
@@ -86,7 +91,7 @@ namespace coal_raider
         /// </summary>
         void TutorialMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new TutorialMenuScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new TutorialMenuScreen(sm), e.PlayerIndex);
         }
 
 
