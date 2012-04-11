@@ -19,21 +19,22 @@ namespace coal_raider
 
     static class UnitFactory
     {
-        public static Unit createUnit(Game game, Model[] modelComponents, Vector3 position, UnitType type, int team)
+
+        public static Unit createUnit(Game game, Model[] modelComponents, Vector3 position, UnitType type, int team, Camera camera)
         {
             switch(type)
             {
                 case UnitType.Mage:
-                    return createMage(game, modelComponents, position, team);
+                    return createMage(game, modelComponents, position, team, camera);
                 case UnitType.Ranger:
-                    return createRanger(game, modelComponents, position, team);
+                    return createRanger(game, modelComponents, position, team, camera);
                 case UnitType.Warrior:
-                    return createWarrior(game, modelComponents, position, team);
+                    return createWarrior(game, modelComponents, position, team, camera);
             }
             return null;
         }
 
-        private static Unit createMage(Game game, Model[] modelComponents, Vector3 position, int team)
+        private static Unit createMage(Game game, Model[] modelComponents, Vector3 position, int team, Camera camera)
         {
             int topHP = 2000;
             float speed = 0.05f;
@@ -53,14 +54,16 @@ namespace coal_raider
             float armDownAngle = 15f;
             float armRotationSpeed = 10f;
 
+
+
             SoundEffect attackSound = game.Content.Load<SoundEffect>(@"Sounds/staff");
             
             return new Unit(game, modelComponents, position, UnitType.Mage,
                             topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
-                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound);
+                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound, camera);
         }
 
-        private static Unit createRanger(Game game, Model[] modelComponents, Vector3 position, int team)
+        private static Unit createRanger(Game game, Model[] modelComponents, Vector3 position, int team, Camera camera)
         {
             int topHP = 2000;
             float speed = 0.07f;
@@ -84,10 +87,10 @@ namespace coal_raider
 
             return new Unit(game, modelComponents, position, UnitType.Ranger,
                             topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
-                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound);
+                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound, camera);
         }
 
-        private static Unit createWarrior(Game game, Model[] modelComponents, Vector3 position, int team)
+        private static Unit createWarrior(Game game, Model[] modelComponents, Vector3 position, int team, Camera camera)
         {
             int topHP = 4000;
             float speed = 0.06f;
@@ -111,7 +114,7 @@ namespace coal_raider
 
             return new Unit(game, modelComponents, position, UnitType.Warrior,
                             topHP, meleeAttack, rangeAttack, magicAttack, meleeDefense, rangeDefense, magicDefense, speed, true, team,
-                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound);
+                            armUpAngle, armDownAngle, armRotationSpeed, attackRange, attackRate, attackSound, camera);
         }
 
     }

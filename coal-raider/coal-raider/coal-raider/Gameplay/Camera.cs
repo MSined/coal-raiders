@@ -20,7 +20,7 @@ namespace coal_raider
         Vector3 cameraDirection;
         Vector3 cameraUp;
 
-        private Vector3 cameraTarget;
+        public Vector3 cameraTarget;
 
         // Current scroll wheel value. It stores the cumulative scroll value since start of game
         // Also used to verify against new scroll values to determine if zoom in or out

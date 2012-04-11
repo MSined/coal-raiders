@@ -386,7 +386,7 @@ namespace coal_raider
                 /*----- GAME UPDATE GOES HERE -----*/
                 camera.Update(gameTime);
 
-                Squad newSquad = ai.Update(gameTime);
+                Squad newSquad = ai.Update(gameTime, camera);
                 if (!(newSquad == null)){
                     components.Add(newSquad);
                 }
@@ -731,7 +731,7 @@ namespace coal_raider
                     {
                         if (warriorResourceCount > 0)
                         {
-                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, w, spawnPosition, UnitType.Warrior, playerTeam));
+                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, w, spawnPosition, UnitType.Warrior, playerTeam, camera));
                             warriorResourceCount--;
                         }
                     }
@@ -739,7 +739,7 @@ namespace coal_raider
                     {
                         if (rangerResourceCount > 0)
                         {
-                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, r, spawnPosition, UnitType.Ranger, playerTeam));
+                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, r, spawnPosition, UnitType.Ranger, playerTeam, camera));
                             rangerResourceCount--;
                         }
                     }
@@ -747,7 +747,7 @@ namespace coal_raider
                     {
                         if (mageResourceCount > 0)
                         {
-                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, m, spawnPosition, UnitType.Mage, playerTeam));
+                            uList.Add(UnitFactory.createUnit(ScreenManager.Game, m, spawnPosition, UnitType.Mage, playerTeam, camera));
                             mageResourceCount--;
                         }
                     }
