@@ -40,11 +40,18 @@ namespace coal_raider
 
         protected void moveToTargetPosition(List<Waypoint> waypointsList)
         {
+            Vector3 myTarget = (Vector3)targetPosition;
+            bool isNaN = false;
+            if (float.IsNaN(this.position.X) ||float.IsNaN(this.position.Y)||float.IsNaN(this.position.Z) ||
+                float.IsNaN(myTarget.X) || float.IsNaN(myTarget.Y) || float.IsNaN(myTarget.Z))
+                isNaN = true;
+
             // If target acquired
-            if (targetPosition != null)
+            if (targetPosition != null && !isNaN)
             {
                 // If the target is a new one
                 if (newTargetPosition)
+
                 {
                     // Find path to target
                     pathToTarget = aStarToPosition(waypointsList);
