@@ -78,9 +78,9 @@ namespace coal_raider
         float cooldown2;
         float cooldown3;
 
-        int warriorResourceCount = 155;
-        int mageResourceCount = 155;
-        int rangerResourceCount = 155;
+        int warriorResourceCount = 5;
+        int mageResourceCount = 5;
+        int rangerResourceCount = 5;
 
         AI.Difficulty difficulty;
         public static int[] teamSquadCtrs = new int[4];
